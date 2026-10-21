@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formularios: Nuevo Cliente & Nuevo Proveedor — Ivi</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="./styles/styles.css">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(180deg, #f0f7ff 0%, #e0f2fe 100%);
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+    .demo-container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .demo-header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+    .demo-header h1 {
+      font-family: 'Libre Baskerville', serif;
+      font-size: 2rem;
+      color: #0f172a;
+    }
+    .demo-btn-group {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+    .btn-demo-trigger {
+      padding: 1rem 2rem;
+      border-radius: 1rem;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .btn-demo-cliente {
+      background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+      color: #ffffff;
+      box-shadow: 0 8px 20px rgba(234, 88, 12, 0.3);
+    }
+    .btn-demo-proveedor {
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+      color: #ffffff;
+      box-shadow: 0 8px 20px rgba(2, 132, 199, 0.3);
+    }
+    .btn-demo-trigger:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.05);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="demo-container">
+    <header class="demo-header">
+      <img src="./styles/images/logo.png" alt="Logo" style="height: 64px; margin: 0 auto 0.75rem auto;" onerror="this.style.display='none'">
+      <h1>Formularios Modales de Gestión</h1>
+      <p style="color: #64748b; font-size: 0.95rem; margin-top: 0.25rem;">Estilo idéntico a Noa Mora / CliP26 para Clientes y Proveedores</p>
+    </header>
+
+    <div class="demo-btn-group">
+      <button class="btn-demo-trigger btn-demo-cliente" onclick="abrirModalNuevoCliente()">
+        <span>👤</span>
+        <span>Abrir Modal: Nuevo Cliente</span>
+      </button>
+
+      <button class="btn-demo-trigger btn-demo-proveedor" onclick="abrirModalNuevoProveedor()">
+        <span>🏭</span>
+        <span>Abrir Modal: Nuevo Proveedor</span>
+      </button>
+    </div>
+
+    <!-- Previsualización de Datos en Memoria -->
+    <div class="chapa">
+      <div class="chapa-header">
+        <div>
+          <div class="chapa-title">Últimos Registros en Base Local</div>
+          <div class="chapa-subtitle">Sincronizados con PostgreSQL y almacenamiento local</div>
+        </div>
+        <a href="./index.html" class="btn btn-secondary btn-sm">Volver al Menú</a>
+      </div>
+      <div class="chapa-body">
+        <div id="previewData"></div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ========================================================================
+       MODAL 1: NUEVO CLIENTE (Idéntico a la imagen provista)
+       ======================================================================== -->
+  <div id="modalNuevoCliente" class="modal-overlay">
+    <div class="modal-box-form">
+      <button type="button" class="btn-close-form-modal" onclick="cerrarModalNuevoCliente()">✕</button>
+      
+      <!-- Cabecera Naranja -->
+      <div class="modal-header-orange">
+        <h3>Nuevo Cliente</h3>
+        <p>Gestión de datos de Clientes</p>
+      </div>
+
+      <!-- Formulario 2 Columnas -->
+      <form id="formNuevoCliente" class="modal-form-body" onsubmit="guardarNuevoCliente(event)">
+        <div class="form-grid-2col">
+          
+          <!-- Columna 1 -->
+          <div class="form-field-group">
+            <label class="form-field-label" for="clienteNombre">Nombre <span class="req">*</span></label>
+            <input type="text" id="clienteNombre" name="nombre" required class="form-field-input" placeholder="Ej. Ana">
+          </div>
+
+          <!-- Columna 2 -->
+          <div class="form-field-group">
+            <label class="form-field-label" for="clienteApellido">Apellido <span class="req">*</span></label>
+            <input type="text" id="clienteApellido" name="apellido" required class="form-field-input" placeholder="Ej. López">
+          </div>
+
+          <!-- Teléfono -->
+          <div class="form-field-group">
+            <label class="form-field-label" for="clienteTelefono">Teléfono</label>
+            <input type="text" id="clienteTelefono" name="telefono" class="form-field-input" placeholder="Ej: 2231122333">
+          </div>
+
+          <!-- DNI -->
+          <div class="form-field-group">
+            <label class="form-field-label" for="clienteDni">DNI <span class="opt">(Opcional)</span></label>
+            <input type="text" id="clienteDni" name="dni" class="form-field-input" placeholder="">
+          </div>
+
+          <!-- Cumpleaños -->
+          <div class="form-field-group">
+            <label class="form-field-label">Cumpleaños</label>
+            <div class="birthday-selects">
+              <select name="dia_nac" style="width: 38%;">
+                <option value="">Día</option>
+                <script>
+                  for (let i = 1; i <= 31; i++) {
+                    document.write(`<option value="${i}">${i}</option>`);
+                  }
+                </script>
+              </select>
+              <select name="mes_nac" style="flex: 1;">
+                <option value="">Mes</option>
+                <option value="1">Enero</option>
+                <option value="2">Febrero</option>
+                <option value="3">Marzo</option>
+                <option value="4">Abril</option>
+                <option value="5">Mayo</option>
+                <option value="6">Junio</option>
+                <option value="7">Julio</option>
+                <option value="8">Agosto</option>
+                <option value="9">Septiembre</option>
+                <option value="10">Octubre</option>
+                <option value="11">Noviembre</option>
+                <option value="12">Diciembre</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Checkboxes -->
+          <div class="checkbox-stack">
+            <label class="custom-checkbox-label">
+              <input type="checkbox" name="acepta_promociones" checked>
+              <span>Recibir promociones</span>
+            </label>
+            <label class="custom-checkbox-label">
+              <input type="checkbox" name="estado" checked>
+              <span>Cliente Activo</span>
+            </label>
+          </div>
+
+        </div>
+
+        <!-- Botones de Acción -->
+        <div class="modal-form-footer">
+          <button type="button" class="btn-form-cancel" onclick="cerrarModalNuevoCliente()">Cancelar</button>
+          <button type="submit" class="btn-form-save-orange">Guardar Cliente</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- ========================================================================
+       MODAL 2: NUEVO PROVEEDOR (Misma estética y estructura)
+       ======================================================================== -->
+  <div id="modalNuevoProveedor" class="modal-overlay">
+    <div class="modal-box-form">
+      <button type="button" class="btn-close-form-modal" onclick="cerrarModalNuevoProveedor()">✕</button>
+      
+      <!-- Cabecera Naranja -->
+      <div class="modal-header-orange">
+        <h3>Nuevo Proveedor</h3>
+        <p>Gestión de datos de Proveedores</p>
+      </div>
+
+      <!-- Formulario 2 Columnas -->
+      <form id="formNuevoProveedor" class="modal-form-body" onsubmit="guardarNuevoProveedor(event)">
+        <div class="form-grid-2col">
+          
+          <!-- Nombre Comercial -->
+          <div class="form-field-group">
+            <label class="form-field-label" for="provNombreComercial">Nombre Comercial <span class="req">*</span></label>
+            <input type="text" id="provNombreComercial" name="nombre_comercial" required class="form-field-input" placeholder="Ej. Natura Cosméticos">
+          </div>
+
+          <!-- CUIT -->
+          <div class="form-field-group">
+            <label class="form-field-label" for="provCuit">CUIT <span class="opt">(Opcional)</span></label>
+            <input type="text" id="provCuit" name="cuit" class="form-field-input" placeholder="Ej: 30-70889900-1">
+          </div>
+
+          <!-- Contacto Principal -->
+          <div class="form-field-group">
+            <label class="form-field-label" for="provContacto">Contacto Principal</label>
+            <input type="text" id="provContacto" name="contacto" class="form-field-input" placeholder="Ej: María Gómez">
+          </div>
+
+          <!-- Teléfono -->
+          <div class="form-field-group">
+            <label class="form-field-label" for="provTelefono">Teléfono</label>
+            <input type="text" id="provTelefono" name="telefono" class="form-field-input" placeholder="Ej: 02235869878">
+          </div>
+
+          <!-- Email -->
+          <div class="form-field-group">
+            <label class="form-field-label" for="provEmail">Correo Electrónico</label>
+            <input type="email" id="provEmail" name="email" class="form-field-input" placeholder="pedidos@proveedor.com">
+          </div>
+
+          <!-- Dirección -->
+          <div class="form-field-group">
+            <label class="form-field-label" for="provDireccion">Dirección</label>
+            <input type="text" id="provDireccion" name="direccion" class="form-field-input" placeholder="Ej: Avenida Colón 2134">
+          </div>
+
+        </div>
+
+        <!-- Checkbox Estado -->
+        <div style="padding-left: 0.25rem;">
+          <label class="custom-checkbox-label">
+            <input type="checkbox" name="estado" checked>
+            <span>Proveedor Activo</span>
+          </label>
+        </div>
+
+        <!-- Botones de Acción -->
+        <div class="modal-form-footer">
+          <button type="button" class="btn-form-cancel" onclick="cerrarModalNuevoProveedor()">Cancelar</button>
+          <button type="submit" class="btn-form-save-orange">Guardar Proveedor</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- Script del Controlador de Modales -->
+  <script src="./js/modals.js"></script>
+
+  <script>
+    function renderPreview() {
+      const container = document.getElementById('previewData');
+      const clientes = ModalManager.clientes;
+      const proveedores = ModalManager.proveedores;
+
+      container.innerHTML = `
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+          <div>
+            <h4 style="font-size: 0.95rem; font-weight: 700; color: #1e293b; margin-bottom: 0.75rem;">Clientes (${clientes.length})</h4>
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+              ${clientes.slice(0, 4).map(c => `
+                <div style="padding: 0.75rem 1rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0.75rem; font-size: 0.85rem;">
+                  <strong>${c.nombre} ${c.apellido}</strong><br>
+                  <span style="color: #64748b; font-size: 0.75rem;">📞 ${c.telefono || 'Sin tel'} • DNI: ${c.dni || 'S/D'}</span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+          <div>
+            <h4 style="font-size: 0.95rem; font-weight: 700; color: #1e293b; margin-bottom: 0.75rem;">Proveedores (${proveedores.length})</h4>
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+              ${proveedores.slice(0, 4).map(p => `
+                <div style="padding: 0.75rem 1rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0.75rem; font-size: 0.85rem;">
+                  <strong>${p.nombreComercial}</strong><br>
+                  <span style="color: #64748b; font-size: 0.75rem;">👤 ${p.contacto || 'Sin contacto'} • 📞 ${p.telefono || 'S/T'}</span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    window.renderClientesTable = renderPreview;
+    window.renderProveedoresTable = renderPreview;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderPreview();
+    });
+  </script>
+</body>
+</html>

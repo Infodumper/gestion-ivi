@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stock & Almacenes — Costa Atlántica</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', 'Poppins', sans-serif;
+      background-color: #f1f5f9; /* Escala de grises sobria: Slate 100 */
+      min-height: 100vh;
+      color: #0f172a;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Navbar */
+    .top-navbar {
+      height: 68px;
+      background-color: #ffffff;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+
+    .nav-brand-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .nav-btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #475569;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 0.45rem 0.85rem;
+      border-radius: 8px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      transition: all 0.15s ease;
+    }
+
+    .nav-btn-back:hover {
+      background: #f1f5f9;
+      border-color: #cbd5e1;
+      color: #0f172a;
+    }
+
+    .nav-btn-back img {
+      width: 14px;
+      height: 14px;
+      opacity: 0.75;
+    }
+
+    .nav-logo {
+      height: 38px;
+      width: auto;
+    }
+
+    .nav-center {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+    }
+
+    .nav-title-main {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #0f172a;
+      letter-spacing: -0.01em;
+    }
+
+    .nav-user-right {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .user-pill {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      line-height: 1.15;
+    }
+
+    .user-name {
+      font-size: 0.825rem;
+      font-weight: 600;
+      color: #1e293b;
+    }
+
+    .user-badge {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: #0f172a;
+      background: #f1f5f9;
+      padding: 2px 7px;
+      border-radius: 9999px;
+      border: 1px solid #cbd5e1;
+    }
+
+    /* Contenedor Central */
+    .sector-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 1.25rem 4rem 1.25rem;
+    }
+
+    /* Chapa Card Stock (Diseño Sobrio & Corporativo) */
+    .chapa-stock-card {
+      width: 100%;
+      max-width: 440px;
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 2.5rem 2.25rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+      border: 1px solid #e2e8f0;
+      border-top: 4px solid #334155; /* Slate oscuro sobrio */
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .chapa-stock-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08);
+      border-color: #cbd5e1;
+    }
+
+    /* Ícono Superior Phosphor PNG */
+    .chapa-icon-circle {
+      width: 76px;
+      height: 76px;
+      border-radius: 16px;
+      background-color: #f8fafc;
+      border: 1px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .chapa-icon-circle img {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+    }
+
+    .chapa-title {
+      font-size: 1.85rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 1.75rem;
+      letter-spacing: -0.025em;
+    }
+
+    /* Lista de Botones */
+    .chapa-links-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .chapa-link-btn {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      padding: 0.95rem 1.25rem;
+      background-color: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      color: #1e293b;
+      font-size: 1rem;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-align: left;
+    }
+
+    .chapa-link-btn:hover {
+      background-color: #f8fafc;
+      border-color: #475569;
+      color: #0f172a;
+      transform: translateX(3px);
+    }
+
+    .chapa-link-btn:active {
+      transform: scale(0.99);
+    }
+
+    .chapa-link-icon-ph {
+      width: 22px;
+      height: 22px;
+      margin-right: 0.85rem;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+
+    /* Modales */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .modal-box-wide {
+      background: #ffffff;
+      border-radius: 14px;
+      width: 100%;
+      max-width: 860px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
+      border: 1px solid #e2e8f0;
+      animation: modalFadeIn 0.2s ease-out;
+    }
+
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: scale(0.98); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .modal-header-sober {
+      background: #f8fafc;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 1.25rem 1.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top-left-radius: 14px;
+      border-top-right-radius: 14px;
+    }
+
+    .modal-header-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #0f172a;
+      letter-spacing: -0.01em;
+    }
+
+    .modal-header-subtitle {
+      font-size: 0.825rem;
+      color: #64748b;
+      font-weight: 500;
+      margin-top: 0.15rem;
+    }
+
+    .btn-modal-close {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      background: #ffffff;
+      color: #64748b;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+
+    .btn-modal-close:hover {
+      background: #fee2e2;
+      border-color: #fca5a5;
+      color: #dc2626;
+    }
+
+    .modal-body-pad {
+      padding: 1.75rem;
+    }
+
+    /* Tabla */
+    .stock-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+
+    .stock-table th {
+      background: #f8fafc;
+      color: #475569;
+      font-weight: 600;
+      text-align: left;
+      padding: 0.75rem 1rem;
+      border-bottom: 2px solid #e2e8f0;
+    }
+
+    .stock-table td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #f1f5f9;
+      color: #1e293b;
+    }
+
+    .stock-table tr:hover {
+      background-color: #f8fafc;
+    }
+
+    .badge-stock {
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+      text-transform: uppercase;
+    }
+
+    .badge-stock.optimo { background: #d1fae5; color: #065f46; }
+    .badge-stock.bajo { background: #fef3c7; color: #92400e; }
+    .badge-stock.agotado { background: #fee2e2; color: #991b1b; }
+
+    .stock-circle {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      vertical-align: middle;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      cursor: pointer;
+    }
+    .stock-circle:hover {
+      transform: scale(1.25);
+    }
+    .stock-circle.optimo {
+      background-color: #10b981;
+      box-shadow: 0 0 0 3px #d1fae5;
+    }
+    .stock-circle.bajo {
+      background-color: #f59e0b;
+      box-shadow: 0 0 0 3px #fef3c7;
+    }
+    .stock-circle.agotado {
+      background-color: #ef4444;
+      box-shadow: 0 0 0 3px #fee2e2;
+    }
+
+    .form-input-control {
+      width: 100%;
+      padding: 0.65rem 0.85rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      outline: none;
+      background: #ffffff;
+      transition: all 0.15s;
+    }
+
+    .form-input-control:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .form-group-item label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #334155;
+    }
+
+    .btn-cancel-action {
+      padding: 0.65rem 1.25rem;
+      background: #f1f5f9;
+      color: #475569;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-cancel-action:hover {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+
+    .btn-submit-action {
+      padding: 0.65rem 1.25rem;
+      background: #334155;
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.15s;
+    }
+
+    .btn-submit-action:hover {
+      background: #1e293b;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <header class="top-navbar">
+    <div class="nav-brand-left">
+      <a href="../index.html" class="nav-btn-back" title="Volver al Panel Principal">
+        <img src="../assets/icons/arrow-left-fill.png" alt="←">
+        <span>Volver</span>
+      </a>
+      <img src="../styles/images/logo.png" alt="Logo" class="nav-logo" onerror="this.style.display='none'">
+    </div>
+
+    <div class="nav-center">
+      <div class="nav-title-main">Costa Atlántica</div>
+    </div>
+
+    <div class="nav-user-right">
+      <div class="user-pill">
+        <span class="user-name" id="navUserName">Ignacio Vizoso</span>
+        <span class="user-badge">STOCK</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Contenedor Principal: Chapa Stock -->
+  <main class="sector-container">
+    <div class="chapa-stock-card">
+      
+      <!-- Ícono Superior Phosphor PNG -->
+      <div class="chapa-icon-circle">
+        <img src="../assets/icons/package-fill.png" alt="Stock">
+      </div>
+
+      <!-- Título -->
+      <h1 class="chapa-title">Stock</h1>
+
+      <!-- Opciones -->
+      <div class="chapa-links-list">
+        <button type="button" class="chapa-link-btn" onclick="abrirModalNuevoProducto()">
+          <img src="../assets/icons/plus-fill.png" class="chapa-link-icon-ph" alt="+">
+          <span>Nuevo Producto</span>
+        </button>
+
+        <button type="button" class="chapa-link-btn" onclick="abrirModalInventario()">
+          <img src="../assets/icons/package-fill.png" class="chapa-link-icon-ph" alt="Inventario">
+          <span>Gestión de Inventario</span>
+        </button>
+
+        <button type="button" class="chapa-link-btn" onclick="abrirModalProveedores()">
+          <img src="../assets/icons/warehouse-fill.png" class="chapa-link-icon-ph" alt="Proveedores">
+          <span>Directorio de Proveedores</span>
+        </button>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- MODAL INVENTARIO -->
+  <div id="modalInventario" class="modal-overlay">
+    <div class="modal-box-wide">
+      <div class="modal-header-sober">
+        <div>
+          <h2 class="modal-header-title">Gestión de Inventario</h2>
+          <p class="modal-header-subtitle">Control de stock, existencias y catálogo — Haga clic en un artículo para editarlo</p>
+        </div>
+        <button class="btn-modal-close" onclick="cerrarModalInventario()">✕</button>
+      </div>
+
+      <div class="modal-body-pad">
+        <div style="margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+          <input type="text" id="filtroStock" class="form-input-control" placeholder="Buscar por código, producto o proveedor..." oninput="filtrarStock()" style="max-width: 350px;">
+          <button type="button" onclick="abrirModalNuevoProducto()" style="background: #334155; padding: 0.55rem 1rem; font-size: 0.85rem; border-radius: 8px; color: white; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 600;">
+            <img src="../assets/icons/plus-fill.png" style="width: 14px; height: 14px; filter: brightness(0) invert(1);" alt="+">
+            <span>Nuevo Producto</span>
+          </button>
+        </div>
+
+        <div style="overflow-x: auto;">
+          <table class="stock-table">
+            <thead>
+              <tr>
+                <th>Código</th>
+                <th>Producto</th>
+                <th>Proveedor</th>
+                <th>Existencias</th>
+                <th style="text-align: center; width: 70px;">Estado</th>
+                <th style="text-align: right;">Precio Unitario</th>
+              </tr>
+            </thead>
+            <tbody id="stockTableBody">
+              <!-- Renderizado dinámico -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL PROVEEDORES -->
+  <div id="modalProveedores" class="modal-overlay">
+    <div class="modal-box-wide">
+      <div class="modal-header-sober">
+        <div>
+          <h2 class="modal-header-title">Directorio de Proveedores</h2>
+          <p class="modal-header-subtitle">Gestión de marcas, fabricantes y distribuidores</p>
+        </div>
+        <button class="btn-modal-close" onclick="cerrarModalProveedores()">✕</button>
+      </div>
+
+      <div class="modal-body-pad">
+        <div style="overflow-x: auto;">
+          <table class="stock-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Razón Social</th>
+                <th>Contacto</th>
+                <th>Teléfono</th>
+                <th>Email</th>
+              </tr>
+            </thead>
+            <tbody id="proveedoresTableBody">
+              <!-- Renderizado dinámico -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL EDITAR / NUEVO PRODUCTO -->
+  <div id="modalEditarProducto" class="modal-overlay">
+    <div class="modal-box-wide">
+      <div class="modal-header-sober">
+        <div>
+          <h2 id="modalProdTitle" class="modal-header-title">Editar Producto</h2>
+          <p id="modalProdSubtitle" class="modal-header-subtitle">Modificar inventario, precio y datos del catálogo</p>
+        </div>
+        <button class="btn-modal-close" onclick="cerrarModalEditarProducto()">✕</button>
+      </div>
+
+      <div class="modal-body-pad">
+        <form id="formProducto" onsubmit="guardarProductoForm(event)">
+          <input type="hidden" id="prodId" value="">
+          <div class="form-grid-2">
+            <div class="form-group-item">
+              <label>Código de Producto <span style="color: #dc2626;">*</span></label>
+              <input type="text" id="prodCodigo" class="form-input-control" placeholder="Ej: 93617" required>
+            </div>
+            <div class="form-group-item">
+              <label>Proveedor <span style="color: #dc2626;">*</span></label>
+              <select id="prodProveedor" class="form-input-control">
+                <option value="Natura Cosméticos">Natura Cosméticos</option>
+                <option value="Monique Cosmética">Monique Cosmética</option>
+                <option value="AVON Argentina">AVON Argentina</option>
+                <option value="L'Oréal Distribución">L'Oréal Distribución</option>
+                <option value="Ignacio - Infodumper">Ignacio - Infodumper</option>
+              </select>
+            </div>
+            <div class="form-group-item" style="grid-column: span 2;">
+              <label>Descripción / Denominación <span style="color: #dc2626;">*</span></label>
+              <input type="text" id="prodDescripcion" class="form-input-control" placeholder="Nombre completo del producto" required>
+            </div>
+            <div class="form-group-item">
+              <label>Precio Unitario ($ ARS) <span style="color: #dc2626;">*</span></label>
+              <input type="number" id="prodPrecio" class="form-input-control" step="0.01" min="0" required>
+            </div>
+            <div class="form-group-item">
+              <label>Existencias en Stock (unidades) <span style="color: #dc2626;">*</span></label>
+              <input type="number" id="prodStock" class="form-input-control" min="0" required>
+            </div>
+            <div class="form-group-item">
+              <label>Estado de Inventario</label>
+              <select id="prodEstado" class="form-input-control">
+                <option value="optimo">Óptimo</option>
+                <option value="bajo">Stock Bajo</option>
+                <option value="agotado">Agotado</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+            <button type="button" class="btn-cancel-action" onclick="cerrarModalEditarProducto()">Cancelar</button>
+            <button type="submit" class="btn-submit-action">
+              <img src="../assets/icons/check-circle-fill.png" style="width: 16px; height: 16px; filter: brightness(0) invert(1);" alt="">
+              <span>Guardar Cambios</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentUser = JSON.parse(localStorage.getItem('ivi_session_user') || 'null');
+    if (currentUser) {
+      document.getElementById('navUserName').innerText = currentUser.nombre || currentUser.email;
+    }
+
+    let storedStock = localStorage.getItem('ivi_stock_data');
+    let productosData = storedStock ? JSON.parse(storedStock) : [
+      { codigo: "PROD-001", nombre: "Extracto Puro 100ml", proveedor: "Natura Cosméticos", categoria: "Perfumería", stock: 45, estado: "optimo", precio: 12500 },
+      { codigo: "PROD-002", nombre: "Difusor Aromático Premium", proveedor: "Monique Cosmética", categoria: "Hogar", stock: 12, estado: "bajo", precio: 8900 },
+      { codigo: "PROD-003", nombre: "Agua de Ropa Floral 500ml", proveedor: "L'Oréal Distribución", categoria: "Textil", stock: 60, estado: "optimo", precio: 6400 },
+      { codigo: "PROD-004", nombre: "Esencia Concentrada 30ml", proveedor: "AVON Argentina", categoria: "Aromaterapia", stock: 0, estado: "agotado", precio: 4800 }
+    ];
+
+    let proveedoresData = JSON.parse(localStorage.getItem('ivi_proveedores_data') || 'null');
+    if (!proveedoresData || !proveedoresData.some(p => p.razon === 'Ignacio - Infodumper')) {
+      proveedoresData = [
+        { id: 1, razon: "Natura Cosméticos", contacto: "María Gómez", tel: "02235869878", email: "pedidos@natura.com.ar" },
+        { id: 2, razon: "Monique Cosmética", contacto: "Esteban López", tel: "2235869878", email: "ventas@monique.com" },
+        { id: 3, razon: "AVON Argentina", contacto: "Pepita Pérez", tel: "225455812", email: "contacto@avon.com" },
+        { id: 4, razon: "L'Oréal Distribución", contacto: "Carlos Rivas", tel: "2234112233", email: "info@loreal.com.ar" },
+        { id: 5, razon: "Ignacio - Infodumper", contacto: "Ignacio", tel: "2235869878", email: "ignacio@infodumper.net" }
+      ];
+      localStorage.setItem('ivi_proveedores_data', JSON.stringify(proveedoresData));
+    }
+
+    function escapeHtml(str) {
+      return (str || '').replace(/[&<>"']/g, function(m) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
+      });
+    }
+
+    function poblarSelectProveedores(valorSeleccionado = '') {
+      const selectEl = document.getElementById('prodProveedor');
+      if (!selectEl) return;
+      const provs = (typeof proveedoresData !== 'undefined' && proveedoresData && proveedoresData.length)
+        ? proveedoresData
+        : JSON.parse(localStorage.getItem('ivi_proveedores_data') || '[]');
+      
+      if (!provs || !provs.length) return;
+
+      selectEl.innerHTML = provs.map(pr => {
+        const nombre = pr.razon || pr.nombre_comercial || '';
+        const selected = (nombre === valorSeleccionado) ? 'selected' : '';
+        return `<option value="${escapeHtml(nombre)}" ${selected}>${escapeHtml(nombre)}</option>`;
+      }).join('');
+
+      if (valorSeleccionado && !provs.some(pr => (pr.razon || pr.nombre_comercial) === valorSeleccionado)) {
+        selectEl.insertAdjacentHTML('beforeend', `<option value="${escapeHtml(valorSeleccionado)}" selected>${escapeHtml(valorSeleccionado)}</option>`);
+      }
+    }
+
+    function sincronizarProveedoresDesdeBackend() {
+      const apiPath = (window.location.pathname.includes('/ventas/') || window.location.pathname.includes('/crm/') || window.location.pathname.includes('/stock/'))
+        ? '../api/proveedores.php'
+        : 'api/proveedores.php';
+
+      fetch(apiPath)
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.ok && Array.isArray(data.proveedores) && data.proveedores.length > 0) {
+            proveedoresData = data.proveedores;
+            localStorage.setItem('ivi_proveedores_data', JSON.stringify(proveedoresData));
+            poblarSelectProveedores();
+          }
+        })
+        .catch(err => console.warn('[Proveedores DB] Modo offline o backend no disponible:', err));
+    }
+
+    function formatPesos(val) {
+      return new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS" }).format(val);
+    }
+
+    function abrirModalInventario() {
+      // Sincronizar por si hubo cambios en otros módulos
+      const latestStock = localStorage.getItem('ivi_stock_data');
+      if (latestStock) {
+        productosData = JSON.parse(latestStock);
+      }
+      renderStock();
+      document.getElementById('modalInventario').style.display = 'flex';
+    }
+
+    function cerrarModalInventario() {
+      document.getElementById('modalInventario').style.display = 'none';
+    }
+
+    function abrirModalNuevoProducto() {
+      cerrarModalInventario();
+      const form = document.getElementById('formProducto');
+      if (form) form.reset();
+      document.getElementById('prodId').value = '';
+
+      const titleEl = document.getElementById('modalProdTitle');
+      if (titleEl) titleEl.innerText = 'Nuevo Producto';
+      const subEl = document.getElementById('modalProdSubtitle');
+      if (subEl) subEl.innerText = 'Dar de alta un nuevo artículo en el catálogo y stock';
+
+      poblarSelectProveedores('Natura Cosméticos');
+
+      const estadoEl = document.getElementById('prodEstado');
+      if (estadoEl) estadoEl.value = 'optimo';
+
+      const stockEl = document.getElementById('prodStock');
+      if (stockEl) stockEl.value = 10;
+
+      const precioEl = document.getElementById('prodPrecio');
+      if (precioEl) precioEl.value = '';
+
+      document.getElementById('modalEditarProducto').style.display = 'flex';
+      setTimeout(() => document.getElementById('prodCodigo').focus(), 100);
+    }
+
+    function editarProducto(cod) {
+      const p = productosData.find(item => item.codigo == cod || item.id == cod);
+      if (!p) return;
+
+      cerrarModalInventario();
+
+      document.getElementById('prodId').value = p.codigo || p.id;
+      document.getElementById('prodCodigo').value = p.codigo || '';
+      poblarSelectProveedores(p.proveedor || 'Natura Cosméticos');
+      document.getElementById('prodDescripcion').value = p.descripcion || p.nombre || '';
+      document.getElementById('prodPrecio').value = p.precio || 0;
+      document.getElementById('prodStock').value = p.stock !== undefined ? p.stock : 25;
+      document.getElementById('prodEstado').value = p.estado || 'optimo';
+
+      const titleEl = document.getElementById('modalProdTitle');
+      if (titleEl) titleEl.innerText = `Editar Producto (${p.codigo})`;
+      const subEl = document.getElementById('modalProdSubtitle');
+      if (subEl) subEl.innerText = `Modificar inventario, precio y datos de ${p.descripcion || p.nombre}`;
+
+      document.getElementById('modalEditarProducto').style.display = 'flex';
+      setTimeout(() => document.getElementById('prodDescripcion').focus(), 100);
+    }
+
+    function cerrarModalEditarProducto() {
+      document.getElementById('modalEditarProducto').style.display = 'none';
+      const form = document.getElementById('formProducto');
+      if (form) form.reset();
+      document.getElementById('prodId').value = '';
+    }
+
+    function guardarProductoForm(e) {
+      e.preventDefault();
+      const prodId = document.getElementById('prodId').value;
+      const codigo = document.getElementById('prodCodigo').value.trim();
+      const provEl = document.getElementById('prodProveedor');
+      const proveedor = provEl ? provEl.value : 'Natura Cosméticos';
+      const descripcion = document.getElementById('prodDescripcion').value.trim();
+      const precio = parseFloat(document.getElementById('prodPrecio').value) || 0;
+      const stock = parseInt(document.getElementById('prodStock').value) || 0;
+      const estado = document.getElementById('prodEstado').value;
+
+      const idx = productosData.findIndex(p => p.codigo == prodId || (p.id && p.id == prodId));
+      if (idx !== -1) {
+        productosData[idx] = {
+          ...productosData[idx],
+          codigo,
+          nombre: descripcion,
+          descripcion,
+          proveedor,
+          precio,
+          stock,
+          estado
+        };
+        localStorage.setItem('ivi_stock_data', JSON.stringify(productosData));
+        cerrarModalEditarProducto();
+        renderStock();
+        abrirModalInventario();
+      } else {
+        const nuevoId = productosData.length > 0 ? Math.max(...productosData.map(p => p.id || 0)) + 1 : 1;
+        const nuevoProducto = {
+          id: nuevoId,
+          codigo,
+          nombre: descripcion,
+          descripcion,
+          proveedor,
+          precio,
+          stock,
+          estado: estado || (stock <= 0 ? 'agotado' : (stock <= 10 ? 'bajo' : 'optimo'))
+        };
+        productosData.push(nuevoProducto);
+        localStorage.setItem('ivi_stock_data', JSON.stringify(productosData));
+        cerrarModalEditarProducto();
+        renderStock();
+        abrirModalInventario();
+      }
+    }
+
+    function renderStock(lista = productosData) {
+      const tbody = document.getElementById('stockTableBody');
+      tbody.innerHTML = lista.map(p => {
+        const prov = p.proveedor || p.categoria || 'Natura Cosméticos';
+        const estadoTit = p.estado === 'optimo' ? 'Stock Óptimo' : (p.estado === 'bajo' ? 'Stock Bajo' : 'Agotado');
+        const nombreProd = p.descripcion || p.nombre || '';
+        return `
+        <tr onclick="editarProducto('${p.codigo || p.id}')" style="cursor: pointer;" title="Haga clic para editar ${nombreProd}">
+          <td style="font-weight: 700; color: #334155;">${p.codigo}</td>
+          <td style="font-weight: 600;">${nombreProd}</td>
+          <td style="color: #475569;">${prov}</td>
+          <td><strong>${p.stock}</strong> u.</td>
+          <td style="text-align: center;"><span class="stock-circle ${p.estado || 'optimo'}" title="${estadoTit}"></span></td>
+          <td style="text-align: right; font-weight: 700; color: #047857;">${formatPesos(p.precio)}</td>
+        </tr>
+      `;
+      }).join('');
+    }
+
+    function filtrarStock() {
+      const q = document.getElementById('filtroStock').value.toLowerCase();
+      const filtrados = productosData.filter(p => 
+        (p.codigo && p.codigo.toLowerCase().includes(q)) || 
+        ((p.nombre || p.descripcion) && (p.nombre || p.descripcion).toLowerCase().includes(q)) ||
+        (p.proveedor && p.proveedor.toLowerCase().includes(q))
+      );
+      renderStock(filtrados);
+    }
+
+    function abrirModalProveedores() {
+      const tbody = document.getElementById('proveedoresTableBody');
+      tbody.innerHTML = proveedoresData.map(pr => `
+        <tr>
+          <td style="font-weight: 700; color: #334155;">#${pr.id}</td>
+          <td style="font-weight: 600;">${pr.razon}</td>
+          <td>${pr.contacto}</td>
+          <td>${pr.tel}</td>
+          <td style="color: #64748b;">${pr.email}</td>
+        </tr>
+      `).join('');
+      document.getElementById('modalProveedores').style.display = 'flex';
+    }
+
+    function cerrarModalProveedores() {
+      document.getElementById('modalProveedores').style.display = 'none';
+    }
+
+    // Inicialización y sincronización con PostgreSQL
+    sincronizarProveedoresDesdeBackend();
+    poblarSelectProveedores();
+  </script>
+</body>
+</html>

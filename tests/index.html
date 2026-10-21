@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Suite de Pruebas de Regresión — Sistema de Gestión Ivi</title>
+  
+  <link rel="stylesheet" href="../styles/variables.css">
+  <link rel="stylesheet" href="../styles/base.css">
+  <link rel="stylesheet" href="../styles/layout.css">
+  <link rel="stylesheet" href="../styles/components.css">
+  
+  <style>
+    body {
+      background-color: #f1f5f9;
+      color: #0f172a;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 2rem;
+    }
+
+    .test-container {
+      max-width: 1040px;
+      margin: 0 auto;
+    }
+
+    .test-header {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 1.5rem 2rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .test-title h1 {
+      margin: 0 0 0.25rem 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .test-title p {
+      margin: 0;
+      color: #64748b;
+      font-size: 0.875rem;
+    }
+
+    .test-metrics {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .metric-badge {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 0.5rem 1rem;
+      text-align: center;
+      min-width: 90px;
+    }
+
+    .metric-val {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .metric-label {
+      font-size: 0.75rem;
+      color: #64748b;
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+
+    .metric-passed .metric-val { color: #16a34a; }
+    .metric-failed .metric-val { color: #dc2626; }
+
+    .test-suite-card {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      margin-bottom: 1.25rem;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+
+    .suite-head {
+      background: #f8fafc;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 600;
+      color: #1e293b;
+    }
+
+    .suite-badge {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.25rem 0.6rem;
+      border-radius: 9999px;
+      background: #e2e8f0;
+      color: #475569;
+    }
+
+    .test-item {
+      padding: 0.85rem 1.5rem;
+      border-bottom: 1px solid #f1f5f9;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+      font-size: 0.875rem;
+    }
+
+    .test-item:last-child {
+      border-bottom: none;
+    }
+
+    .test-desc {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .test-name {
+      font-weight: 600;
+      color: #1e293b;
+    }
+
+    .test-detail {
+      font-size: 0.8rem;
+      color: #64748b;
+      font-family: monospace;
+    }
+
+    .status-badge {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      white-space: nowrap;
+    }
+
+    .status-pass {
+      background: #dcfce7;
+      color: #15803d;
+      border: 1px solid #bbf7d0;
+    }
+
+    .status-fail {
+      background: #fee2e2;
+      color: #b91c1c;
+      border: 1px solid #fecaca;
+    }
+
+    .status-running {
+      background: #e0f2fe;
+      color: #0369a1;
+      border: 1px solid #bae6fd;
+    }
+
+    .btn-run {
+      background: #1e293b;
+      color: white;
+      border: none;
+      padding: 0.65rem 1.25rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.875rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: background-color 0.15s ease;
+    }
+
+    .btn-run:hover {
+      background: #0f172a;
+    }
+
+    .btn-back {
+      background: white;
+      color: #475569;
+      border: 1px solid #cbd5e1;
+      padding: 0.65rem 1.1rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.875rem;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-back:hover {
+      background: #f8fafc;
+      color: #0f172a;
+    }
+
+    .hidden-test-sandbox {
+      position: absolute;
+      left: -9999px;
+      top: -9999px;
+      visibility: hidden;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="test-container">
+    <!-- Header -->
+    <div class="test-header">
+      <div class="test-title">
+        <h1>
+          <img src="../assets/icons/check-circle-fill.png" style="width: 28px; height: 28px;" alt="Tests">
+          Suite de Regresión y Validación
+        </h1>
+        <p>Verificación automatizada de directivas de Ventas, UI y teclado para cambios en producción.</p>
+      </div>
+
+      <div style="display: flex; gap: 0.75rem;">
+        <a href="../ventas/index.html" class="btn-back">
+          <img src="../assets/icons/caret-left-fill.png" style="width: 14px; height: 14px;" alt="">
+          Volver a Ventas
+        </a>
+        <button id="btnRunTests" class="btn-run" onclick="ejecutarTodasLasPruebas()">
+          <span>▶</span>
+          Ejecutar Suite Completa
+        </button>
+      </div>
+    </div>
+
+    <!-- Metricas Resumen -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+      <div class="test-metrics">
+        <div class="metric-badge">
+          <div id="metricTotal" class="metric-val">0</div>
+          <div class="metric-label">Total</div>
+        </div>
+        <div class="metric-badge metric-passed">
+          <div id="metricPassed" class="metric-val">0</div>
+          <div class="metric-label">Pasados</div>
+        </div>
+        <div class="metric-badge metric-failed">
+          <div id="metricFailed" class="metric-val">0</div>
+          <div class="metric-label">Fallados</div>
+        </div>
+        <div class="metric-badge">
+          <div id="metricTime" class="metric-val">0ms</div>
+          <div class="metric-label">Tiempo</div>
+        </div>
+      </div>
+
+      <div id="globalStatusBadge" class="status-badge" style="display: none;"></div>
+    </div>
+
+    <!-- Contenedor dinámico de suites -->
+    <div id="testSuitesContainer">
+      <!-- Se inyecta por JS -->
+    </div>
+  </div>
+
+  <!-- Sandbox invisible para montar elementos DOM durante los tests -->
+  <div id="testSandbox" class="hidden-test-sandbox"></div>
+
+  <!-- Script con la suite de pruebas -->
+  <script src="ventas.test.js?v=2"></script>
+</body>
+</html>

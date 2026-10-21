@@ -1,0 +1,2038 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRM y Clientes — Costa Atlántica</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', 'Poppins', sans-serif;
+      background-color: #f1f5f9; /* Slate 100 */
+      min-height: 100vh;
+      color: #0f172a;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Navbar */
+    .top-navbar {
+      height: 68px;
+      background-color: #ffffff;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+
+    .nav-brand-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .nav-btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #475569;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 0.45rem 0.85rem;
+      border-radius: 8px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      transition: all 0.15s ease;
+    }
+
+    .nav-btn-back:hover {
+      background: #f1f5f9;
+      border-color: #cbd5e1;
+      color: #0f172a;
+    }
+
+    .nav-btn-back img {
+      width: 14px;
+      height: 14px;
+      opacity: 0.75;
+    }
+
+    .nav-logo {
+      height: 38px;
+      width: auto;
+    }
+
+    .nav-center {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+    }
+
+    .nav-title-main {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #0f172a;
+      letter-spacing: -0.01em;
+    }
+
+    .nav-user-right {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .user-pill {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      line-height: 1.15;
+    }
+
+    .user-name {
+      font-size: 0.825rem;
+      font-weight: 600;
+      color: #1e293b;
+    }
+
+    .user-badge {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: #065f46;
+      background: #d1fae5;
+      padding: 2px 7px;
+      border-radius: 9999px;
+      border: 1px solid #a7f3d0;
+    }
+
+    /* Contenedor Central */
+    .sector-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 1.25rem 4rem 1.25rem;
+    }
+
+    /* Chapa Card Clientes (ADN Placas independientes) */
+    .chapa-clients-card {
+      width: 100%;
+      max-width: 440px;
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 2.5rem 2.25rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+      border: 1px solid #e2e8f0;
+      border-top: 4px solid #059669; /* Verde esmeralda */
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .chapa-clients-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px -5px rgba(5, 150, 105, 0.08);
+      border-color: #cbd5e1;
+    }
+
+    /* Ícono Superior Phosphor PNG */
+    .chapa-icon-circle {
+      width: 76px;
+      height: 76px;
+      border-radius: 16px;
+      background-color: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .chapa-icon-circle img {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+    }
+
+    .chapa-title {
+      font-size: 1.85rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 0.35rem;
+      letter-spacing: -0.025em;
+    }
+
+    .chapa-subtitle {
+      font-size: 0.875rem;
+      color: #64748b;
+      margin-bottom: 1.75rem;
+      font-weight: 500;
+    }
+
+    /* Lista de Botones */
+    .chapa-links-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .chapa-link-btn {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      padding: 0.95rem 1.25rem;
+      background-color: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      color: #1e293b;
+      font-size: 1rem;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-align: left;
+    }
+
+    .chapa-link-btn:hover {
+      background-color: #f8fafc;
+      border-color: #059669;
+      color: #047857;
+      transform: translateX(3px);
+    }
+
+    .chapa-link-btn:active {
+      transform: scale(0.99);
+    }
+
+    .chapa-link-icon-ph {
+      width: 22px;
+      height: 22px;
+      margin-right: 0.85rem;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+
+    /* Modales */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .modal-box-wide {
+      background: #ffffff;
+      border-radius: 14px;
+      width: 100%;
+      max-width: 900px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
+      border: 1px solid #e2e8f0;
+      animation: modalFadeIn 0.2s ease-out;
+    }
+
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: scale(0.98); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .modal-header-sober {
+      background: #f8fafc;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 1.25rem 1.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top-left-radius: 14px;
+      border-top-right-radius: 14px;
+    }
+
+    .modal-header-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #0f172a;
+      letter-spacing: -0.01em;
+    }
+
+    .modal-header-subtitle {
+      font-size: 0.825rem;
+      color: #64748b;
+      font-weight: 500;
+      margin-top: 0.15rem;
+    }
+
+    .btn-modal-close {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      background: #ffffff;
+      color: #64748b;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+
+    .btn-modal-close:hover {
+      background: #fee2e2;
+      border-color: #fca5a5;
+      color: #dc2626;
+    }
+
+    .modal-body-pad {
+      padding: 1.75rem;
+    }
+
+    /* Tabla */
+    .clients-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+
+    .clients-table th {
+      background: #f8fafc;
+      color: #475569;
+      font-weight: 600;
+      text-align: left;
+      padding: 0.75rem 1rem;
+      border-bottom: 2px solid #e2e8f0;
+    }
+
+    .th-sortable {
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 0.15s ease, color 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .th-sortable:hover {
+      background-color: #f1f5f9 !important;
+      color: #0f172a !important;
+    }
+
+    .th-sort-content {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .sort-icon {
+      font-size: 0.72rem;
+      color: #94a3b8;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+      transition: color 0.15s ease;
+    }
+
+    .th-sortable.active-asc,
+    .th-sortable.active-desc {
+      color: #047857 !important;
+      background-color: #ecfdf5 !important;
+    }
+
+    .th-sortable.active-asc .sort-icon,
+    .th-sortable.active-desc .sort-icon {
+      color: #047857 !important;
+      font-weight: 800;
+    }
+
+    .clients-table td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #f1f5f9;
+      color: #1e293b;
+    }
+
+    .clients-table tr:hover {
+      background-color: #f8fafc;
+    }
+
+    .badge-status {
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+      text-transform: uppercase;
+    }
+
+    .badge-status.activo { background: #d1fae5; color: #065f46; }
+    .badge-status.inactivo { background: #fee2e2; color: #991b1b; }
+
+    .badge-destacado {
+      background: #fef3c7;
+      color: #92400e;
+      border: 1px solid #fde68a;
+      font-size: 0.725rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Estilos del Panel CRM y Fidelización */
+    .crm-kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .crm-kpi-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      transition: all 0.15s ease;
+    }
+
+    .crm-kpi-card:hover {
+      background: #f1f5f9;
+      border-color: #cbd5e1;
+    }
+
+    .crm-kpi-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .crm-kpi-icon img {
+      width: 22px;
+      height: 22px;
+      object-fit: contain;
+    }
+
+    .crm-kpi-val {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1.1;
+    }
+
+    .crm-kpi-lbl {
+      font-size: 0.775rem;
+      color: #64748b;
+      font-weight: 600;
+      margin-top: 0.2rem;
+    }
+
+    .crm-tabs-bar {
+      display: flex;
+      gap: 0.5rem;
+      background: #f1f5f9;
+      padding: 0.35rem;
+      border-radius: 10px;
+      margin-bottom: 1.25rem;
+      border: 1px solid #e2e8f0;
+    }
+
+    .crm-tab-btn {
+      flex: 1;
+      padding: 0.65rem 1rem;
+      border-radius: 8px;
+      border: none;
+      background: transparent;
+      color: #64748b;
+      font-weight: 600;
+      font-size: 0.875rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: all 0.15s ease;
+    }
+
+    .crm-tab-btn.active {
+      background: #ffffff;
+      color: #0f172a;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      font-weight: 700;
+    }
+
+    .crm-tab-badge {
+      font-size: 0.7rem;
+      padding: 2px 7px;
+      border-radius: 9999px;
+      background: #e2e8f0;
+      color: #475569;
+    }
+
+    .crm-tab-btn.active .crm-tab-badge {
+      background: #059669;
+      color: #ffffff;
+    }
+
+    .btn-wa-action {
+      background: #ecfdf5;
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+      padding: 0.4rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.775rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .btn-wa-action:hover {
+      background: #d1fae5;
+      border-color: #6ee7b7;
+      color: #047857;
+      box-shadow: 0 1px 3px rgba(6, 95, 70, 0.1);
+    }
+
+    /* Acciones de Fidelización CRM: Oferta del Mes y Felicitación del Día */
+    .crm-acciones-cumple {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-crm-oferta-mes {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0.4rem 0.75rem;
+      border-radius: 8px;
+      font-size: 0.775rem;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: #fffbeb;
+      color: #b45309;
+      border: 1px solid #fde68a;
+    }
+
+    .btn-crm-oferta-mes:hover:not(.inutilizado) {
+      background: #fef3c7;
+      border-color: #f59e0b;
+      color: #92400e;
+      box-shadow: 0 1px 3px rgba(245, 158, 11, 0.2);
+      transform: translateY(-1px);
+    }
+
+    /* Icono / Botón INUTILIZADO con menos brillo una vez avisado, pero REVERSIBLE al pulsar */
+    .btn-crm-oferta-mes.inutilizado {
+      opacity: 0.38 !important;
+      filter: grayscale(85%) !important;
+      cursor: pointer !important;
+      background: #f1f5f9 !important;
+      color: #64748b !important;
+      border: 1px solid #cbd5e1 !important;
+      box-shadow: none !important;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .btn-crm-oferta-mes.inutilizado:hover {
+      opacity: 0.92 !important;
+      filter: grayscale(0%) !important;
+      background: #fef2f2 !important;
+      color: #b91c1c !important;
+      border-color: #fca5a5 !important;
+      transform: translateY(-1px);
+    }
+
+    .btn-crm-felicitar-dia {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0.4rem 0.75rem;
+      border-radius: 8px;
+      font-size: 0.775rem;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: #fdf2f8;
+      color: #be185d;
+      border: 1px solid #fbcfe8;
+    }
+
+    .btn-crm-felicitar-dia:hover:not(.inutilizado):not(.desactivado) {
+      background: #fce7f3;
+      border-color: #ec4899;
+      color: #9d174d;
+      box-shadow: 0 1px 3px rgba(236, 72, 153, 0.2);
+      transform: translateY(-1px);
+    }
+
+    .btn-crm-felicitar-dia.inutilizado {
+      opacity: 0.38 !important;
+      filter: grayscale(85%) !important;
+      cursor: pointer !important;
+      background: #f1f5f9 !important;
+      color: #64748b !important;
+      border: 1px solid #cbd5e1 !important;
+      box-shadow: none !important;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .btn-crm-felicitar-dia.inutilizado:hover {
+      opacity: 0.92 !important;
+      filter: grayscale(0%) !important;
+      background: #fef2f2 !important;
+      color: #b91c1c !important;
+      border-color: #fca5a5 !important;
+      transform: translateY(-1px);
+    }
+
+    .btn-crm-felicitar-dia.desactivado {
+      opacity: 0.32 !important;
+      filter: grayscale(100%) !important;
+      cursor: not-allowed !important;
+      background: #f8fafc !important;
+      color: #94a3b8 !important;
+      border-color: #e2e8f0 !important;
+      box-shadow: none !important;
+      transform: none !important;
+      pointer-events: none;
+    }
+
+    /* Formulario */
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group-item label {
+      display: block;
+      font-size: 0.825rem;
+      font-weight: 600;
+      color: #334155;
+      margin-bottom: 0.35rem;
+    }
+
+    .form-input-control {
+      width: 100%;
+      padding: 0.65rem 0.85rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      outline: none;
+      background: #ffffff;
+      transition: all 0.15s;
+    }
+
+    .form-input-control:focus {
+      border-color: #059669;
+      box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.12);
+    }
+
+    .btn-submit-action {
+      background: #059669;
+      color: #ffffff;
+      font-size: 0.925rem;
+      font-weight: 600;
+      padding: 0.75rem 1.75rem;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-submit-action:hover {
+      background: #047857;
+      box-shadow: 0 2px 6px rgba(4, 120, 87, 0.2);
+    }
+
+    .btn-cancel-action {
+      background: #f8fafc;
+      color: #475569;
+      font-size: 0.925rem;
+      font-weight: 600;
+      padding: 0.75rem 1.25rem;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      cursor: pointer;
+    }
+
+    .btn-cancel-action:hover {
+      background: #f1f5f9;
+      color: #0f172a;
+    }
+
+    .switch-container {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      margin-top: 0.5rem;
+    }
+
+    /* Toasts de Feedback */
+    .toast-container {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .toast-item {
+      background: #0f172a;
+      color: #ffffff;
+      padding: 0.85rem 1.25rem;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      animation: slideInRight 0.25s ease-out;
+    }
+
+    .toast-item.success {
+      background: #065f46;
+      border-left: 4px solid #34d399;
+    }
+
+    @keyframes slideInRight {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    @media (max-width: 768px) {
+      .crm-kpi-grid { grid-template-columns: 1fr; }
+      .crm-tabs-bar { flex-direction: column; }
+    }
+
+    @media (max-width: 640px) {
+      .form-grid-2 { grid-template-columns: 1fr; }
+      .chapa-clients-card { padding: 2rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <header class="top-navbar">
+    <div class="nav-brand-left">
+      <a href="../index.html" class="nav-btn-back" title="Volver al Panel Principal">
+        <img src="../assets/icons/arrow-left-fill.png" alt="←">
+        <span>Volver</span>
+      </a>
+      <img src="../styles/images/logo.png" alt="Logo" class="nav-logo" onerror="this.style.display='none'">
+    </div>
+
+    <div class="nav-center">
+      <div class="nav-title-main">Costa Atlántica</div>
+    </div>
+
+    <div class="nav-user-right">
+      <div class="user-pill">
+        <span class="user-name" id="navUserName">Ignacio Vizoso</span>
+        <span class="user-badge">CRM & CLIENTES</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Contenedor Central: Chapa Clientes -->
+  <main class="sector-container">
+    <div class="chapa-clients-card">
+      
+      <!-- Ícono Superior Phosphor PNG -->
+      <div class="chapa-icon-circle">
+        <img src="../assets/icons/users-three-fill.png" alt="Clientes">
+      </div>
+
+      <!-- Título -->
+      <h1 class="chapa-title">Clientes</h1>
+      <p class="chapa-subtitle">Directorio comercial y fidelización</p>
+
+      <!-- 3 OPCIONES: Nuevo Cliente, Directorio, Panel CRM -->
+      <div class="chapa-links-list">
+        <button type="button" class="chapa-link-btn" onclick="abrirModalNuevoCliente()">
+          <img src="../assets/icons/user-plus-fill.png" class="chapa-link-icon-ph" alt="+">
+          <span>Nuevo Cliente</span>
+        </button>
+
+        <button type="button" class="chapa-link-btn" onclick="abrirModalDirectorio()">
+          <img src="../assets/icons/address-book-fill.png" class="chapa-link-icon-ph" alt="Directorio">
+          <span>Directorio de Clientes</span>
+        </button>
+
+        <button type="button" class="chapa-link-btn" onclick="abrirModalCRM()" style="border-left: 3px solid #059669; background: #fafdfc;">
+          <img src="../assets/icons/star-fill.png" class="chapa-link-icon-ph" alt="CRM">
+          <div style="flex: 1;">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <span>Panel CRM y Fidelización</span>
+              <span class="badge-destacado" style="font-size: 0.65rem;">Top & Cumpleaños</span>
+            </div>
+            <div style="font-size: 0.75rem; color: #64748b; font-weight: 400; margin-top: 2px;">
+              Cumpleaños del mes y clientes destacados
+            </div>
+          </div>
+        </button>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- MODAL CRM Y FIDELIZACIÓN (CUMPLEAÑOS Y CLIENTES DESTACADOS) -->
+  <div id="modalCRM" class="modal-overlay">
+    <div class="modal-box-wide">
+      <div class="modal-header-sober">
+        <div>
+          <h2 class="modal-header-title">Panel CRM y Fidelización</h2>
+          <p class="modal-header-subtitle">Cumpleaños del mes actual y ranking de clientes con compras frecuentes</p>
+        </div>
+        <button class="btn-modal-close" onclick="cerrarModalCRM()">✕</button>
+      </div>
+
+      <div class="modal-body-pad">
+        <!-- Tarjetas de Métricas KPI -->
+        <div class="crm-kpi-grid">
+          <div class="crm-kpi-card">
+            <div class="crm-kpi-icon" style="background: #fdf2f8; color: #be185d;">
+              <img src="../assets/icons/cake-fill.png" alt="Cumple">
+            </div>
+            <div>
+              <div class="crm-kpi-val" id="crmKpiCumple">0</div>
+              <div class="crm-kpi-lbl">Cumpleaños este Mes</div>
+            </div>
+          </div>
+
+          <div class="crm-kpi-card">
+            <div class="crm-kpi-icon" style="background: #ecfdf5; color: #047857;">
+              <img src="../assets/icons/shopping-bag-fill.png" alt="Ventas">
+            </div>
+            <div>
+              <div class="crm-kpi-val" id="crmKpiComprasMes">0</div>
+              <div class="crm-kpi-lbl">Compras Registradas (Mes)</div>
+            </div>
+          </div>
+
+          <div class="crm-kpi-card">
+            <div class="crm-kpi-icon" style="background: #fffbeb; color: #b45309;">
+              <img src="../assets/icons/star-fill.png" alt="Destacados">
+            </div>
+            <div>
+              <div class="crm-kpi-val" id="crmKpiDestacados">0</div>
+              <div class="crm-kpi-lbl">Clientes Destacados (≥ 2 compras)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Barra de Pestañas Segmentadas -->
+        <div class="crm-tabs-bar">
+          <button type="button" id="tabBtnCumple" class="crm-tab-btn active" onclick="cambiarTabCRM('cumple')">
+            <img src="../assets/icons/cake-fill.png" style="width: 16px; height: 16px;" alt="">
+            <span>🎂 Cumpleaños del Mes Actual</span>
+            <span class="crm-tab-badge" id="crmBadgeCumpleCount">0</span>
+          </button>
+          <button type="button" id="tabBtnTop" class="crm-tab-btn" onclick="cambiarTabCRM('top')">
+            <img src="../assets/icons/star-fill.png" style="width: 16px; height: 16px;" alt="">
+            <span>⭐ Clientes que más compran (Destacados)</span>
+            <span class="crm-tab-badge" id="crmBadgeTopCount">0</span>
+          </button>
+        </div>
+
+        <!-- VISTA 1: CUMPLEAÑOS DEL MES -->
+        <div id="crmViewCumple">
+          <div style="margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+            <div style="font-size: 0.85rem; color: #475569; font-weight: 600;">
+              Mostrando cumpleañeros de: <span id="crmMesActualNombre" style="color: #047857; font-weight: 700;">Octubre</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <label for="crmMesSelect" style="font-size: 0.8rem; font-weight: 600; color: #64748b;">Filtrar otro mes:</label>
+              <select id="crmMesSelect" class="form-input-control" style="width: auto; padding: 0.35rem 0.75rem; font-size: 0.85rem;" onchange="renderCRMCumpleanos(parseInt(this.value))">
+                <option value="1">Enero</option>
+                <option value="2">Febrero</option>
+                <option value="3">Marzo</option>
+                <option value="4">Abril</option>
+                <option value="5">Mayo</option>
+                <option value="6">Junio</option>
+                <option value="7">Julio</option>
+                <option value="8">Agosto</option>
+                <option value="9">Septiembre</option>
+                <option value="10">Octubre</option>
+                <option value="11">Noviembre</option>
+                <option value="12">Diciembre</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="overflow-x: auto;">
+            <table class="clients-table">
+              <thead>
+                <tr>
+                  <th>Cliente</th>
+                  <th>DNI / CUIT</th>
+                  <th>Fecha de Cumpleaños</th>
+                  <th>Teléfono</th>
+                  <th style="text-align: right; min-width: 250px;">Acciones de Fidelización</th>
+                </tr>
+              </thead>
+              <tbody id="crmCumpleTableBody">
+                <!-- Se inyecta dinámicamente -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- VISTA 2: CLIENTES QUE MÁS COMPRAN / DESTACADOS -->
+        <div id="crmViewTop" style="display: none;">
+          <div style="margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.75rem 1rem;">
+            <div style="font-size: 0.85rem; color: #334155;">
+              <strong>Criterio de Fidelización:</strong> Los clientes con <strong>2 o más compras</strong> en el mes se clasifican automáticamente como <span class="badge-destacado" style="font-size: 0.7rem;">⭐ Destacado</span>.
+            </div>
+            <div style="font-size: 0.8rem; color: #64748b;">
+              Ordenados por volumen mensual y facturación
+            </div>
+          </div>
+
+          <div style="overflow-x: auto;">
+            <table class="clients-table">
+              <thead>
+                <tr>
+                  <th>Cliente</th>
+                  <th>Compras este Mes</th>
+                  <th>Monto Facturado (Mes)</th>
+                  <th>Historial Total</th>
+                  <th>Categoría CRM</th>
+                  <th style="text-align: right;">Contacto</th>
+                </tr>
+              </thead>
+              <tbody id="crmTopTableBody">
+                <!-- Se inyecta dinámicamente -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: NUEVO CLIENTE -->
+  <div id="modalNuevoCliente" class="modal-overlay">
+    <div class="modal-box-wide">
+      <div class="modal-header-sober">
+        <div>
+          <h2 class="modal-header-title">Nuevo Cliente</h2>
+          <p class="modal-header-subtitle">Registrar ficha de cliente en base de datos</p>
+        </div>
+        <button class="btn-modal-close" onclick="cerrarModalNuevoCliente()">✕</button>
+      </div>
+
+      <div class="modal-body-pad">
+        <form id="formNuevoCliente" onsubmit="guardarClienteForm(event)">
+          <div class="form-grid-2">
+            <div class="form-group-item">
+              <label>Nombre *</label>
+              <input type="text" id="cliNombre" class="form-input-control" placeholder="Ej: Juan" required>
+            </div>
+
+            <div class="form-group-item">
+              <label>Apellido *</label>
+              <input type="text" id="cliApellido" class="form-input-control" placeholder="Ej: Pérez" required>
+            </div>
+
+            <div class="form-group-item">
+              <label>Teléfono *</label>
+              <input type="tel" id="cliTelefono" class="form-input-control" placeholder="Ej: 2235869878" required>
+            </div>
+
+            <div class="form-group-item">
+              <label>DNI / CUIT</label>
+              <input type="text" id="cliDni" class="form-input-control" placeholder="Sin puntos ni guiones">
+            </div>
+
+            <div class="form-group-item">
+              <label>Día de Nacimiento</label>
+              <input type="number" id="cliDiaNac" class="form-input-control" placeholder="1-31" min="1" max="31">
+            </div>
+
+            <div class="form-group-item">
+              <label>Mes de Nacimiento</label>
+              <select id="cliMesNac" class="form-input-control">
+                <option value="">Seleccione mes...</option>
+                <option value="1">Enero</option>
+                <option value="2">Febrero</option>
+                <option value="3">Marzo</option>
+                <option value="4">Abril</option>
+                <option value="5">Mayo</option>
+                <option value="6">Junio</option>
+                <option value="7">Julio</option>
+                <option value="8">Agosto</option>
+                <option value="9">Septiembre</option>
+                <option value="10">Octubre</option>
+                <option value="11">Noviembre</option>
+                <option value="12">Diciembre</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; display: flex; flex-wrap: wrap; gap: 2rem;">
+            <label class="switch-container" style="cursor: pointer;">
+              <input type="checkbox" id="cliPromociones" checked style="width: 16px; height: 16px; accent-color: #059669;">
+              <span style="font-size: 0.85rem; font-weight: 600; color: #334155;">Acepta Notificaciones por WhatsApp</span>
+            </label>
+            <label class="switch-container" style="cursor: pointer;">
+              <input type="checkbox" id="cliEstado" checked style="width: 16px; height: 16px; accent-color: #059669;">
+              <span style="font-size: 0.85rem; font-weight: 600; color: #334155;">Cliente Activo</span>
+            </label>
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+            <button type="button" class="btn-cancel-action" onclick="cerrarModalNuevoCliente()">Cancelar</button>
+            <button type="submit" class="btn-submit-action">
+              <img src="../assets/icons/check-circle-fill.png" style="width: 16px; height: 16px; filter: brightness(0) invert(1);" alt="">
+              <span>Guardar Cliente</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: DIRECTORIO DE CLIENTES -->
+  <div id="modalDirectorio" class="modal-overlay">
+    <div class="modal-box-wide">
+      <div class="modal-header-sober">
+        <div>
+          <h2 class="modal-header-title">Directorio de Clientes</h2>
+          <p class="modal-header-subtitle">Base de datos unificada de clientes registrados</p>
+        </div>
+        <button class="btn-modal-close" onclick="cerrarModalDirectorio()">✕</button>
+      </div>
+
+      <div class="modal-body-pad">
+        <div style="margin-bottom: 1.25rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;">
+          <input type="text" id="filtroDirectorio" class="form-input-control" placeholder="Buscar por nombre, apellido, DNI o teléfono..." oninput="filtrarDirectorio()" style="max-width: 400px;">
+          <button type="button" class="btn-submit-action" onclick="cerrarModalDirectorio(); abrirModalNuevoCliente();" style="padding: 0.55rem 1rem; font-size: 0.85rem;">
+            <img src="../assets/icons/user-plus-fill.png" style="width: 14px; height: 14px; filter: brightness(0) invert(1);" alt="">
+            <span>Nuevo Cliente</span>
+          </button>
+        </div>
+
+        <div style="overflow-x: auto;">
+          <table class="clients-table">
+            <thead>
+              <tr>
+                <th id="th-dir-id" class="th-sortable" onclick="ordenarDirectorio('id')" title="Haga clic para ordenar por ID">
+                  <div class="th-sort-content"><span>ID</span><span class="sort-icon" id="sort-icon-dir-id">↕</span></div>
+                </th>
+                <th id="th-dir-nombre" class="th-sortable" onclick="ordenarDirectorio('nombre')" title="Haga clic para ordenar por Nombre">
+                  <div class="th-sort-content"><span>Nombre</span><span class="sort-icon" id="sort-icon-dir-nombre">↕</span></div>
+                </th>
+                <th id="th-dir-apellido" class="th-sortable" onclick="ordenarDirectorio('apellido')" title="Haga clic para ordenar por Apellido">
+                  <div class="th-sort-content"><span>Apellido</span><span class="sort-icon" id="sort-icon-dir-apellido">↕</span></div>
+                </th>
+                <th id="th-dir-telefono" class="th-sortable" onclick="ordenarDirectorio('telefono')" title="Haga clic para ordenar por Teléfono">
+                  <div class="th-sort-content"><span>Teléfono</span><span class="sort-icon" id="sort-icon-dir-telefono">↕</span></div>
+                </th>
+                <th id="th-dir-dni" class="th-sortable" onclick="ordenarDirectorio('dni')" title="Haga clic para ordenar por DNI / CUIT">
+                  <div class="th-sort-content"><span>DNI / CUIT</span><span class="sort-icon" id="sort-icon-dir-dni">↕</span></div>
+                </th>
+                <th id="th-dir-cumple" class="th-sortable" onclick="ordenarDirectorio('cumple')" title="Haga clic para ordenar por Cumpleaños">
+                  <div class="th-sort-content"><span>Cumpleaños</span><span class="sort-icon" id="sort-icon-dir-cumple">↕</span></div>
+                </th>
+                <th id="th-dir-estado" class="th-sortable" onclick="ordenarDirectorio('estado')" title="Haga clic para ordenar por Estado">
+                  <div class="th-sort-content"><span>Estado</span><span class="sort-icon" id="sort-icon-dir-estado">↕</span></div>
+                </th>
+              </tr>
+            </thead>
+            <tbody id="directorioTableBody">
+              <!-- Renderizado dinámico -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DE CONFIRMACIÓN DE REVERSIÓN CRM (SIN ALERTS NATIVOS) -->
+  <div id="modalConfirmarReversion" class="modal-overlay" style="display: none; align-items: center; justify-content: center; z-index: 10000;">
+    <div class="modal-box-wide" style="max-width: 440px; border-radius: 16px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.25), 0 8px 10px -6px rgba(0, 0, 0, 0.1); background: white; overflow: hidden; border: 1px solid #e2e8f0;">
+      <div style="padding: 1.75rem 1.5rem; text-align: center;">
+        <div style="width: 56px; height: 56px; border-radius: 50%; background: #fef2f2; color: #dc2626; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1rem; border: 1px solid #fee2e2;">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+            <path d="M3 3v5h5"/>
+          </svg>
+        </div>
+        <h3 id="reversionModalTitle" style="font-size: 1.2rem; font-weight: 700; color: #0f172a; margin: 0 0 0.5rem 0;">¿Revertir acción?</h3>
+        <p id="reversionModalMsg" style="font-size: 0.875rem; color: #64748b; line-height: 1.5; margin: 0 0 1.5rem 0;">
+          El estado del botón volverá a estar disponible como si no hubiese sido enviado.
+        </p>
+        <div style="display: flex; gap: 0.75rem; justify-content: center;">
+          <button type="button" class="btn-cancel" onclick="cerrarModalConfirmarReversion()" style="padding: 0.6rem 1.25rem; font-weight: 600; border-radius: 8px; border: 1px solid #cbd5e1; background: white; color: #475569; cursor: pointer; transition: background 0.15s ease;">
+            Cancelar
+          </button>
+          <button type="button" id="btnConfirmarReversionAction" onclick="ejecutarReversionConfirmada()" style="padding: 0.6rem 1.25rem; font-weight: 600; border-radius: 8px; border: none; background: #dc2626; color: white; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 4px rgba(220, 38, 38, 0.25); transition: background 0.15s ease;">
+            <span>Sí, revertir</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenedor para Toast flotantes -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <script>
+    // Inicializar usuario activo
+    let currentUser = JSON.parse(localStorage.getItem('ivi_session_user') || 'null');
+    if (currentUser) {
+      document.getElementById('navUserName').innerText = currentUser.nombre || currentUser.email;
+    }
+
+    // Datos base de clientes
+    let clientesData = JSON.parse(localStorage.getItem('ivi_clientes_data') || 'null');
+    if (!clientesData || !Array.isArray(clientesData) || clientesData.length === 0) {
+      clientesData = [
+        { id: 1, nombre: "José Ignacio", apellido: "Vizoso Martínez", telefono: "2235869878", dni: "95003856", dia_nac: 17, mes_nac: 2, promociones: true, estado: true },
+        { id: 2, nombre: "Paola Adriana", apellido: "Estévez", telefono: "2233012095", dni: "28642892", dia_nac: 13, mes_nac: 1, promociones: true, estado: false },
+        { id: 3, nombre: "Mariana", apellido: "Montenegro", telefono: "2235170307", dni: "32145678", dia_nac: 9, mes_nac: 5, promociones: true, estado: true },
+        { id: 4, nombre: "Florencia", apellido: "Gómez", telefono: "2234123456", dni: "38990112", dia_nac: 22, mes_nac: 10, promociones: true, estado: true },
+        { id: 5, nombre: "Martín", apellido: "López", telefono: "2236987412", dni: "34567890", dia_nac: 15, mes_nac: 10, promociones: true, estado: true },
+        { id: 6, nombre: "Distribuidora San Martín S.A.", apellido: "", telefono: "2235550192", dni: "30-71123456-8", dia_nac: 18, mes_nac: 10, promociones: true, estado: true },
+        { id: 7, nombre: "Ferretería Industrial Del Sur", apellido: "", telefono: "2234991188", dni: "30-68991234-9", dia_nac: 25, mes_nac: 10, promociones: true, estado: true },
+        { id: 8, nombre: "Valentina", apellido: "Ríos", telefono: "2236112233", dni: "41223344", dia_nac: 4, mes_nac: 2, promociones: true, estado: true },
+        { id: 9, nombre: "Carlos", apellido: "Benítez", telefono: "2235445566", dni: "29887766", dia_nac: 12, mes_nac: 3, promociones: true, estado: true }
+      ];
+      localStorage.setItem('ivi_clientes_data', JSON.stringify(clientesData));
+    }
+
+    // Datos base de pedidos para computar ranking CRM y clientes destacados
+    let pedidosData = JSON.parse(localStorage.getItem('ivi_pedidos_data') || 'null');
+    if (!pedidosData || !Array.isArray(pedidosData) || pedidosData.length === 0) {
+      pedidosData = [
+        { id: 'PED-1001', fecha: '16/10/2026', cliente: 'Distribuidora San Martín S.A.', estado: 'PAG', total: 450000.00, items: [] },
+        { id: 'PED-1002', fecha: '17/10/2026', cliente: 'Distribuidora San Martín S.A.', estado: 'PAG', total: 280000.00, items: [] },
+        { id: 'PED-1003', fecha: '15/10/2026', cliente: 'Ferretería Industrial Del Sur', estado: 'PAG', total: 195000.00, items: [] },
+        { id: 'PED-1004', fecha: '18/10/2026', cliente: 'Ferretería Industrial Del Sur', estado: 'PEN', total: 110000.00, items: [] },
+        { id: 'PED-1005', fecha: '14/10/2026', cliente: 'José Ignacio Vizoso Martínez', estado: 'PAG', total: 85000.00, items: [] },
+        { id: 'PED-1006', fecha: '12/10/2026', cliente: 'Mariana Montenegro', estado: 'PAG', total: 64000.00, items: [] },
+        { id: 'PED-1007', fecha: '10/10/2026', cliente: 'Florencia Gómez', estado: 'PAG', total: 42000.00, items: [] }
+      ];
+      localStorage.setItem('ivi_pedidos_data', JSON.stringify(pedidosData));
+    }
+
+    // Helper Toast
+    function showToast(mensaje, tipo = 'success') {
+      const container = document.getElementById('toastContainer');
+      if (!container) return;
+      const toast = document.createElement('div');
+      toast.className = `toast-item ${tipo}`;
+      toast.innerHTML = `
+        <img src="../assets/icons/check-circle-fill.png" style="width: 18px; height: 18px; filter: brightness(0) invert(1);" alt="">
+        <span>${escapeHtml(mensaje)}</span>
+      `;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.transition = 'all 0.3s ease';
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(10px)';
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function formatPesos(monto) {
+      return '$ ' + Number(monto || 0).toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    // =========================================================================
+    // MODAL NUEVO CLIENTE
+    // =========================================================================
+    function abrirModalNuevoCliente() {
+      document.getElementById('modalNuevoCliente').style.display = 'flex';
+      document.getElementById('cliNombre').focus();
+    }
+
+    function cerrarModalNuevoCliente() {
+      document.getElementById('modalNuevoCliente').style.display = 'none';
+      document.getElementById('formNuevoCliente').reset();
+    }
+
+    function guardarClienteForm(e) {
+      e.preventDefault();
+      const nuevoCliente = {
+        id: clientesData.length + 1,
+        nombre: document.getElementById('cliNombre').value.trim(),
+        apellido: document.getElementById('cliApellido').value.trim(),
+        telefono: document.getElementById('cliTelefono').value.trim(),
+        dni: document.getElementById('cliDni').value.trim(),
+        dia_nac: document.getElementById('cliDiaNac').value ? parseInt(document.getElementById('cliDiaNac').value) : null,
+        mes_nac: document.getElementById('cliMesNac').value ? parseInt(document.getElementById('cliMesNac').value) : null,
+        promociones: document.getElementById('cliPromociones').checked,
+        estado: document.getElementById('cliEstado').checked
+      };
+
+      clientesData.unshift(nuevoCliente);
+      localStorage.setItem('ivi_clientes_data', JSON.stringify(clientesData));
+      
+      cerrarModalNuevoCliente();
+      showToast(`Cliente ${nuevoCliente.nombre} ${nuevoCliente.apellido} registrado.`);
+    }
+
+    // =========================================================================
+    // MODAL DIRECTORIO DE CLIENTES
+    // =========================================================================
+    function abrirModalDirectorio() {
+      renderDirectorio();
+      document.getElementById('modalDirectorio').style.display = 'flex';
+    }
+
+    function cerrarModalDirectorio() {
+      document.getElementById('modalDirectorio').style.display = 'none';
+    }
+
+    function escapeJs(str) {
+      if (!str) return '';
+      return String(str).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+    }
+
+    // Persistencia y estado de avisos de cumpleaños CRM
+    function getCrmNotificaciones() {
+      try {
+        return JSON.parse(localStorage.getItem('ivi_crm_notificaciones_cumple')) || { ofertasMes: {}, felicitacionesDia: {} };
+      } catch (e) {
+        return { ofertasMes: {}, felicitacionesDia: {} };
+      }
+    }
+
+    function yaNotificadoOfertaMes(clienteId, mes, anio) {
+      const notifs = getCrmNotificaciones();
+      return !!(notifs.ofertasMes && notifs.ofertasMes[`${clienteId}_${mes}_${anio}`]);
+    }
+
+    function yaFelicitadoDia(clienteId, dia, mes, anio) {
+      const notifs = getCrmNotificaciones();
+      return !!(notifs.felicitacionesDia && notifs.felicitacionesDia[`${clienteId}_${dia}_${mes}_${anio}`]);
+    }
+
+    function marcarOfertaMesEnviada(clienteId, mes, anio) {
+      const notifs = getCrmNotificaciones();
+      if (!notifs.ofertasMes) notifs.ofertasMes = {};
+      notifs.ofertasMes[`${clienteId}_${mes}_${anio}`] = new Date().toISOString();
+      localStorage.setItem('ivi_crm_notificaciones_cumple', JSON.stringify(notifs));
+    }
+
+    function marcarFelicitacionDiaEnviada(clienteId, dia, mes, anio) {
+      const notifs = getCrmNotificaciones();
+      if (!notifs.felicitacionesDia) notifs.felicitacionesDia = {};
+      notifs.felicitacionesDia[`${clienteId}_${dia}_${mes}_${anio}`] = new Date().toISOString();
+      localStorage.setItem('ivi_crm_notificaciones_cumple', JSON.stringify(notifs));
+    }
+
+    function revertirOfertaMes(clienteId, mes, anio) {
+      const notifs = getCrmNotificaciones();
+      const key = `${clienteId}_${mes}_${anio}`;
+      if (notifs.ofertasMes && notifs.ofertasMes[key]) {
+        delete notifs.ofertasMes[key];
+        localStorage.setItem('ivi_crm_notificaciones_cumple', JSON.stringify(notifs));
+      }
+      revertirContactoEnBackend(clienteId, 'oferta_cumple');
+    }
+
+    function revertirFelicitacionDia(clienteId, dia, mes, anio) {
+      const notifs = getCrmNotificaciones();
+      const key = `${clienteId}_${dia}_${mes}_${anio}`;
+      if (notifs.felicitacionesDia && notifs.felicitacionesDia[key]) {
+        delete notifs.felicitacionesDia[key];
+        localStorage.setItem('ivi_crm_notificaciones_cumple', JSON.stringify(notifs));
+      }
+      revertirContactoEnBackend(clienteId, 'saludo_cumple');
+    }
+
+    function revertirContactoEnBackend(clienteId, tipo) {
+      if (!clienteId) return;
+      const apiPath = window.location.pathname.includes('/crm/') || window.location.pathname.includes('/ventas/')
+        ? '../api/contactos_whatsapp.php'
+        : 'api/contactos_whatsapp.php';
+
+      fetch(apiPath, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cliente_id: parseInt(clienteId), tipo: tipo, accion: 'revertir' })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.ok) {
+          console.log(`[CRM DB] Contacto revertido en PostgreSQL (Tipo: ${tipo}, Cliente: ${clienteId})`);
+        }
+      })
+      .catch(err => console.warn('[CRM DB] Modo offline o backend no disponible al revertir:', err));
+    }
+
+    let reversionPendiente = null;
+
+    function abrirModalConfirmarReversion(config) {
+      reversionPendiente = config;
+      const modal = document.getElementById('modalConfirmarReversion');
+      const title = document.getElementById('reversionModalTitle');
+      const msg = document.getElementById('reversionModalMsg');
+      if (!modal || !title || !msg) return;
+
+      title.innerText = config.titulo || '¿Revertir estado?';
+      msg.innerHTML = config.mensaje || '¿Está seguro de revertir esta acción? El botón volverá a su estado previo.';
+      modal.style.display = 'flex';
+    }
+
+    function cerrarModalConfirmarReversion() {
+      reversionPendiente = null;
+      const modal = document.getElementById('modalConfirmarReversion');
+      if (modal) modal.style.display = 'none';
+    }
+
+    function ejecutarReversionConfirmada() {
+      if (!reversionPendiente) return;
+      const { tipo, clienteId, nombre, dia, mes, anio } = reversionPendiente;
+
+      if (tipo === 'oferta') {
+        revertirOfertaMes(clienteId, mes, anio);
+        if (typeof showToast === 'function') {
+          showToast(`Aviso de oferta para ${nombre} revertido con éxito. El botón vuelve a estar disponible.`);
+        }
+      } else if (tipo === 'felicitacion') {
+        revertirFelicitacionDia(clienteId, dia, mes, anio);
+        if (typeof showToast === 'function') {
+          showToast(`Felicitación para ${nombre} revertida con éxito. El botón vuelve a estar disponible.`);
+        }
+      }
+
+      cerrarModalConfirmarReversion();
+      if (typeof renderCRMCumpleanos === 'function') renderCRMCumpleanos(mes);
+      if (typeof renderDirectorio === 'function') renderDirectorio();
+    }
+
+    function confirmarRevertirOfertaMes(clienteId, nombre, mes, anio) {
+      abrirModalConfirmarReversion({
+        tipo: 'oferta',
+        clienteId,
+        nombre,
+        mes,
+        anio,
+        titulo: '¿Revertir Aviso de Oferta?',
+        mensaje: `¿Desea revertir el aviso de oferta de cumpleaños para <strong>${escapeHtml(nombre)}</strong>?<br><br>Volverá al estado inicial <strong>"Avisar Oferta Mes"</strong> para poder enviarse nuevamente si hubo algún error.`
+      });
+    }
+
+    function confirmarRevertirFelicitacionDia(clienteId, nombre, dia, mes, anio) {
+      abrirModalConfirmarReversion({
+        tipo: 'felicitacion',
+        clienteId,
+        nombre,
+        dia,
+        mes,
+        anio,
+        titulo: '¿Revertir Felicitación de Cumpleaños?',
+        mensaje: `¿Desea revertir la felicitación del día para <strong>${escapeHtml(nombre)}</strong>?<br><br>Volverá al estado inicial <strong>"🎂 ¡Felicitar Hoy!"</strong> para poder enviarse nuevamente si hubo algún error.`
+      });
+    }
+
+    function registrarContactoEnBackend(clienteId, tipo) {
+      if (!clienteId) return;
+      const apiPath = window.location.pathname.includes('/crm/') || window.location.pathname.includes('/ventas/')
+        ? '../api/contactos_whatsapp.php'
+        : 'api/contactos_whatsapp.php';
+
+      fetch(apiPath, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cliente_id: parseInt(clienteId), tipo: tipo })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.ok) {
+          console.log(`[CRM DB] Contacto registrado en PostgreSQL (ID: ${data.contacto?.id_contacto_wa || 'OK'}, Tipo: ${tipo})`);
+        }
+      })
+      .catch(err => console.warn('[CRM DB] Modo offline o backend no disponible:', err));
+    }
+
+    function sincronizarContactosDesdeBackend() {
+      const apiPath = window.location.pathname.includes('/crm/') || window.location.pathname.includes('/ventas/')
+        ? '../api/contactos_whatsapp.php'
+        : 'api/contactos_whatsapp.php';
+
+      fetch(apiPath)
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.ok && Array.isArray(data.contactos)) {
+            const notifs = getCrmNotificaciones();
+            let modificado = false;
+            data.contactos.forEach(c => {
+              const fechaObj = new Date(c.fecha_contacto);
+              const mes = fechaObj.getMonth() + 1;
+              const dia = fechaObj.getDate();
+              const anio = fechaObj.getFullYear();
+
+              if (c.tipo === 'oferta_cumple') {
+                const key = `${c.cliente_id}_${mes}_${anio}`;
+                if (!notifs.ofertasMes[key]) {
+                  notifs.ofertasMes[key] = c.fecha_contacto;
+                  modificado = true;
+                }
+              } else if (c.tipo === 'saludo_cumple') {
+                const key = `${c.cliente_id}_${dia}_${mes}_${anio}`;
+                if (!notifs.felicitacionesDia[key]) {
+                  notifs.felicitacionesDia[key] = c.fecha_contacto;
+                  modificado = true;
+                }
+              }
+            });
+            if (modificado) {
+              localStorage.setItem('ivi_crm_notificaciones_cumple', JSON.stringify(notifs));
+              const mesActual = new Date().getMonth() + 1;
+              if (typeof renderCRMCumpleanos === 'function') renderCRMCumpleanos(mesActual);
+              if (typeof renderDirectorio === 'function') renderDirectorio();
+            }
+          }
+        })
+        .catch(err => console.warn('[CRM DB] Sincronización offline'));
+    }
+
+    function generarUrlWhatsApp(telefono, textoMensaje) {
+      const tel = (telefono || '').replace(/\D/g, '');
+      const msg = encodeURIComponent(textoMensaje);
+      const esMovil = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+      return esMovil
+        ? `https://api.whatsapp.com/send?phone=549${tel}&text=${msg}`
+        : `https://web.whatsapp.com/send?phone=549${tel}&text=${msg}`;
+    }
+
+    function enviarOfertaCumpleMes(clienteId, nombre, telefono, mes, anio) {
+      const tel = (telefono || '').replace(/\D/g, '');
+      if (!tel) {
+        showToast(`El cliente ${nombre} no tiene teléfono registrado.`, 'info');
+        return;
+      }
+      marcarOfertaMesEnviada(clienteId, mes, anio);
+      registrarContactoEnBackend(clienteId, 'oferta_cumple');
+      
+      const url = generarUrlWhatsApp(tel, `¡Hola ${nombre}! 🎁 En el mes de tu cumpleaños, desde Costa Atlántica queremos celebrarlo con vos. ¡Tenés un descuento y beneficio especial en tus pedidos durante este mes!`);
+      window.open(url, '_blank');
+      showToast(`Oferta del mes de cumpleaños avisada a ${nombre} y registrada en base de datos.`);
+      renderCRMCumpleanos(mes);
+      renderDirectorio();
+    }
+
+    function enviarFelicitacionDiaCumple(clienteId, nombre, telefono, dia, mes, anio) {
+      const tel = (telefono || '').replace(/\D/g, '');
+      if (!tel) {
+        showToast(`El cliente ${nombre} no tiene teléfono registrado.`, 'info');
+        return;
+      }
+      marcarFelicitacionDiaEnviada(clienteId, dia, mes, anio);
+      registrarContactoEnBackend(clienteId, 'saludo_cumple');
+
+      const url = generarUrlWhatsApp(tel, `¡Feliz cumpleaños ${nombre}! 🎂🎉 Desde Costa Atlántica te deseamos un día extraordinario y lleno de alegrías. ¡Brindamos por vos!`);
+      window.open(url, '_blank');
+      showToast(`Felicitación de cumpleaños enviada a ${nombre} y registrada en base de datos.`);
+      renderCRMCumpleanos(mes);
+      renderDirectorio();
+    }
+
+    function contactarClienteHabitual(clienteId, nombre, telefono) {
+      const tel = (telefono || '').replace(/\D/g, '');
+      if (clienteId) {
+        registrarContactoEnBackend(clienteId, 'habitual');
+      }
+      const url = generarUrlWhatsApp(tel, `¡Hola ${nombre}! Desde Costa Atlántica queremos agradecerte por ser un cliente destacado de este mes. ¡Tenemos promociones y beneficios especiales para tu próximo pedido!`);
+      window.open(url, '_blank');
+      showToast(`Contacto de fidelización enviado a ${nombre} y registrado en base de datos.`);
+    }
+
+    let directorioSort = {
+      columna: 'id',
+      orden: 'asc'
+    };
+
+    function ordenarDirectorio(columna) {
+      if (directorioSort.columna === columna) {
+        directorioSort.orden = (directorioSort.orden === 'asc') ? 'desc' : 'asc';
+      } else {
+        directorioSort.columna = columna;
+        directorioSort.orden = 'asc';
+      }
+      filtrarDirectorio();
+    }
+
+    function actualizarIndicadoresOrdenDirectorio() {
+      const columnas = ['id', 'nombre', 'apellido', 'telefono', 'dni', 'cumple', 'estado'];
+      columnas.forEach(col => {
+        const th = document.getElementById(`th-dir-${col}`);
+        const icon = document.getElementById(`sort-icon-dir-${col}`);
+        if (!th || !icon) return;
+        if (directorioSort.columna === col) {
+          th.classList.add(directorioSort.orden === 'asc' ? 'active-asc' : 'active-desc');
+          th.classList.remove(directorioSort.orden === 'asc' ? 'active-desc' : 'active-asc');
+          icon.textContent = (directorioSort.orden === 'asc') ? '▲' : '▼';
+        } else {
+          th.classList.remove('active-asc', 'active-desc');
+          icon.textContent = '↕';
+        }
+      });
+    }
+
+    function compararClientes(a, b, columna, orden) {
+      let res = 0;
+      if (columna === 'id') {
+        res = (Number(a.id) || 0) - (Number(b.id) || 0);
+      } else if (columna === 'nombre') {
+        const nA = (a.nombre || '').toLowerCase();
+        const nB = (b.nombre || '').toLowerCase();
+        res = nA.localeCompare(nB, 'es', { numeric: true });
+      } else if (columna === 'apellido') {
+        const aA = (a.apellido || '').toLowerCase();
+        const aB = (b.apellido || '').toLowerCase();
+        res = aA.localeCompare(aB, 'es', { numeric: true });
+      } else if (columna === 'telefono') {
+        const tA = (a.telefono || '').replace(/\D/g, '');
+        const tB = (b.telefono || '').replace(/\D/g, '');
+        res = tA.localeCompare(tB);
+      } else if (columna === 'dni') {
+        const dA = parseInt(String(a.dni || '').replace(/\D/g, ''), 10) || 0;
+        const dB = parseInt(String(b.dni || '').replace(/\D/g, ''), 10) || 0;
+        res = dA - dB;
+      } else if (columna === 'cumple') {
+        const cA = (a.mes_nac && a.dia_nac) ? (Number(a.mes_nac) * 100 + Number(a.dia_nac)) : 99999;
+        const cB = (b.mes_nac && b.dia_nac) ? (Number(b.mes_nac) * 100 + Number(b.dia_nac)) : 99999;
+        res = cA - cB;
+      } else if (columna === 'estado') {
+        const eA = (a.estado !== false) ? 1 : 0;
+        const eB = (b.estado !== false) ? 1 : 0;
+        res = eB - eA;
+      }
+      return orden === 'asc' ? res : -res;
+    }
+
+    function renderDirectorio(lista = clientesData) {
+      const tbody = document.getElementById('directorioTableBody');
+      if (!tbody) return;
+      actualizarIndicadoresOrdenDirectorio();
+
+      const meses = ["", "Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+      const diaActual = new Date().getDate();
+      const mesActual = new Date().getMonth() + 1;
+      const anioActual = new Date().getFullYear();
+      
+      const itemsOrdenados = [...lista].sort((a, b) => compararClientes(a, b, directorioSort.columna, directorioSort.orden));
+
+      tbody.innerHTML = itemsOrdenados.map(c => {
+        let cumpleInfo = '-';
+        if (c.dia_nac && c.mes_nac) {
+          const cumpleEsteMes = (parseInt(c.mes_nac) === mesActual);
+          const esHoy = (cumpleEsteMes && parseInt(c.dia_nac) === diaActual);
+          const avisadoOferta = cumpleEsteMes && yaNotificadoOfertaMes(c.id, mesActual, anioActual);
+          
+          let badgeMes = '';
+          if (cumpleEsteMes) {
+            badgeMes = `
+              <span title="${avisadoOferta ? 'Oferta de cumpleaños avisada por WhatsApp (Inutilizado)' : 'Cumple este mes - Oferta disponible'}" style="margin-left: 6px; display: inline-flex; align-items: center; gap: 3px; font-size: 0.7rem; font-weight: 700; padding: 2px 6px; border-radius: 6px; ${avisadoOferta ? 'opacity: 0.38; filter: grayscale(85%); background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1;' : 'background: #fffbeb; color: #b45309; border: 1px solid #fde68a;'}">
+                <img src="../assets/icons/gift-fill.png" style="width: 11px; height: 11px;" alt="">
+                <span>${avisadoOferta ? 'Avisado ✓' : 'Oferta Mes'}</span>
+              </span>
+            `;
+          }
+          let badgeHoy = '';
+          if (esHoy) {
+            badgeHoy = `
+              <span title="¡Hoy es su cumpleaños exacto!" style="margin-left: 4px; display: inline-flex; align-items: center; gap: 3px; font-size: 0.7rem; font-weight: 700; padding: 2px 6px; border-radius: 6px; background: #fdf2f8; color: #be185d; border: 1px solid #fbcfe8;">
+                <img src="../assets/icons/cake-fill.png" style="width: 11px; height: 11px;" alt="">
+                <span>¡Hoy!</span>
+              </span>
+            `;
+          }
+          cumpleInfo = `
+            <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 4px;">
+              <span>${c.dia_nac} de ${meses[c.mes_nac]}</span>
+              ${badgeMes}
+              ${badgeHoy}
+            </div>
+          `;
+        }
+
+        return `
+          <tr>
+            <td style="font-weight: 700; color: #047857;">#${c.id}</td>
+            <td style="font-weight: 600;">${escapeHtml(c.nombre)}</td>
+            <td style="font-weight: 600;">${escapeHtml(c.apellido || '')}</td>
+            <td>${escapeHtml(c.telefono || '-')}</td>
+            <td style="color: #64748b;">${escapeHtml(c.dni || '-')}</td>
+            <td>${cumpleInfo}</td>
+            <td>
+              <span class="badge-status ${c.estado ? 'activo' : 'inactivo'}">
+                ${c.estado ? 'Activo' : 'Inactivo'}
+              </span>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function filtrarDirectorio() {
+      const q = (document.getElementById('filtroDirectorio')?.value || '').toLowerCase().trim();
+      const filtrados = clientesData.filter(c => 
+        (c.nombre && c.nombre.toLowerCase().includes(q)) || 
+        (c.apellido && c.apellido.toLowerCase().includes(q)) ||
+        (c.dni && String(c.dni).includes(q)) ||
+        (c.telefono && String(c.telefono).includes(q))
+      );
+      renderDirectorio(filtrados);
+    }
+
+    // =========================================================================
+    // PANEL CRM Y FIDELIZACIÓN (CUMPLEAÑOS Y CLIENTES DESTACADOS)
+    // =========================================================================
+    let crmTabActiva = 'cumple';
+
+    function abrirModalCRM() {
+      asegurarDatosCumpleanos();
+      sincronizarContactosDesdeBackend();
+      
+      const mesActual = new Date().getMonth() + 1;
+      const selectMes = document.getElementById('crmMesSelect');
+      if (selectMes) selectMes.value = mesActual;
+      
+      const mesesNombres = ["", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+      const elNombreMes = document.getElementById('crmMesActualNombre');
+      if (elNombreMes) elNombreMes.innerText = mesesNombres[mesActual] || 'Mes Actual';
+
+      renderCRMCumpleanos(mesActual);
+      renderCRMTopClientes();
+      actualizarMetricasCRM(mesActual);
+
+      document.getElementById('modalCRM').style.display = 'flex';
+    }
+
+    function cerrarModalCRM() {
+      document.getElementById('modalCRM').style.display = 'none';
+    }
+
+    function cambiarTabCRM(tab) {
+      crmTabActiva = tab;
+      const btnCumple = document.getElementById('tabBtnCumple');
+      const btnTop = document.getElementById('tabBtnTop');
+      const viewCumple = document.getElementById('crmViewCumple');
+      const viewTop = document.getElementById('crmViewTop');
+
+      if (tab === 'cumple') {
+        btnCumple.classList.add('active');
+        btnTop.classList.remove('active');
+        viewCumple.style.display = 'block';
+        viewTop.style.display = 'none';
+      } else {
+        btnTop.classList.add('active');
+        btnCumple.classList.remove('active');
+        viewTop.style.display = 'block';
+        viewCumple.style.display = 'none';
+      }
+    }
+
+    function asegurarDatosCumpleanos() {
+      const fechasDefault = {
+        1: { dia: 17, mes: 2 },
+        2: { dia: 13, mes: 1 },
+        3: { dia: 9, mes: 5 },
+        4: { dia: 22, mes: 10 },
+        5: { dia: 15, mes: 10 },
+        6: { dia: 18, mes: 10 },
+        7: { dia: 25, mes: 10 },
+        8: { dia: 4, mes: 2 },
+        9: { dia: 12, mes: 3 }
+      };
+
+      let modificado = false;
+      clientesData.forEach(c => {
+        if ((!c.mes_nac || !c.dia_nac) && fechasDefault[c.id]) {
+          c.dia_nac = fechasDefault[c.id].dia;
+          c.mes_nac = fechasDefault[c.id].mes;
+          modificado = true;
+        }
+      });
+      if (modificado) {
+        localStorage.setItem('ivi_clientes_data', JSON.stringify(clientesData));
+      }
+    }
+
+    function parseFechaPedido(fechaStr) {
+      if (!fechaStr) return { mes: null, anio: null };
+      if (fechaStr.includes('/')) {
+        const parts = fechaStr.split('/');
+        if (parts.length >= 3) {
+          return { mes: parseInt(parts[1], 10), anio: parseInt(parts[2], 10) };
+        }
+      } else if (fechaStr.includes('-')) {
+        const parts = fechaStr.split('-');
+        if (parts.length >= 3) {
+          return { mes: parseInt(parts[1], 10), anio: parseInt(parts[0], 10) };
+        }
+      }
+      const d = new Date(fechaStr);
+      if (!isNaN(d.getTime())) {
+        return { mes: d.getMonth() + 1, anio: d.getFullYear() };
+      }
+      return { mes: null, anio: null };
+    }
+
+    function renderCRMCumpleanos(mesSeleccionado) {
+      const mes = mesSeleccionado || (new Date().getMonth() + 1);
+      const diaActual = new Date().getDate();
+      const mesActual = new Date().getMonth() + 1;
+      const anioActual = new Date().getFullYear();
+      const mesesNombres = ["", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+
+      const elNombreMes = document.getElementById('crmMesActualNombre');
+      if (elNombreMes) elNombreMes.innerText = mesesNombres[mes] || '';
+
+      const cumpleaneros = clientesData.filter(c => parseInt(c.mes_nac) === parseInt(mes));
+      cumpleaneros.sort((a, b) => (a.dia_nac || 0) - (b.dia_nac || 0));
+
+      const tbody = document.getElementById('crmCumpleTableBody');
+      const badgeCount = document.getElementById('crmBadgeCumpleCount');
+      if (badgeCount) badgeCount.innerText = cumpleaneros.length;
+
+      if (cumpleaneros.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="5" style="text-align: center; padding: 2.5rem 1rem; color: #64748b;">
+              <img src="../assets/icons/cake-fill.png" style="width: 36px; height: 36px; opacity: 0.35; margin-bottom: 0.5rem;" alt=""><br>
+              No hay clientes registrados con fecha de cumpleaños en <strong>${mesesNombres[mes]}</strong>.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = cumpleaneros.map(c => {
+        const esHoy = (parseInt(c.mes_nac) === mesActual && parseInt(c.dia_nac) === diaActual);
+        const diaBadge = esHoy
+          ? `<span class="badge-status" style="background:#dcfce7; color:#15803d; border:1px solid #86efac; margin-left: 6px;">🎉 ¡Es hoy!</span>`
+          : '';
+        const telefonoLimpio = (c.telefono || '').replace(/\D/g, '');
+
+        const avisadoOferta = yaNotificadoOfertaMes(c.id, mes, anioActual);
+        const felicitadoHoy = yaFelicitadoDia(c.id, c.dia_nac, mes, anioActual);
+
+        // 1. Botón Oferta del Mes (Icono Regalo): Activo hasta que se avise por WhatsApp, luego queda inutilizado con menos brillo
+        let btnOfertaHtml = '';
+        if (!telefonoLimpio) {
+          btnOfertaHtml = `<span style="font-size: 0.75rem; color: #94a3b8;">Sin teléfono</span>`;
+        } else if (avisadoOferta) {
+          btnOfertaHtml = `
+            <button type="button" class="btn-crm-oferta-mes inutilizado" onclick="confirmarRevertirOfertaMes(${c.id}, '${escapeJs(c.nombre)}', ${mes}, ${anioActual})" title="Oferta ya avisada. Haga clic para revertir al estado inicial si hubo un error.">
+              <img src="../assets/icons/gift-fill.png" style="width: 14px; height: 14px;" alt="Oferta">
+              <span>Oferta avisada ✓</span>
+            </button>
+          `;
+        } else {
+          btnOfertaHtml = `
+            <button type="button" class="btn-crm-oferta-mes" onclick="enviarOfertaCumpleMes(${c.id}, '${escapeJs(c.nombre)}', '${c.telefono}', ${mes}, ${anioActual})" title="Avisar oferta del mes de cumpleaños por WhatsApp">
+              <img src="../assets/icons/gift-fill.png" style="width: 14px; height: 14px;" alt="Oferta">
+              <span>Avisar Oferta Mes</span>
+            </button>
+          `;
+        }
+
+        // 2. Botón Felicitación en el Día Exacto (Icono Torta): Solo se activa el mismo día del cumpleaños
+        let btnDiaHtml = '';
+        if (esHoy) {
+          if (!telefonoLimpio) {
+            btnDiaHtml = '';
+          } else if (felicitadoHoy) {
+            btnDiaHtml = `
+              <button type="button" class="btn-crm-felicitar-dia inutilizado" onclick="confirmarRevertirFelicitacionDia(${c.id}, '${escapeJs(c.nombre)}', ${c.dia_nac}, ${mes}, ${anioActual})" title="Felicitación ya enviada. Haga clic para revertir al estado inicial si hubo un error.">
+                <img src="../assets/icons/cake-fill.png" style="width: 14px; height: 14px;" alt="Hoy">
+                <span>¡Felicitado hoy! ✓</span>
+              </button>
+            `;
+          } else {
+            btnDiaHtml = `
+              <button type="button" class="btn-crm-felicitar-dia" onclick="enviarFelicitacionDiaCumple(${c.id}, '${escapeJs(c.nombre)}', '${c.telefono}', ${c.dia_nac}, ${mes}, ${anioActual})" title="¡Hoy es su cumpleaños! Enviar felicitación por WhatsApp">
+                <img src="../assets/icons/cake-fill.png" style="width: 14px; height: 14px;" alt="Hoy">
+                <span>🎂 ¡Felicitar Hoy!</span>
+              </button>
+            `;
+          }
+        } else {
+          btnDiaHtml = `
+            <button type="button" class="btn-crm-felicitar-dia desactivado" title="Se habilitará el ${c.dia_nac || '1'} de ${mesesNombres[c.mes_nac]} para felicitar en su día exacto">
+              <img src="../assets/icons/cake-fill.png" style="width: 13px; height: 13px;" alt="Día">
+              <span>Día exacto (${c.dia_nac || '1'})</span>
+            </button>
+          `;
+        }
+
+        return `
+          <tr>
+            <td>
+              <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div style="width: 34px; height: 34px; border-radius: 50%; background: #fdf2f8; color: #be185d; border: 1px solid #fbcfe8; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8rem;">
+                  ${escapeHtml((c.nombre || 'C').charAt(0).toUpperCase())}
+                </div>
+                <div>
+                  <div style="font-weight: 700; color: #0f172a;">${escapeHtml(c.nombre)} ${escapeHtml(c.apellido)}</div>
+                  <div style="font-size: 0.75rem; color: #64748b;">ID #${c.id}</div>
+                </div>
+              </div>
+            </td>
+            <td style="color: #64748b; font-size: 0.85rem;">${escapeHtml(c.dni || '-')}</td>
+            <td>
+              <span style="font-weight: 600; color: #1e293b;">${c.dia_nac || '1'} de ${mesesNombres[c.mes_nac]}</span>
+              ${diaBadge}
+            </td>
+            <td style="color: #334155; font-weight: 500;">
+              ${escapeHtml(c.telefono || '-')}
+            </td>
+            <td style="text-align: right;">
+              <div class="crm-acciones-cumple">
+                ${btnOfertaHtml}
+                ${btnDiaHtml}
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderCRMTopClientes() {
+      const mesActual = new Date().getMonth() + 1;
+      const pedidos = Array.isArray(pedidosData) ? pedidosData : [];
+
+      const resumenClientes = {};
+
+      clientesData.forEach(c => {
+        const nombreCompleto = `${c.nombre} ${c.apellido}`.trim();
+        resumenClientes[nombreCompleto] = {
+          clienteId: c.id,
+          nombre: nombreCompleto,
+          telefono: c.telefono,
+          comprasMes: 0,
+          montoMes: 0,
+          comprasTotal: 0,
+          montoTotal: 0,
+          ultimaCompra: null
+        };
+      });
+
+      pedidos.forEach(p => {
+        const cliName = (p.cliente || 'Consumidor Final').trim();
+        let match = resumenClientes[cliName];
+        if (!match) {
+          const keyFound = Object.keys(resumenClientes).find(k => k.toLowerCase().includes(cliName.toLowerCase()) || cliName.toLowerCase().includes(k.toLowerCase()));
+          if (keyFound) {
+            match = resumenClientes[keyFound];
+          } else {
+            resumenClientes[cliName] = {
+              clienteId: null,
+              nombre: cliName,
+              telefono: '',
+              comprasMes: 0,
+              montoMes: 0,
+              comprasTotal: 0,
+              montoTotal: 0,
+              ultimaCompra: null
+            };
+            match = resumenClientes[cliName];
+          }
+        }
+
+        const monto = parseFloat(p.total) || 0;
+        match.comprasTotal++;
+        match.montoTotal += monto;
+        if (!match.ultimaCompra) match.ultimaCompra = p.fecha;
+
+        if (p.estado !== 'CAN') {
+          const infoFecha = parseFechaPedido(p.fecha);
+          if (infoFecha.mes === mesActual) {
+            match.comprasMes++;
+            match.montoMes += monto;
+          }
+        }
+      });
+
+      const listaRanking = Object.values(resumenClientes).filter(item => item.comprasTotal > 0 || item.comprasMes > 0);
+      listaRanking.sort((a, b) => {
+        if (b.comprasMes !== a.comprasMes) return b.comprasMes - a.comprasMes;
+        if (b.montoMes !== a.montoMes) return b.montoMes - a.montoMes;
+        return b.montoTotal - a.montoTotal;
+      });
+
+      const tbody = document.getElementById('crmTopTableBody');
+      const badgeCount = document.getElementById('crmBadgeTopCount');
+      const destacados = listaRanking.filter(item => item.comprasMes >= 2);
+      if (badgeCount) badgeCount.innerText = `${destacados.length} destacados`;
+
+      if (listaRanking.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" style="text-align: center; padding: 2.5rem 1rem; color: #64748b;">
+              No se registran transacciones suficientes para computar el ranking del mes.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = listaRanking.map(item => {
+        const esDestacado = (item.comprasMes >= 2);
+        const badgeCategoria = esDestacado
+          ? `<span class="badge-destacado"><img src="../assets/icons/star-fill.png" style="width: 12px; height: 12px;" alt=""> ⭐ Destacado</span>`
+          : `<span class="badge-status" style="background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1;">Regular</span>`;
+
+        const telefonoLimpio = (item.telefono || '').replace(/\D/g, '');
+        const urlWa = generarUrlWhatsApp(telefonoLimpio, `¡Hola ${item.nombre}! Desde Costa Atlántica queremos agradecerte por ser un cliente destacado de este mes. ¡Tenemos promociones y beneficios especiales para tu próximo pedido!`);
+
+        return `
+          <tr style="${esDestacado ? 'background: #fffdf5;' : ''}">
+            <td>
+              <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div style="width: 34px; height: 34px; border-radius: 8px; background: ${esDestacado ? '#fef3c7' : '#f1f5f9'}; color: ${esDestacado ? '#92400e' : '#334155'}; border: 1px solid ${esDestacado ? '#fde68a' : '#e2e8f0'}; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8rem;">
+                  ${esDestacado ? '⭐' : (item.nombre.charAt(0).toUpperCase())}
+                </div>
+                <div>
+                  <div style="font-weight: 700; color: #0f172a;">${escapeHtml(item.nombre)}</div>
+                  <div style="font-size: 0.75rem; color: #64748b;">Última compra: ${item.ultimaCompra || 'Este mes'}</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <span style="font-weight: 700; font-size: 0.95rem; color: ${esDestacado ? '#b45309' : '#1e293b'};">
+                ${item.comprasMes} ${item.comprasMes === 1 ? 'compra' : 'compras'}
+              </span>
+            </td>
+            <td style="font-weight: 700; color: #047857;">
+              ${formatPesos(item.montoMes)}
+            </td>
+            <td style="font-size: 0.85rem; color: #64748b;">
+              ${item.comprasTotal} ped. (${formatPesos(item.montoTotal)})
+            </td>
+            <td>
+              ${badgeCategoria}
+            </td>
+            <td style="text-align: right;">
+              ${telefonoLimpio ? `
+                <button type="button" class="btn-wa-action" onclick="contactarClienteHabitual(${item.clienteId || 'null'}, '${escapeJs(item.nombre)}', '${telefonoLimpio}')" title="Contactar y fidelizar por WhatsApp">
+                  <img src="../assets/icons/whatsapp-logo-fill.png" style="width: 14px; height: 14px;" alt="WA">
+                  <span>Contactar</span>
+                </button>
+              ` : `
+                <button type="button" class="btn-wa-action" onclick="cerrarModalCRM(); abrirModalDirectorio();" style="background: #f1f5f9; color: #475569; border-color: #e2e8f0;" title="Ver ficha en directorio">
+                  <span>Ver Ficha</span>
+                </button>
+              `}
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function actualizarMetricasCRM(mes) {
+      const cumpleaneros = clientesData.filter(c => parseInt(c.mes_nac) === parseInt(mes));
+      const elCumple = document.getElementById('crmKpiCumple');
+      if (elCumple) elCumple.innerText = cumpleaneros.length;
+
+      let destacadosCount = 0;
+      let comprasMesTotal = 0;
+      const conteoPorCliente = {};
+
+      (pedidosData || []).forEach(p => {
+        if (p.estado !== 'CAN') {
+          const info = parseFechaPedido(p.fecha);
+          if (info.mes === mes) {
+            const cli = (p.cliente || '').trim();
+            conteoPorCliente[cli] = (conteoPorCliente[cli] || 0) + 1;
+            comprasMesTotal++;
+          }
+        }
+      });
+
+      Object.values(conteoPorCliente).forEach(count => {
+        if (count >= 2) destacadosCount++;
+      });
+
+      const elCompras = document.getElementById('crmKpiComprasMes');
+      if (elCompras) elCompras.innerText = comprasMesTotal;
+
+      const elDest = document.getElementById('crmKpiDestacados');
+      if (elDest) elDest.innerText = destacadosCount;
+    }
+
+    // Auto-abrir si la URL tiene parámetro crm o hash #crm
+    window.addEventListener('DOMContentLoaded', () => {
+      sincronizarContactosDesdeBackend();
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('crm') === '1' || urlParams.get('panel') === 'crm' || window.location.hash === '#crm') {
+        abrirModalCRM();
+      }
+    });
+
+    // Cerrar con Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        cerrarModalCRM();
+        cerrarModalNuevoCliente();
+        cerrarModalDirectorio();
+      }
+    });
+  </script>
+</body>
+</html>

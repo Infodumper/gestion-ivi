@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iniciar Sesión — Costa Atlántica</title>
+  
+  <!-- Tipografías Oficiales del Sistema CliP27 / Costa Atlántica -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(180deg, #f0f7ff 0%, #e0f2fe 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      color: #1e293b;
+    }
+
+    .login-container {
+      width: 100%;
+      max-width: 440px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Cabecera con Logo y Título */
+    .brand-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .brand-logo {
+      height: 96px;
+      width: auto;
+      margin: 0 auto 0.75rem auto;
+      display: block;
+      filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.05));
+    }
+
+    .brand-title {
+      font-family: 'Libre Baskerville', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #0f172a;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+    }
+
+    .brand-subtitle {
+      font-size: 0.95rem;
+      color: #64748b;
+      margin-top: 0.25rem;
+      font-weight: 400;
+    }
+
+    /* Tarjeta Principal */
+    .login-card {
+      width: 100%;
+      background-color: #ffffff;
+      border-radius: 1.75rem; /* rounded-3xl */
+      padding: 2.5rem 2.25rem;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.06), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+      border: 1px solid #eff6ff;
+    }
+
+    .card-title {
+      font-size: 1.625rem;
+      font-weight: 700;
+      color: #0f172a;
+      text-align: center;
+      margin-bottom: 1.75rem;
+      letter-spacing: -0.01em;
+    }
+
+    /* Formulario */
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #2563eb; /* Azul label */
+      margin-bottom: 0.45rem;
+      margin-left: 0.25rem;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 0.875rem 1.125rem;
+      font-size: 0.95rem;
+      font-family: 'Poppins', sans-serif;
+      border: 1px solid #e2e8f0;
+      border-radius: 1rem; /* rounded-2xl */
+      background-color: #ffffff;
+      color: #0f172a;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .form-input::placeholder {
+      color: #94a3b8;
+    }
+
+    .form-input:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+
+    /* Botón Entrar al Sistema */
+    .btn-submit {
+      width: 100%;
+      background-color: #1d4ed8;
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      color: #ffffff;
+      font-size: 1rem;
+      font-weight: 600;
+      font-family: 'Poppins', sans-serif;
+      padding: 0.95rem;
+      border-radius: 1rem;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 8px 20px -4px rgba(37, 99, 235, 0.35);
+      transition: all 0.2s ease;
+      margin-top: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-submit:hover {
+      background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 12px 24px -4px rgba(37, 99, 235, 0.45);
+    }
+
+    .btn-submit:active {
+      transform: scale(0.98);
+    }
+
+    /* Divisor "O continúa con" */
+    .divider-container {
+      position: relative;
+      margin: 1.75rem 0 1.5rem 0;
+      text-align: center;
+    }
+
+    .divider-container::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background-color: #e2e8f0;
+    }
+
+    .divider-text {
+      position: relative;
+      background-color: #ffffff;
+      padding: 0 0.85rem;
+      font-size: 0.825rem;
+      color: #64748b;
+      font-weight: 400;
+    }
+
+    /* Botón Google */
+    .btn-google {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      background-color: #ffffff;
+      color: #334155;
+      font-size: 0.95rem;
+      font-weight: 500;
+      font-family: 'Poppins', sans-serif;
+      padding: 0.85rem;
+      border-radius: 1rem;
+      border: 1px solid #cbd5e1;
+      cursor: pointer;
+      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      transition: all 0.2s ease;
+    }
+
+    .btn-google:hover {
+      background-color: #f8fafc;
+      border-color: #94a3b8;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
+      transform: translateY(-1px);
+    }
+
+    .btn-google:active {
+      transform: scale(0.98);
+    }
+
+    .google-icon {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* Modal / Alert de Opción B: Solicitud Pendiente */
+    .status-alert {
+      display: none;
+      padding: 1rem 1.25rem;
+      border-radius: 1rem;
+      margin-bottom: 1.25rem;
+      font-size: 0.875rem;
+      line-height: 1.5;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .status-alert.warning {
+      background-color: #fffbeb;
+      border: 1px solid #fde68a;
+      color: #92400e;
+    }
+
+    .status-alert.danger {
+      background-color: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #991b1b;
+    }
+
+    .status-alert.success {
+      background-color: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      color: #065f46;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Footer */
+    .brand-footer {
+      margin-top: 2rem;
+      text-align: center;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #94a3b8;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* Quick Test Helper (Para probar en local) */
+    .test-box {
+      margin-top: 1.5rem;
+      padding: 0.75rem 1rem;
+      background: rgba(255, 255, 255, 0.6);
+      border-radius: 0.75rem;
+      border: 1px dashed #cbd5e1;
+      font-size: 0.75rem;
+      color: #64748b;
+      text-align: center;
+      width: 100%;
+    }
+
+    .test-box span {
+      display: inline-block;
+      cursor: pointer;
+      color: #2563eb;
+      font-weight: 600;
+      margin: 0 4px;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-container">
+    <!-- Header -->
+    <header class="brand-header">
+      <img src="./styles/images/logo.png" alt="Logo Costa Atlántica" class="brand-logo" onerror="this.style.display='none'">
+      <h1 class="brand-title">Costa Atlántica</h1>
+      <p class="brand-subtitle">Gestión de Clientes</p>
+    </header>
+
+    <!-- Card -->
+    <div class="login-card">
+      <h2 class="card-title">Bienvenida</h2>
+
+      <!-- Notificación Dinámica Opción B (Aprobación) -->
+      <div id="statusAlert" class="status-alert"></div>
+
+      <!-- Formulario Clásico -->
+      <form id="loginForm" onsubmit="handleEmailLogin(event)">
+        <div class="form-group">
+          <label class="form-label" for="email">Email</label>
+          <input 
+            type="email" 
+            id="email" 
+            name="email" 
+            class="form-input" 
+            placeholder="usuario@ejemplo.com" 
+            required
+            autocomplete="email"
+          >
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">Contraseña</label>
+          <input 
+            type="password" 
+            id="password" 
+            name="password" 
+            class="form-input" 
+            placeholder="••••••••" 
+            required
+            autocomplete="current-password"
+          >
+        </div>
+
+        <button type="submit" class="btn-submit" id="btnSubmit">
+          Entrar al Sistema
+        </button>
+      </form>
+
+      <!-- Divisor -->
+      <div class="divider-container">
+        <span class="divider-text">O continúa con</span>
+      </div>
+
+      <!-- Botón Google Oficial -->
+      <button type="button" class="btn-google" onclick="handleGoogleLogin()">
+        <svg class="google-icon" viewBox="0 0 24 24">
+          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+        </svg>
+        <span>Google</span>
+      </button>
+    </div>
+
+    <!-- Pruebas Rápidas de Opción B en Local -->
+    <div class="test-box">
+      <strong>Probar en local:</strong> 
+      <span onclick="setQuickUser('infodumper.au@gmail.com', 'admin')">Admin Aprobado</span> | 
+      <span onclick="setQuickUser('nuevo.asesor@gmail.com', 'pendiente')">Usuario Pendiente (Opción B)</span>
+    </div>
+
+    <!-- Footer -->
+    <footer class="brand-footer">
+      &copy; 2026 EQUIPO COSTA ATLÁNTICA
+    </footer>
+  </div>
+
+  <script>
+    // Simulación del motor de usuarios locales sincronizado con database/init_postgres_noa_mora.sql
+    const UsuariosDB = JSON.parse(localStorage.getItem('ivi_usuarios_autorizados') || 'null') || [
+      { email: 'infodumper.au@gmail.com', nombre: 'Ignacio Vizoso', rol: 'admin', estado: 'aprobado' },
+      { email: 'ignacio.vizoso@gmail.com', nombre: 'Nacho', rol: 'vendedor', estado: 'aprobado' },
+      { email: 'perlanegracostaatlantica@gmail.com', nombre: 'Paola Estévez', rol: 'admin', estado: 'aprobado' },
+      { email: 'paco@policia.es', nombre: 'Paquito', rol: 'vendedor', estado: 'aprobado' }
+    ];
+
+    function guardarUsuarios() {
+      localStorage.setItem('ivi_usuarios_autorizados', JSON.stringify(UsuariosDB));
+    }
+
+    function mostrarAlerta(tipo, mensaje) {
+      const alertEl = document.getElementById('statusAlert');
+      alertEl.className = `status-alert ${tipo}`;
+      alertEl.innerHTML = mensaje;
+      alertEl.style.display = 'block';
+    }
+
+    function ocultarAlerta() {
+      const alertEl = document.getElementById('statusAlert');
+      alertEl.style.display = 'none';
+    }
+
+    // Procesar Inicio de Sesión
+    function procesarAcceso(email, nombre) {
+      ocultarAlerta();
+      const correoNormalizado = email.trim().toLowerCase();
+      let usuario = UsuariosDB.find(u => u.email.toLowerCase() === correoNormalizado);
+
+      // Si no existe, se registra automáticamente como PENDIENTE (Opción B)
+      if (!usuario) {
+        usuario = {
+          email: correoNormalizado,
+          nombre: nombre || correoNormalizado.split('@')[0],
+          rol: 'vendedor',
+          estado: 'pendiente',
+          fecha_solicitud: new Date().toISOString()
+        };
+        UsuariosDB.push(usuario);
+        guardarUsuarios();
+      }
+
+      // Validar según Opción B
+      if (usuario.estado === 'pendiente') {
+        mostrarAlerta('warning', `
+          <strong>⏳ Solicitud enviada</strong><br>
+          Hola <strong>${usuario.nombre}</strong>. Tu cuenta está registrada pero <strong>pendiente de aprobación</strong> por el Administrador.<br>
+          <small style="opacity:0.85">Una vez que seas aprobado, podrás acceder al sistema.</small>
+        `);
+        return;
+      }
+
+      if (usuario.estado === 'rechazado') {
+        mostrarAlerta('danger', `
+          <strong>⛔ Acceso Denegado</strong><br>
+          Tu solicitud fue desestimada por el Administrador. Contacta a soporte.
+        `);
+        return;
+      }
+
+      if (usuario.estado === 'aprobado') {
+        mostrarAlerta('success', `<strong>¡Bienvenido, ${usuario.nombre}!</strong> Redirigiendo al panel...`);
+        localStorage.setItem('ivi_session_user', JSON.stringify(usuario));
+        setTimeout(() => {
+          window.location.href = './index.html';
+        }, 800);
+      }
+    }
+
+    function handleEmailLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      procesarAcceso(email);
+    }
+
+    function handleGoogleLogin() {
+      // Simulación de Google OAuth (en producción se enlaza con Supabase OAuth)
+      const emailGoogle = prompt("Simulador Google OAuth:\nIngresa el correo de tu cuenta de Google:", "nuevo.asesor@gmail.com");
+      if (!emailGoogle) return;
+      procesarAcceso(emailGoogle, emailGoogle.split('@')[0]);
+    }
+
+    function setQuickUser(email, modo) {
+      document.getElementById('email').value = email;
+      document.getElementById('password').value = '123456';
+      if (modo === 'pendiente') {
+        // Asegurar que esté pendiente
+        const u = UsuariosDB.find(x => x.email === email);
+        if (u) u.estado = 'pendiente';
+        guardarUsuarios();
+      }
+    }
+  </script>
+</body>
+</html>
