@@ -12,6 +12,6 @@
  */
 
 window.IVI_SUPABASE_CONFIG = {
-  url: 'https://bhdvktbxirouocywkkvc.supabase.co/rest/v1/',        // ej: 'https://abcdefghijklm.supabase.co'
-  anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJoZHZrdGJ4aXJvdW9jeXdra3ZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI3NzE1MzYsImV4cCI6MjEwODM0NzUzNn0.Q2OZusyMHgn4YCddqPLA0UmVPvqFY62y6Aw5EuQeJXk'    // ej: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+  url: 'https://bhdvktbxirouocywkkvc.supabase.co',
+  anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJoZHZrdGJ4aXJvdW9jeXdra3ZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI3NzE1MzYsImV4cCI6MjEwODM0NzUzNn0.Q2OZusyMHgn4YCddqPLA0UmVPvqFY62y6Aw5EuQeJXk'
 };
