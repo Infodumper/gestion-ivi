@@ -1293,6 +1293,10 @@
         <span class="user-name" id="navUserName">Ignacio Vizoso</span>
         <span class="user-badge">VENTAS</span>
       </div>
+      <button type="button" onclick="cerrarSesion()" class="nav-btn-back" title="Cerrar sesión" style="color: #b91c1c; border-color: #fee2e2; background: #fef2f2; padding: 0.35rem 0.65rem; cursor: pointer;">
+        <img src="assets/icons/sign-out-fill.png" alt="Salir" style="width: 14px; height: 14px;">
+        <span>Salir</span>
+      </button>
     </div>
   </header>
 
@@ -2132,10 +2136,17 @@
   <div id="toastContainer" class="toast-container"></div>
 
   <script>
-    // Inicializar sesión de usuario
+    // Inicializar sesión de usuario (Auth Guard)
     let currentUser = JSON.parse(localStorage.getItem('ivi_session_user') || 'null');
-    if (currentUser) {
+    if (!currentUser) {
+      window.location.href = './login.html';
+    } else {
       document.getElementById('navUserName').innerText = currentUser.nombre || currentUser.email;
+    }
+
+    function cerrarSesion() {
+      localStorage.removeItem('ivi_session_user');
+      window.location.href = './login.html';
     }
 
     // Base de Clientes (Sincronizada con PostgreSQL / IviS)

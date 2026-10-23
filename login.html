@@ -158,67 +158,6 @@
       transform: scale(0.98);
     }
 
-    /* Divisor "O continúa con" */
-    .divider-container {
-      position: relative;
-      margin: 1.75rem 0 1.5rem 0;
-      text-align: center;
-    }
-
-    .divider-container::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 0;
-      right: 0;
-      height: 1px;
-      background-color: #e2e8f0;
-    }
-
-    .divider-text {
-      position: relative;
-      background-color: #ffffff;
-      padding: 0 0.85rem;
-      font-size: 0.825rem;
-      color: #64748b;
-      font-weight: 400;
-    }
-
-    /* Botón Google */
-    .btn-google {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.75rem;
-      background-color: #ffffff;
-      color: #334155;
-      font-size: 0.95rem;
-      font-weight: 500;
-      font-family: 'Poppins', sans-serif;
-      padding: 0.85rem;
-      border-radius: 1rem;
-      border: 1px solid #cbd5e1;
-      cursor: pointer;
-      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-      transition: all 0.2s ease;
-    }
-
-    .btn-google:hover {
-      background-color: #f8fafc;
-      border-color: #94a3b8;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
-      transform: translateY(-1px);
-    }
-
-    .btn-google:active {
-      transform: scale(0.98);
-    }
-
-    .google-icon {
-      width: 20px;
-      height: 20px;
-    }
 
     /* Modal / Alert de Opción B: Solicitud Pendiente */
     .status-alert {
@@ -265,27 +204,6 @@
       text-transform: uppercase;
     }
 
-    /* Quick Test Helper (Para probar en local) */
-    .test-box {
-      margin-top: 1.5rem;
-      padding: 0.75rem 1rem;
-      background: rgba(255, 255, 255, 0.6);
-      border-radius: 0.75rem;
-      border: 1px dashed #cbd5e1;
-      font-size: 0.75rem;
-      color: #64748b;
-      text-align: center;
-      width: 100%;
-    }
-
-    .test-box span {
-      display: inline-block;
-      cursor: pointer;
-      color: #2563eb;
-      font-weight: 600;
-      margin: 0 4px;
-      text-decoration: underline;
-    }
   </style>
 </head>
 <body>
@@ -338,28 +256,7 @@
         </button>
       </form>
 
-      <!-- Divisor -->
-      <div class="divider-container">
-        <span class="divider-text">O continúa con</span>
-      </div>
-
-      <!-- Botón Google Oficial -->
-      <button type="button" class="btn-google" onclick="handleGoogleLogin()">
-        <svg class="google-icon" viewBox="0 0 24 24">
-          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
-          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-        </svg>
-        <span>Google</span>
-      </button>
-    </div>
-
-    <!-- Pruebas Rápidas de Opción B en Local -->
-    <div class="test-box">
-      <strong>Probar en local:</strong> 
-      <span onclick="setQuickUser('infodumper.au@gmail.com', 'admin')">Admin Aprobado</span> | 
-      <span onclick="setQuickUser('nuevo.asesor@gmail.com', 'pendiente')">Usuario Pendiente (Opción B)</span>
+      </form>
     </div>
 
     <!-- Footer -->
@@ -369,7 +266,7 @@
   </div>
 
   <script>
-    // Simulación del motor de usuarios locales sincronizado con database/init_postgres_ivis.sql
+    // Motor de usuarios locales de respaldo
     const UsuariosDB = JSON.parse(localStorage.getItem('ivi_usuarios_autorizados') || 'null') || [
       { email: 'infodumper.au@gmail.com', nombre: 'Ignacio Vizoso', rol: 'admin', estado: 'aprobado' },
       { email: 'ignacio.vizoso@gmail.com', nombre: 'Nacho', rol: 'vendedor', estado: 'aprobado' },
@@ -393,49 +290,104 @@
       alertEl.style.display = 'none';
     }
 
-    // Procesar Inicio de Sesión
-    function procesarAcceso(email, nombre) {
+    // Procesar Inicio de Sesión Solo con Email
+    async function procesarAcceso(email) {
       ocultarAlerta();
       const correoNormalizado = email.trim().toLowerCase();
-      let usuario = UsuariosDB.find(u => u.email.toLowerCase() === correoNormalizado);
+      const submitBtn = document.getElementById('btnSubmit');
 
-      // Si no existe, se registra automáticamente como PENDIENTE (Opción B)
-      if (!usuario) {
-        usuario = {
-          email: correoNormalizado,
-          nombre: nombre || correoNormalizado.split('@')[0],
-          rol: 'vendedor',
-          estado: 'pendiente',
-          fecha_solicitud: new Date().toISOString()
-        };
-        UsuariosDB.push(usuario);
-        guardarUsuarios();
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerText = 'Verificando...';
       }
 
-      // Validar según Opción B
-      if (usuario.estado === 'pendiente') {
-        mostrarAlerta('warning', `
-          <strong>⏳ Solicitud enviada</strong><br>
-          Hola <strong>${usuario.nombre}</strong>. Tu cuenta está registrada pero <strong>pendiente de aprobación</strong> por el Administrador.<br>
-          <small style="opacity:0.85">Una vez que seas aprobado, podrás acceder al sistema.</small>
-        `);
-        return;
-      }
+      try {
+        let usuario = null;
 
-      if (usuario.estado === 'rechazado') {
-        mostrarAlerta('danger', `
-          <strong>⛔ Acceso Denegado</strong><br>
-          Tu solicitud fue desestimada por el Administrador. Contacta a soporte.
-        `);
-        return;
-      }
+        // 1. Consultar en Supabase Cloud si está conectado
+        if (window.IviSupabase && window.IviSupabase.isConfigured()) {
+          const client = window.IviSupabase.client;
+          const { data, error } = await client
+            .from('usuarios_autorizados')
+            .select('*')
+            .ilike('email', correoNormalizado)
+            .maybeSingle();
 
-      if (usuario.estado === 'aprobado') {
-        mostrarAlerta('success', `<strong>¡Bienvenido, ${usuario.nombre}!</strong> Redirigiendo al panel...`);
-        localStorage.setItem('ivi_session_user', JSON.stringify(usuario));
-        setTimeout(() => {
-          window.location.href = './index.html';
-        }, 800);
+          if (error) {
+            console.warn('[Supabase Auth] Error consultando usuario:', error);
+          } else if (data) {
+            usuario = data;
+          } else {
+            // Usuario no encontrado: registrarlo como PENDIENTE en Supabase
+            const nombreAuto = correoNormalizado.split('@')[0];
+            const { data: nuevoUser, error: errInsert } = await client
+              .from('usuarios_autorizados')
+              .insert([{
+                email: correoNormalizado,
+                nombre: nombreAuto,
+                rol: 'vendedor',
+                estado: 'pendiente'
+              }])
+              .select()
+              .single();
+
+            if (!errInsert && nuevoUser) {
+              usuario = nuevoUser;
+            }
+          }
+        }
+
+        // 2. Fallback a LocalStorage si Supabase no está configurado
+        if (!usuario) {
+          usuario = UsuariosDB.find(u => u.email.toLowerCase() === correoNormalizado);
+          if (!usuario) {
+            usuario = {
+              email: correoNormalizado,
+              nombre: correoNormalizado.split('@')[0],
+              rol: 'vendedor',
+              estado: 'pendiente',
+              fecha_solicitud: new Date().toISOString()
+            };
+            UsuariosDB.push(usuario);
+            guardarUsuarios();
+          }
+        }
+
+        // 3. Evaluar permisos y estados
+        if (usuario.estado === 'pendiente') {
+          mostrarAlerta('warning', `
+            <strong>⏳ Solicitud enviada</strong><br>
+            Hola <strong>${usuario.nombre || 'Asesor'}</strong>. Tu cuenta está registrada pero <strong>pendiente de aprobación</strong> por el Administrador.<br>
+            <small style="opacity:0.85">Una vez que seas aprobado, podrás acceder al sistema.</small>
+          `);
+          return;
+        }
+
+        if (usuario.estado === 'rechazado') {
+          mostrarAlerta('danger', `
+            <strong>⛔ Acceso Denegado</strong><br>
+            Tu solicitud fue desestimada por el Administrador. Contacta a soporte.
+          `);
+          return;
+        }
+
+        if (usuario.estado === 'aprobado') {
+          mostrarAlerta('success', `<strong>¡Bienvenido, ${usuario.nombre || 'Usuario'}!</strong> Redirigiendo al panel...`);
+          localStorage.setItem('ivi_session_user', JSON.stringify(usuario));
+          setTimeout(() => {
+            window.location.href = './index.html';
+          }, 600);
+          return;
+        }
+
+      } catch (err) {
+        console.error('[Login] Error:', err);
+        mostrarAlerta('danger', 'Error al procesar el inicio de sesión. Intente nuevamente.');
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerText = 'Entrar al Sistema';
+        }
       }
     }
 
@@ -445,23 +397,6 @@
       procesarAcceso(email);
     }
 
-    function handleGoogleLogin() {
-      // Simulación de Google OAuth (en producción se enlaza con Supabase OAuth)
-      const emailGoogle = prompt("Simulador Google OAuth:\nIngresa el correo de tu cuenta de Google:", "nuevo.asesor@gmail.com");
-      if (!emailGoogle) return;
-      procesarAcceso(emailGoogle, emailGoogle.split('@')[0]);
-    }
-
-    function setQuickUser(email, modo) {
-      document.getElementById('email').value = email;
-      document.getElementById('password').value = '123456';
-      if (modo === 'pendiente') {
-        // Asegurar que esté pendiente
-        const u = UsuariosDB.find(x => x.email === email);
-        if (u) u.estado = 'pendiente';
-        guardarUsuarios();
-      }
-    }
   </script>
 </body>
 </html>
