@@ -212,20 +212,97 @@
     },
 
     /**
-     * PRODUCTOS: Consulta de stock
+     * PRODUCTOS: Consulta de stock en tiempo real
      */
     async getProductos() {
       if (!this.client) return null;
       try {
         const { data, error } = await this.client
           .from('productos')
-          .select('*')
+          .select('*, proveedores(id_proveedor, nombre_comercial, contacto)')
           .order('id_producto', { ascending: true });
 
-        if (error) throw error;
+        if (error) {
+          // Fallback a consulta directa si falla el join
+          const { data: dataDirecta, error: err2 } = await this.client
+            .from('productos')
+            .select('*')
+            .order('id_producto', { ascending: true });
+          if (err2) throw err2;
+          return dataDirecta;
+        }
         return data;
       } catch (err) {
         console.warn('[Supabase] Error al obtener productos:', err.message);
+        return null;
+      }
+    },
+
+    /**
+     * PRODUCTOS: Guardar o actualizar producto en Supabase Cloud
+     */
+    async saveProducto(prod) {
+      if (!this.client) return null;
+      try {
+        let idProveedor = prod.id_proveedor || 1;
+        if (prod.proveedor && isNaN(prod.proveedor)) {
+          const provs = await this.getProveedores();
+          const matchProv = provs?.find(p => (p.nombre_comercial || p.razon) === prod.proveedor);
+          if (matchProv) idProveedor = matchProv.id_proveedor || matchProv.id;
+        }
+
+        const payload = {
+          cod_producto: prod.codigo || prod.cod_producto,
+          nombre_producto: prod.descripcion || prod.nombre || prod.nombre_producto,
+          descripcion: prod.descripcion || prod.nombre || prod.nombre_producto,
+          precio: parseFloat(prod.precio) || 0,
+          stock: parseInt(prod.stock) || 0,
+          id_proveedor: idProveedor,
+          estado: (parseInt(prod.stock) || 0) > 0
+        };
+
+        if (prod.id && Number(prod.id) < 100000000) {
+          const { data, error } = await this.client
+            .from('productos')
+            .update(payload)
+            .eq('id_producto', prod.id)
+            .select();
+          if (error) throw error;
+          return data ? data[0] : null;
+        } else {
+          const { data, error } = await this.client
+            .from('productos')
+            .insert([payload])
+            .select();
+          if (error) throw error;
+          return data ? data[0] : null;
+        }
+      } catch (err) {
+        console.warn('[Supabase] Error al guardar producto:', err.message);
+        return null;
+      }
+    },
+
+    /**
+     * PRODUCTOS: Actualizar stock de un producto
+     */
+    async actualizarStockProducto(idProducto, nuevoStock) {
+      if (!this.client) return null;
+      try {
+        const { data, error } = await this.client
+          .from('productos')
+          .update({
+            stock: parseInt(nuevoStock) || 0,
+            estado: (parseInt(nuevoStock) || 0) > 0,
+            fecha_modificacion: new Date().toISOString()
+          })
+          .eq('id_producto', idProducto)
+          .select();
+
+        if (error) throw error;
+        return data ? data[0] : null;
+      } catch (err) {
+        console.warn('[Supabase] Error al actualizar stock:', err.message);
         return null;
       }
     }

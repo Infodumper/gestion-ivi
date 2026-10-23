@@ -2220,6 +2220,9 @@
           prod.stock = Math.max(0, stockActual - cant);
           recalcularEstadoProducto(prod);
           huboCambios = true;
+          if (window.IviSupabase && window.IviSupabase.isConfigured() && prod.id) {
+            window.IviSupabase.actualizarStockProducto(prod.id, prod.stock);
+          }
         }
       });
       if (huboCambios) {
@@ -2242,6 +2245,9 @@
           prod.stock = stockActual + cant;
           recalcularEstadoProducto(prod);
           huboCambios = true;
+          if (window.IviSupabase && window.IviSupabase.isConfigured() && prod.id) {
+            window.IviSupabase.actualizarStockProducto(prod.id, prod.stock);
+          }
         }
       });
       if (huboCambios) {
@@ -4020,12 +4026,40 @@
         .catch(err => console.warn('[Proveedores DB] Modo offline o backend no disponible:', err));
     }
 
+    function sincronizarProductosDesdeBackend() {
+      if (window.IviSupabase && window.IviSupabase.isConfigured()) {
+        window.IviSupabase.getProductos().then(data => {
+          if (Array.isArray(data)) {
+            catalogoProductos = data.map(p => {
+              const provNombre = p.proveedores?.nombre_comercial || (proveedoresData.find(pr => pr.id === p.id_proveedor)?.razon) || 'Natura Cosméticos';
+              const st = parseInt(p.stock) || 0;
+              const est = st <= 0 ? 'agotado' : (st <= 10 ? 'bajo' : 'optimo');
+              return {
+                id: p.id_producto,
+                codigo: p.cod_producto || `PROD-${p.id_producto}`,
+                descripcion: p.nombre_producto || p.descripcion || 'Sin nombre',
+                precio: parseFloat(p.precio) || 0,
+                stock: st,
+                categoria: p.familia_olfativa || 'Perfumería',
+                proveedor: provNombre,
+                estado: est
+              };
+            });
+            localStorage.setItem('ivi_stock_data', JSON.stringify(catalogoProductos));
+            if (typeof renderStock === 'function') renderStock();
+            console.log('[Supabase Cloud] Productos sincronizados desde Supabase:', catalogoProductos.length);
+          }
+        }).catch(err => console.warn('[Supabase Productos] Error:', err));
+      }
+    }
+
     let stockSort = {
       columna: 'codigo',
       orden: 'asc'
     };
 
     function abrirModalInventario() {
+      sincronizarProductosDesdeBackend();
       renderStock();
       document.getElementById('modalInventario').style.display = 'flex';
     }
@@ -4208,6 +4242,9 @@
           estado
         };
         localStorage.setItem('ivi_stock_data', JSON.stringify(catalogoProductos));
+        if (window.IviSupabase && window.IviSupabase.isConfigured()) {
+          window.IviSupabase.saveProducto(catalogoProductos[idx]);
+        }
         cerrarModalEditarProducto();
         mostrarNotificacion(`Producto "${codigo}" actualizado con éxito`, 'success');
         renderStock();
@@ -4225,6 +4262,15 @@
         };
         catalogoProductos.push(nuevoProducto);
         localStorage.setItem('ivi_stock_data', JSON.stringify(catalogoProductos));
+        if (window.IviSupabase && window.IviSupabase.isConfigured()) {
+          window.IviSupabase.saveProducto(nuevoProducto).then(saved => {
+            if (saved && saved.id_producto) {
+              nuevoProducto.id = saved.id_producto;
+              localStorage.setItem('ivi_stock_data', JSON.stringify(catalogoProductos));
+              renderStock();
+            }
+          });
+        }
         cerrarModalEditarProducto();
         mostrarNotificacion(`Producto "${codigo} - ${descripcion}" dado de alta con éxito`, 'success');
         renderStock();
@@ -4861,9 +4907,10 @@
       });
     }
 
-    // Sincronización inicial con PostgreSQL
+    // Sincronización inicial con PostgreSQL / Supabase Cloud
     sincronizarContactosDesdeBackend();
     sincronizarProveedoresDesdeBackend();
+    sincronizarProductosDesdeBackend();
     poblarSelectProveedores();
   </script>
 </body>
