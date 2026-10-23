@@ -1,5 +1,5 @@
 -- ============================================================================
--- BASE DE DATOS NOA MORA / IVI — ADAPTADA PARA POSTGRESQL & SUPABASE
+-- BASE DE DATOS IVI — ADAPTADA PARA POSTGRESQL & SUPABASE
 -- Con Sistema de Aprobación de Usuarios (Opción B) y Políticas RLS
 -- ============================================================================
 
@@ -27,7 +27,7 @@ CREATE TABLE usuarios_autorizados (
 CREATE INDEX idx_usuarios_email ON usuarios_autorizados(email);
 CREATE INDEX idx_usuarios_estado ON usuarios_autorizados(estado);
 
--- Cargar usuarios iniciales de Noa Mora
+-- Cargar usuarios iniciales de Ivi
 INSERT INTO usuarios_autorizados (email, nombre, rol, estado, fecha_aprobacion) VALUES
 ('infodumper.au@gmail.com', 'Ignacio Vizoso', 'admin', 'aprobado', CURRENT_TIMESTAMP),
 ('ignacio.vizoso@gmail.com', 'Nacho', 'vendedor', 'aprobado', CURRENT_TIMESTAMP),
@@ -35,7 +35,7 @@ INSERT INTO usuarios_autorizados (email, nombre, rol, estado, fecha_aprobacion) 
 
 
 -- ============================================================================
--- 3. TABLAS DE NEGOCIO (Migradas de MySQL noa_mora.sql)
+-- 3. TABLAS DE NEGOCIO (Migradas de MySQL ivis.sql)
 -- ============================================================================
 
 -- Proveedores
@@ -226,9 +226,10 @@ CREATE INDEX idx_auditoria_fecha ON auditoria(fecha);
 
 
 -- ============================================================================
--- 4. VISTA INTEGRADA DE PEDIDOS (Adaptada a sintaxis Postgres)
+-- 4. VISTA INTEGRADA DE PEDIDOS (Segura con RLS: security_invoker = true)
 -- ============================================================================
-CREATE OR REPLACE VIEW vista_pedidos_detallados AS
+CREATE OR REPLACE VIEW vista_pedidos_detallados
+WITH (security_invoker = true) AS
 SELECT 
     p.id_pedido,
     p.estado,

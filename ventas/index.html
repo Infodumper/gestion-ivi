@@ -9,6 +9,11 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
+  <!-- Supabase Cloud SDK y Conector Ivi -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase-config.js"></script>
+  <script src="../js/supabase-client.js"></script>
+  
   <style>
     *, *::before, *::after {
       box-sizing: border-box;
@@ -1222,14 +1227,51 @@
     @media (max-width: 640px) {
       .product-list-header { display: none; }
       .product-row-item {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: minmax(90px, 1.1fr) 1.4fr 38px;
+        grid-template-areas:
+          "cod  precio trash"
+          "desc desc   desc"
+          "cant subtotal trash-placeholder";
         background: #f8fafc;
         padding: 0.85rem;
         border-radius: 8px;
         border: 1px solid #e2e8f0;
+        gap: 0.5rem 0.65rem;
+        align-items: center;
       }
-      .product-row-item > div:first-child { grid-column: span 2; }
-      .product-row-subtotal { grid-column: span 1; text-align: left; }
+      /* 1. Código */
+      .product-row-item > div:nth-child(1) {
+        grid-column: 1;
+        grid-row: 1;
+      }
+      /* 2. Descripción */
+      .product-row-item > div:nth-child(2) {
+        grid-column: 1 / -1;
+        grid-row: 2;
+      }
+      /* 3. Precio Unitario */
+      .product-row-item > div:nth-child(3) {
+        grid-column: 2;
+        grid-row: 1;
+      }
+      /* 4. Cantidad */
+      .product-row-item > div:nth-child(4) {
+        grid-column: 1;
+        grid-row: 3;
+      }
+      /* 5. Subtotal */
+      .product-row-subtotal {
+        grid-column: 2;
+        grid-row: 3;
+        text-align: right;
+        padding-right: 0.25rem;
+      }
+      /* 6. Botón Eliminar */
+      .btn-remove-row {
+        grid-column: 3;
+        grid-row: 1;
+        justify-self: end;
+      }
     }
   </style>
 </head>
@@ -1370,20 +1412,6 @@
         <form id="formNuevaVenta" onsubmit="guardarVenta(event)">
           <input type="hidden" id="vtaPedidoId" value="">
 
-          <!-- Selector de Estado (Regla 4.4: Stock se da de baja en PEN) -->
-          <div id="vtaEstadoContainer" style="display: flex; margin-bottom: 1.25rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.75rem 1.25rem; align-items: center; justify-content: space-between;">
-            <div style="display: flex; align-items: center; gap: 0.75rem;">
-              <span style="font-size: 0.85rem; font-weight: 700; color: #334155;">Estado de la Transacción:</span>
-              <select id="vtaEstadoSelect" class="form-input-control" style="width: auto; padding: 0.35rem 0.75rem; font-weight: 600;">
-                <option value="PEN" selected>PEN — Pendiente (Baja de Stock)</option>
-                <option value="PAG">PAG — Pagado</option>
-                <option value="COT">COT — Cotización (Sin Afectar Stock)</option>
-                <option value="CAN">CAN — Cancelado</option>
-              </select>
-            </div>
-            <span id="vtaModoBadge" class="badge-status PEN">Nuevo Pedido</span>
-          </div>
-          
           <!-- SECTOR 1: CLIENTE CON AUTOCOMPLETE Y ESTADO FIJO CON EDICIÓN -->
           <div class="form-group-item">
             <label for="vtaClienteSearch" style="display: flex; justify-content: space-between; align-items: center;">
@@ -1453,7 +1481,7 @@
           </div>
 
           <!-- Resumen de Totales -->
-          <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.25rem; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+          <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.25rem; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
             <div>
               <div style="font-size: 0.85rem; color: #475569; font-weight: 600;">Subtotal Venta</div>
               <div id="resumenDetalle" style="font-size: 0.8rem; color: #64748b;">1 item(s) seleccionados</div>
@@ -1462,6 +1490,20 @@
               <div style="font-size: 0.75rem; text-transform: uppercase; color: #64748b; font-weight: 700;">Total a Cobrar</div>
               <div id="vtaTotal" style="font-size: 1.65rem; font-weight: 800; color: #047857;">$ 0,00</div>
             </div>
+          </div>
+
+          <!-- Selector de Estado (Regla 4.4: Stock se da de baja en PEN) -->
+          <div id="vtaEstadoContainer" style="display: flex; margin-bottom: 1.5rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.75rem 1.25rem; align-items: center; justify-content: space-between;">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <span style="font-size: 0.85rem; font-weight: 700; color: #334155;">Estado de la Transacción:</span>
+              <select id="vtaEstadoSelect" class="form-input-control" style="width: auto; padding: 0.35rem 0.75rem; font-weight: 600;">
+                <option value="PEN" selected>Pendiente</option>
+                <option value="PAG">Pagado</option>
+                <option value="COT">Cotización</option>
+                <option value="CAN">Cancelado</option>
+              </select>
+            </div>
+            <span id="vtaModoBadge" class="badge-status PEN">Nuevo Pedido</span>
           </div>
 
           <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
@@ -2099,7 +2141,7 @@
       document.getElementById('navUserName').innerText = currentUser.nombre || currentUser.email;
     }
 
-    // Base de Clientes (Sincronizada con PostgreSQL / Noa Mora)
+    // Base de Clientes (Sincronizada con PostgreSQL / IviS)
     let clientesBase = JSON.parse(localStorage.getItem('ivi_clientes_data') || 'null');
     if (!clientesBase || clientesBase.length === 0) {
       clientesBase = [
@@ -3535,6 +3577,12 @@
 
     function revertirContactoEnBackend(clienteId, tipo) {
       if (!clienteId) return;
+      if (window.IviSupabase && window.IviSupabase.isConfigured()) {
+        window.IviSupabase.revertirContactoWhatsApp(clienteId, tipo)
+          .then(() => console.log(`[Supabase Cloud] Contacto revertido (Tipo: ${tipo}, Cliente: ${clienteId})`));
+        return;
+      }
+
       const apiPath = window.location.pathname.includes('/ventas/') || window.location.pathname.includes('/crm/')
         ? '../api/contactos_whatsapp.php'
         : 'api/contactos_whatsapp.php';
@@ -3617,6 +3665,12 @@
 
     function registrarContactoEnBackend(clienteId, tipo) {
       if (!clienteId) return;
+      if (window.IviSupabase && window.IviSupabase.isConfigured()) {
+        window.IviSupabase.registrarContactoWhatsApp(clienteId, tipo)
+          .then(() => console.log(`[Supabase Cloud] Contacto registrado (Tipo: ${tipo}, Cliente: ${clienteId})`));
+        return;
+      }
+
       const apiPath = window.location.pathname.includes('/ventas/') || window.location.pathname.includes('/crm/')
         ? '../api/contactos_whatsapp.php'
         : 'api/contactos_whatsapp.php';
@@ -3636,6 +3690,45 @@
     }
 
     function sincronizarContactosDesdeBackend() {
+      const procesarListaContactos = (contactos) => {
+        if (!Array.isArray(contactos)) return;
+        const notifs = getCrmNotificaciones();
+        let modificado = false;
+        contactos.forEach(c => {
+          const fechaObj = new Date(c.fecha_contacto);
+          const mes = fechaObj.getMonth() + 1;
+          const dia = fechaObj.getDate();
+          const anio = fechaObj.getFullYear();
+
+          if (c.tipo === 'oferta_cumple') {
+            const key = `${c.cliente_id}_${mes}_${anio}`;
+            if (!notifs.ofertasMes[key]) {
+              notifs.ofertasMes[key] = c.fecha_contacto;
+              modificado = true;
+            }
+          } else if (c.tipo === 'saludo_cumple') {
+            const key = `${c.cliente_id}_${dia}_${mes}_${anio}`;
+            if (!notifs.felicitacionesDia[key]) {
+              notifs.felicitacionesDia[key] = c.fecha_contacto;
+              modificado = true;
+            }
+          }
+        });
+        if (modificado) {
+          localStorage.setItem('ivi_crm_notificaciones_cumple', JSON.stringify(notifs));
+          const mesActual = new Date().getMonth() + 1;
+          if (typeof renderCRMCumpleanos === 'function') renderCRMCumpleanos(mesActual);
+          if (typeof renderDirectorio === 'function') renderDirectorio();
+        }
+      };
+
+      if (window.IviSupabase && window.IviSupabase.isConfigured()) {
+        window.IviSupabase.getContactosWhatsApp().then(contactos => {
+          if (contactos) procesarListaContactos(contactos);
+        });
+        return;
+      }
+
       const apiPath = window.location.pathname.includes('/ventas/') || window.location.pathname.includes('/crm/')
         ? '../api/contactos_whatsapp.php'
         : 'api/contactos_whatsapp.php';
@@ -3644,38 +3737,12 @@
         .then(res => res.json())
         .then(data => {
           if (data && data.ok && Array.isArray(data.contactos)) {
-            const notifs = getCrmNotificaciones();
-            let modificado = false;
-            data.contactos.forEach(c => {
-              const fechaObj = new Date(c.fecha_contacto);
-              const mes = fechaObj.getMonth() + 1;
-              const dia = fechaObj.getDate();
-              const anio = fechaObj.getFullYear();
-
-              if (c.tipo === 'oferta_cumple') {
-                const key = `${c.cliente_id}_${mes}_${anio}`;
-                if (!notifs.ofertasMes[key]) {
-                  notifs.ofertasMes[key] = c.fecha_contacto;
-                  modificado = true;
-                }
-              } else if (c.tipo === 'saludo_cumple') {
-                const key = `${c.cliente_id}_${dia}_${mes}_${anio}`;
-                if (!notifs.felicitacionesDia[key]) {
-                  notifs.felicitacionesDia[key] = c.fecha_contacto;
-                  modificado = true;
-                }
-              }
-            });
-            if (modificado) {
-              localStorage.setItem('ivi_crm_notificaciones_cumple', JSON.stringify(notifs));
-              const mesActual = new Date().getMonth() + 1;
-              if (typeof renderCRMCumpleanos === 'function') renderCRMCumpleanos(mesActual);
-              if (typeof renderDirectorio === 'function') renderDirectorio();
-            }
+            procesarListaContactos(data.contactos);
           }
         })
         .catch(err => console.warn('[CRM DB] Sincronización offline'));
     }
+
 
     function generarUrlWhatsApp(telefono, textoMensaje) {
       const tel = (telefono || '').replace(/\D/g, '');
@@ -3909,6 +3976,25 @@
     }
 
     function sincronizarProveedoresDesdeBackend() {
+      if (window.IviSupabase && window.IviSupabase.isConfigured()) {
+        window.IviSupabase.getProveedores().then(data => {
+          if (Array.isArray(data) && data.length > 0) {
+            proveedoresData = data.map(p => ({
+              id: p.id_proveedor,
+              razon: p.nombre_comercial,
+              contacto: p.contacto || '',
+              tel: p.telefono || '',
+              email: p.email || ''
+            }));
+            localStorage.setItem('ivi_proveedores_data', JSON.stringify(proveedoresData));
+            if (typeof renderProveedores === 'function') renderProveedores();
+            poblarSelectProveedores();
+            console.log('[Supabase Cloud] Proveedores sincronizados:', proveedoresData.length);
+          }
+        });
+        return;
+      }
+
       const apiPath = (window.location.pathname.includes('/ventas/') || window.location.pathname.includes('/crm/') || window.location.pathname.includes('/stock/'))
         ? '../api/proveedores.php'
         : 'api/proveedores.php';
@@ -4299,14 +4385,19 @@
           localStorage.setItem('ivi_proveedores_data', JSON.stringify(proveedoresData));
           poblarSelectProveedores();
 
-          const apiPath = (window.location.pathname.includes('/ventas/') || window.location.pathname.includes('/crm/') || window.location.pathname.includes('/stock/'))
-            ? '../api/proveedores.php'
-            : 'api/proveedores.php';
-          fetch(apiPath, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id: provId, razon, contacto, tel, email })
-          }).catch(err => console.warn('[Proveedores DB] Error actualizando en backend:', err));
+          if (window.IviSupabase && window.IviSupabase.isConfigured()) {
+            window.IviSupabase.saveProveedor({ id: provId, razon, contacto, tel, email })
+              .then(() => console.log('[Supabase Cloud] Proveedor actualizado con éxito'));
+          } else {
+            const apiPath = (window.location.pathname.includes('/ventas/') || window.location.pathname.includes('/crm/') || window.location.pathname.includes('/stock/'))
+              ? '../api/proveedores.php'
+              : 'api/proveedores.php';
+            fetch(apiPath, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ id: provId, razon, contacto, tel, email })
+            }).catch(err => console.warn('[Proveedores DB] Error actualizando en backend:', err));
+          }
 
           cerrarModalEditarProveedor();
           mostrarNotificacion(`Proveedor "${razon}" actualizado con éxito`, 'success');
@@ -4328,23 +4419,35 @@
       localStorage.setItem('ivi_proveedores_data', JSON.stringify(proveedoresData));
       poblarSelectProveedores();
 
-      const apiPath = (window.location.pathname.includes('/ventas/') || window.location.pathname.includes('/crm/') || window.location.pathname.includes('/stock/'))
-        ? '../api/proveedores.php'
-        : 'api/proveedores.php';
-      fetch(apiPath, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ razon, contacto, tel, email })
-      })
-      .then(r => r.json())
-      .then(data => {
-        if (data && data.ok && data.proveedor && data.proveedor.id) {
-          nuevoProv.id = data.proveedor.id;
-          localStorage.setItem('ivi_proveedores_data', JSON.stringify(proveedoresData));
-          renderProveedores();
-        }
-      })
-      .catch(err => console.warn('[Proveedores DB] Error registrando en backend:', err));
+      if (window.IviSupabase && window.IviSupabase.isConfigured()) {
+        window.IviSupabase.saveProveedor(nuevoProv)
+          .then(data => {
+            if (data && data.id_proveedor) {
+              nuevoProv.id = data.id_proveedor;
+              localStorage.setItem('ivi_proveedores_data', JSON.stringify(proveedoresData));
+              renderProveedores();
+              console.log('[Supabase Cloud] Nuevo proveedor persistido con ID:', data.id_proveedor);
+            }
+          });
+      } else {
+        const apiPath = (window.location.pathname.includes('/ventas/') || window.location.pathname.includes('/crm/') || window.location.pathname.includes('/stock/'))
+          ? '../api/proveedores.php'
+          : 'api/proveedores.php';
+        fetch(apiPath, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ razon, contacto, tel, email })
+        })
+        .then(r => r.json())
+        .then(data => {
+          if (data && data.ok && data.proveedor && data.proveedor.id) {
+            nuevoProv.id = data.proveedor.id;
+            localStorage.setItem('ivi_proveedores_data', JSON.stringify(proveedoresData));
+            renderProveedores();
+          }
+        })
+        .catch(err => console.warn('[Proveedores DB] Error registrando en backend:', err));
+      }
 
       cerrarModalEditarProveedor();
       mostrarNotificacion(`Proveedor "${razon}" registrado con éxito`, 'success');

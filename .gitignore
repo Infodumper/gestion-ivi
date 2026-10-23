@@ -68,3 +68,9 @@ Thumbs.db
 .system_generated/
 scratch/
 .cache/
+
+# 9. Scripts locales de desarrollo (Windows / SO)
+*.bat
+*.cmd
+*.ps1
+

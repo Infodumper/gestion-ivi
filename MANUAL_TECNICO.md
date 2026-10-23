@@ -4,7 +4,7 @@
 > **Motor de Base de Datos:** PostgreSQL 18.6 (x64) / Supabase  
 > **Servidor Web:** Apache 2.4 + PHP 8.x  
 > **Fecha de Actualización:** Octubre 2026  
-> **Documentos de Referencia:** [`/AGENTS.md`](/AGENTS.md), [`/DATABASE.md`](/DATABASE.md), [`/database/init_postgres_noa_mora.sql`](/database/init_postgres_noa_mora.sql)
+> **Documentos de Referencia:** [`/AGENTS.md`](/AGENTS.md), [`/DATABASE.md`](/DATABASE.md), [`/database/init_postgres_ivis.sql`](/database/init_postgres_ivis.sql)
 
 ---
 
@@ -107,7 +107,7 @@ c:/TGPN/Ivi/
 │   └── icons/                 # Iconos Phosphor (gift, cake, whatsapp, star, etc.)
 │
 ├── database/                  # Capa 4: DDL y migraciones SQL
-│   └── init_postgres_noa_mora.sql # Script maestro DDL para PostgreSQL/Supabase
+│   └── init_postgres_ivis.sql # Script maestro DDL para PostgreSQL/Supabase
 │
 ├── directives/                # Capa 1: Directivas normativas de negocio
 │   ├── build_system.md
@@ -443,13 +443,13 @@ Para inicializar la base de datos completa en PostgreSQL local o VPS:
 createdb -h localhost -p 5432 -U postgres ivi_db
 
 # Cargar DDL, tablas y datos semilla
-psql -h localhost -p 5432 -U postgres -d ivi_db -f database/init_postgres_noa_mora.sql
+psql -h localhost -p 5432 -U postgres -d ivi_db -f database/init_postgres_ivis.sql
 ```
 
 ### 8.3. Migración hacia Supabase Cloud
 1. Crear proyecto nuevo en [Supabase](https://supabase.com).
 2. Abrir el **SQL Editor** del panel de control de Supabase.
-3. Copiar y ejecutar el contenido de [`/database/init_postgres_noa_mora.sql`](/database/init_postgres_noa_mora.sql).
+3. Copiar y ejecutar el contenido de [`/database/init_postgres_ivis.sql`](/database/init_postgres_ivis.sql).
 4. El script configurará automáticamente las tablas, datos semilla y las políticas **RLS** asociadas a `auth.jwt()->>'email'`.
 5. En el archivo `.env` de producción, actualizar `DB_HOST`, `DB_NAME`, `DB_USER` y `DB_PASSWORD` provistos por el connection pooler de Supabase (puerto 6543 o 5432).
 

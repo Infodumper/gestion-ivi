@@ -1,0 +1,49 @@
+# ==============================================================================
+# SISTEMA DE GESTIÓN IVI — .netlifyignore
+# Define los archivos y directorios que NO deben publicarse en el bundle de Netlify
+# ==============================================================================
+
+# 1. Variables de entorno y secretos
+.env
+.env.*
+*.env
+*.pem
+*.key
+*.cert
+secrets/
+credentials/
+
+# 2. Documentación interna, manuales y directivas de arquitectura
+AGENTS.md
+DATABASE.md
+MANUAL_TECNICO.md
+MANUAL_USUARIO.md
+directives/
+skills/
+.agents/
+
+# 3. Base de datos local y scripts SQL (se ejecutan en Supabase, no en la web pública)
+database/
+*.sql
+*.dump
+*.bak
+
+# 4. Endpoints PHP locales (Netlify es Jamstack estático; la API va directo a Supabase)
+api/
+*.php
+
+# 5. Suite de pruebas automatizadas
+tests/
+
+# 6. Scripts locales de SO y automatización
+*.bat
+*.cmd
+*.ps1
+*.sh
+
+# 7. Temporales, caches y archivos de agente
+scratch/
+.system_generated/
+.cache/
+.vscode/
+.idea/

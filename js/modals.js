@@ -1,6 +1,6 @@
 /**
  * Sistema de Gestión Ivi — Controlador de Formularios Modales
- * Nuevo Cliente & Nuevo Proveedor (Estilo Noa Mora / CliP26)
+ * Nuevo Cliente & Nuevo Proveedor (Estilo IviS / CliP26)
  */
 
 const ModalManager = {

@@ -1,0 +1,58 @@
+# ==============================================================================
+# SISTEMA DE GESTIÓN IVI — netlify.toml
+# Configuración de despliegue, enrutamiento y cabeceras de seguridad para Netlify
+# ==============================================================================
+
+[build]
+  publish = "."
+
+# ------------------------------------------------------------------------------
+# Enrutamiento amigable y redirecciones limpias
+# ------------------------------------------------------------------------------
+[[redirects]]
+  from = "/login"
+  to = "/login.html"
+  status = 200
+
+[[redirects]]
+  from = "/ventas"
+  to = "/ventas/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/crm"
+  to = "/crm/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/stock"
+  to = "/stock/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/formularios"
+  to = "/formularios.html"
+  status = 200
+
+# ------------------------------------------------------------------------------
+# Cabeceras globales de seguridad y rendimiento
+# ------------------------------------------------------------------------------
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+# Cache eficiente para recursos estáticos inmutables (estilos, logos, iconos)
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/styles/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800, stale-while-revalidate=86400"

@@ -10,6 +10,11 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   
+  <!-- Supabase Cloud SDK y Conector Ivi -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./js/supabase-config.js"></script>
+  <script src="./js/supabase-client.js"></script>
+  
   <style>
     *, *::before, *::after {
       box-sizing: border-box;
@@ -364,7 +369,7 @@
   </div>
 
   <script>
-    // Simulación del motor de usuarios locales sincronizado con database/init_postgres_noa_mora.sql
+    // Simulación del motor de usuarios locales sincronizado con database/init_postgres_ivis.sql
     const UsuariosDB = JSON.parse(localStorage.getItem('ivi_usuarios_autorizados') || 'null') || [
       { email: 'infodumper.au@gmail.com', nombre: 'Ignacio Vizoso', rol: 'admin', estado: 'aprobado' },
       { email: 'ignacio.vizoso@gmail.com', nombre: 'Nacho', rol: 'vendedor', estado: 'aprobado' },

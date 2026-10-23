@@ -1,7 +1,7 @@
 # Especificación y Guía de Base de Datos PostgreSQL — `ivi_db`
 
 > **Estado:** Activo y Poblado en Local (PostgreSQL 18)  
-> **Ubicación del Script Maestro:** [`/database/init_postgres_noa_mora.sql`](/database/init_postgres_noa_mora.sql)  
+> **Ubicación del Script Maestro:** [`/database/init_postgres_ivis.sql`](/database/init_postgres_ivis.sql)  
 > **Fecha de Actualización:** Octubre 2026  
 
 ---
@@ -57,7 +57,7 @@
 | Tabla | Registros Iniciales | Estado en Sistema | Descripción y Responsabilidad de Negocio |
 |---|:---:|:---:|---|
 | **`usuarios_autorizados`** | 3 | **En Uso** | Control de acceso **Opción B** (Google OAuth y Email). Registra roles (`admin`, `vendedor`) y estados (`pendiente`, `aprobado`, `rechazado`). |
-| **`clientes`** | 12 | **En Uso** | Maestro de clientes migrado de Noa Mora. Incluye teléfonos, DNI, fechas de cumpleaños (`dia_nac`, `mes_nac`) y consentimiento de WhatsApp. |
+| **`clientes`** | 12 | **En Uso** | Maestro de clientes migrado de IviS. Incluye teléfonos, DNI, fechas de cumpleaños (`dia_nac`, `mes_nac`) y consentimiento de WhatsApp. |
 | **`productos`** | 4 | **En Uso** | Catálogo maestro de artículos con precios de lista, stock actual y categoría. |
 | **`pedidos`** | 19 | **En Uso** | Cabeceras de ventas históricas con fecha, ID de cliente, total facturado y estado comercial (`PAG`, `PEN`, `COT`, `CAN`). |
 | **`detalle_pedidos`** | 19 | Conservada | Renglones/ítems de cada orden con referencia a producto, cantidad y precio unitario pactado. |
