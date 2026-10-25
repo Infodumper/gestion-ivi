@@ -1,14 +1,14 @@
 /**
  * Sistema de Gestión Ivi — Conector y Adaptador Supabase Cloud
- * Provee sincronización en tiempo real y persistencia en Supabase (PostgreSQL Cloud)
- * con fallback transparente a LocalStorage.
+ * Provee autenticación real cifrada (Supabase Auth JWT), sincronización en tiempo real,
+ * persistencia en Supabase (PostgreSQL Cloud) y fallback controlado a LocalStorage.
  */
 
 (function (window) {
   'use strict';
 
-  // Configuración predeterminada (puede sobreescribirse en runtime o localStorage)
   const STORAGE_KEY = 'ivi_supabase_config';
+  const SESSION_KEY = 'ivi_session_user';
 
   const IviSupabase = {
     client: null,
@@ -39,8 +39,21 @@
 
         if (window.supabase && typeof window.supabase.createClient === 'function') {
           try {
-            this.client = window.supabase.createClient(this.url, this.anonKey);
+            this.client = window.supabase.createClient(this.url, this.anonKey, {
+              auth: {
+                persistSession: true,
+                autoRefreshToken: true,
+                detectSessionInUrl: true
+              }
+            });
             console.log('[Supabase Cloud] Cliente inicializado correctamente:', this.url);
+
+            // Escuchar cambios de estado en la autenticación
+            this.client.auth.onAuthStateChange(async (event, session) => {
+              if (event === 'SIGNED_OUT' || !session) {
+                localStorage.removeItem(SESSION_KEY);
+              }
+            });
           } catch (err) {
             console.error('[Supabase Cloud] Error creando cliente:', err);
             this.client = null;
@@ -76,6 +89,191 @@
     isConfigured() {
       return Boolean(this.client);
     },
+
+    // =========================================================================
+    // MÓDULO DE AUTENTICACIÓN SEGURA (SUPABASE AUTH JWT + ESTADOS DE ACCESO)
+    // =========================================================================
+
+    /**
+     * Iniciar sesión con email y contraseña reales
+     */
+    async signIn(email, password) {
+      if (!this.isConfigured()) {
+        throw new Error('Supabase Cloud no está conectado. No se puede autenticar.');
+      }
+
+      const correo = email.trim().toLowerCase();
+
+      // 1. Autenticar credenciales en Supabase Auth (cifrado con bcrypt)
+      const { data: authData, error: authError } = await this.client.auth.signInWithPassword({
+        email: correo,
+        password: password
+      });
+
+      if (authError) {
+        throw authError;
+      }
+
+      // 2. Verificar estado en la tabla usuarios_autorizados
+      const { data: usuario, error: userError } = await this.client
+        .from('usuarios_autorizados')
+        .select('*')
+        .ilike('email', correo)
+        .maybeSingle();
+
+      if (userError) {
+        console.warn('[Auth] Error consultando perfil de usuario:', userError);
+      }
+
+      if (!usuario) {
+        // El usuario está en auth.users pero no en usuarios_autorizados (caso atípico)
+        await this.client.auth.signOut();
+        throw new Error('PENDING_APPROVAL');
+      }
+
+      if (usuario.estado === 'pendiente') {
+        await this.client.auth.signOut();
+        const err = new Error('Tu cuenta está registrada pero pendiente de aprobación por el Administrador.');
+        err.code = 'PENDING_APPROVAL';
+        err.usuario = usuario;
+        throw err;
+      }
+
+      if (usuario.estado === 'rechazado') {
+        await this.client.auth.signOut();
+        const err = new Error('Tu solicitud de acceso ha sido denegada por el Administrador.');
+        err.code = 'ACCESS_DENIED';
+        throw err;
+      }
+
+      if (usuario.estado === 'aprobado') {
+        localStorage.setItem(SESSION_KEY, JSON.stringify(usuario));
+        return {
+          session: authData.session,
+          user: authData.user,
+          profile: usuario
+        };
+      }
+
+      await this.client.auth.signOut();
+      throw new Error('Estado de usuario no válido.');
+    },
+
+    /**
+     * Registro de nueva cuenta de colaborador
+     */
+    async signUp(email, password, nombre) {
+      if (!this.isConfigured()) {
+        throw new Error('Supabase Cloud no está conectado.');
+      }
+
+      const correo = email.trim().toLowerCase();
+
+      const { data, error } = await this.client.auth.signUp({
+        email: correo,
+        password: password,
+        options: {
+          data: {
+            nombre: nombre || correo.split('@')[0]
+          }
+        }
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      return data;
+    },
+
+    /**
+     * Cerrar sesión de forma segura y revocar tokens
+     */
+    async signOut() {
+      try {
+        if (this.client) {
+          await this.client.auth.signOut();
+        }
+      } catch (err) {
+        console.warn('[Auth] Error al cerrar sesión en Supabase:', err);
+      } finally {
+        localStorage.removeItem(SESSION_KEY);
+      }
+    },
+
+    /**
+     * Recuperación de contraseña por email
+     */
+    async resetPassword(email) {
+      if (!this.isConfigured()) {
+        throw new Error('Supabase no está conectado.');
+      }
+      return await this.client.auth.resetPasswordForEmail(email.trim().toLowerCase(), {
+        redirectTo: window.location.origin + '/login.html'
+      });
+    },
+
+    /**
+     * Obtener sesión activa actual de Supabase
+     */
+    async getSession() {
+      if (!this.isConfigured()) return null;
+      try {
+        const { data: { session }, error } = await this.client.auth.getSession();
+        if (error) throw error;
+        return session;
+      } catch (err) {
+        console.warn('[Auth] Error obteniendo sesión:', err);
+        return null;
+      }
+    },
+
+    /**
+     * Guardián de ruta: Verifica sesión activa y estado aprobado.
+     * Si no es válido, redirige a login.
+     */
+    async requireAuth(redirectPath = './login.html') {
+      if (this.isConfigured()) {
+        try {
+          const session = await this.getSession();
+          if (!session || !session.user) {
+            localStorage.removeItem(SESSION_KEY);
+            window.location.href = redirectPath;
+            return null;
+          }
+
+          // Verificar si sigue aprobado
+          const { data: usuario, error } = await this.client
+            .from('usuarios_autorizados')
+            .select('*')
+            .ilike('email', session.user.email)
+            .maybeSingle();
+
+          if (error || !usuario || usuario.estado !== 'aprobado') {
+            await this.signOut();
+            window.location.href = redirectPath;
+            return null;
+          }
+
+          localStorage.setItem(SESSION_KEY, JSON.stringify(usuario));
+          return usuario;
+        } catch (e) {
+          console.warn('[Auth Guard] Error validando sesión en Supabase:', e);
+        }
+      }
+
+      // Verificación local secundaria
+      const localUser = JSON.parse(localStorage.getItem(SESSION_KEY) || 'null');
+      if (!localUser || localUser.estado !== 'aprobado') {
+        window.location.href = redirectPath;
+        return null;
+      }
+      return localUser;
+    },
+
+    // =========================================================================
+    // MÓDULO DE NEGOCIO: PROVEEDORES, PRODUCTOS, CLIENTES Y MENSAJES
+    // =========================================================================
 
     /**
      * PROVEEDORES: Sincronización
@@ -167,7 +365,6 @@
     async revertirContactoWhatsApp(clienteId, tipo) {
       if (!this.client || !clienteId || !tipo) return null;
       try {
-        // Busca el último contacto de este cliente y tipo
         const { data: ultimos, error: errSelect } = await this.client
           .from('contactos_whatsapp')
           .select('id_contacto_wa')
@@ -223,7 +420,6 @@
           .order('id_producto', { ascending: true });
 
         if (error) {
-          // Fallback a consulta directa si falla el join
           const { data: dataDirecta, error: err2 } = await this.client
             .from('productos')
             .select('*')
@@ -308,9 +504,16 @@
     }
   };
 
-  // Auto-inicializar si las credenciales existen
-  document.addEventListener('DOMContentLoaded', () => {
+  // Inicializar inmediatamente si Supabase JS ya está cargado
+  if (window.supabase) {
     IviSupabase.init();
+  }
+
+  // O inicializar en DOMContentLoaded
+  document.addEventListener('DOMContentLoaded', () => {
+    if (!IviSupabase.client) {
+      IviSupabase.init();
+    }
   });
 
   window.IviSupabase = IviSupabase;

@@ -2139,7 +2139,7 @@
   <div id="toastContainer" class="toast-container"></div>
 
   <script>
-    // Inicializar sesión de usuario (Auth Guard)
+    // Inicializar sesión de usuario (Auth Guard inmediato)
     let currentUser = JSON.parse(localStorage.getItem('ivi_session_user') || 'null');
     if (!currentUser) {
       window.location.href = '../login.html';
@@ -2147,8 +2147,24 @@
       document.getElementById('navUserName').innerText = currentUser.nombre || currentUser.email;
     }
 
-    function cerrarSesion() {
-      localStorage.removeItem('ivi_session_user');
+    // Verificación asíncrona de sesión y estado con Supabase Auth
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (window.IviSupabase && window.IviSupabase.isConfigured()) {
+        const verified = await window.IviSupabase.requireAuth('../login.html');
+        if (verified) {
+          currentUser = verified;
+          const navUser = document.getElementById('navUserName');
+          if (navUser) navUser.innerText = verified.nombre || verified.email;
+        }
+      }
+    });
+
+    async function cerrarSesion() {
+      if (window.IviSupabase) {
+        await window.IviSupabase.signOut();
+      } else {
+        localStorage.removeItem('ivi_session_user');
+      }
       window.location.href = '../login.html';
     }
 

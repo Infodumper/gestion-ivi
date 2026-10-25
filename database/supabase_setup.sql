@@ -262,27 +262,119 @@ SELECT setval('contactos_whatsapp_id_contacto_wa_seq', (SELECT COALESCE(MAX(id_c
 SELECT setval('auditoria_id_auditoria_seq', (SELECT COALESCE(MAX(id_auditoria), 1) FROM auditoria));
 
 -- ============================================================================
--- 6. POLÍTICAS RLS (Row Level Security) PARA SUPABASE
+-- 6. POLÍTICAS RLS (Row Level Security) BLINDADAS PARA SUPABASE
 -- ============================================================================
 ALTER TABLE clientes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE productos ENABLE ROW LEVEL SECURITY;
 ALTER TABLE pedidos ENABLE ROW LEVEL SECURITY;
 ALTER TABLE detalle_pedidos ENABLE ROW LEVEL SECURITY;
 ALTER TABLE proveedores ENABLE ROW LEVEL SECURITY;
+ALTER TABLE vendedores ENABLE ROW LEVEL SECURITY;
 ALTER TABLE contactos_whatsapp ENABLE ROW LEVEL SECURITY;
+ALTER TABLE auditoria ENABLE ROW LEVEL SECURITY;
 ALTER TABLE usuarios_autorizados ENABLE ROW LEVEL SECURITY;
 
--- Políticas de lectura y escritura para clientes del sistema
--- Permite acceso con anon key para el despliegue inmediato
-CREATE POLICY "Permitir lectura y escritura anon en clientes" ON clientes FOR ALL USING (true);
-CREATE POLICY "Permitir lectura y escritura anon en productos" ON productos FOR ALL USING (true);
-CREATE POLICY "Permitir lectura y escritura anon en pedidos" ON pedidos FOR ALL USING (true);
-CREATE POLICY "Permitir lectura y escritura anon en detalle_pedidos" ON detalle_pedidos FOR ALL USING (true);
-CREATE POLICY "Permitir lectura y escritura anon en proveedores" ON proveedores FOR ALL USING (true);
-CREATE POLICY "Permitir lectura y escritura anon en contactos_whatsapp" ON contactos_whatsapp FOR ALL USING (true);
-CREATE POLICY "Permitir lectura y escritura anon en usuarios_autorizados" ON usuarios_autorizados FOR ALL USING (true);
+-- Función de verificación de estado aprobado
+CREATE OR REPLACE FUNCTION public.es_usuario_aprobado()
+RETURNS BOOLEAN AS $$
+DECLARE
+    v_email TEXT;
+    v_estado TEXT;
+BEGIN
+    v_email := auth.jwt()->>'email';
+    IF v_email IS NULL THEN
+        RETURN FALSE;
+    END IF;
+
+    SELECT estado INTO v_estado
+    FROM public.usuarios_autorizados
+    WHERE LOWER(email) = LOWER(v_email);
+
+    RETURN (v_estado = 'aprobado');
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
+
+-- Función de verificación de rol administrador
+CREATE OR REPLACE FUNCTION public.es_admin()
+RETURNS BOOLEAN AS $$
+DECLARE
+    v_email TEXT;
+    v_rol TEXT;
+    v_estado TEXT;
+BEGIN
+    v_email := auth.jwt()->>'email';
+    IF v_email IS NULL THEN
+        RETURN FALSE;
+    END IF;
+
+    SELECT rol, estado INTO v_rol, v_estado
+    FROM public.usuarios_autorizados
+    WHERE LOWER(email) = LOWER(v_email);
+
+    RETURN (v_estado = 'aprobado' AND v_rol = 'admin');
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
+
+-- Trigger automático para nuevos usuarios en auth.users
+CREATE OR REPLACE FUNCTION public.handle_new_auth_user()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO public.usuarios_autorizados (email, nombre, rol, estado, fecha_solicitud)
+  VALUES (
+    LOWER(NEW.email),
+    COALESCE(NEW.raw_user_meta_data->>'nombre', split_part(NEW.email, '@', 1)),
+    'vendedor',
+    'pendiente',
+    CURRENT_TIMESTAMP
+  )
+  ON CONFLICT (email) DO NOTHING;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
+
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+CREATE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW EXECUTE FUNCTION public.handle_new_auth_user();
+
+-- Políticas estrictas: solo usuarios autenticados y con estado 'aprobado'
+CREATE POLICY "Acceso clientes solo aprobados" ON clientes
+    FOR ALL TO authenticated USING (es_usuario_aprobado()) WITH CHECK (es_usuario_aprobado());
+
+CREATE POLICY "Acceso productos solo aprobados" ON productos
+    FOR ALL TO authenticated USING (es_usuario_aprobado()) WITH CHECK (es_usuario_aprobado());
+
+CREATE POLICY "Acceso pedidos solo aprobados" ON pedidos
+    FOR ALL TO authenticated USING (es_usuario_aprobado()) WITH CHECK (es_usuario_aprobado());
+
+CREATE POLICY "Acceso detalle_pedidos solo aprobados" ON detalle_pedidos
+    FOR ALL TO authenticated USING (es_usuario_aprobado()) WITH CHECK (es_usuario_aprobado());
+
+CREATE POLICY "Acceso proveedores solo aprobados" ON proveedores
+    FOR ALL TO authenticated USING (es_usuario_aprobado()) WITH CHECK (es_usuario_aprobado());
+
+CREATE POLICY "Acceso vendedores solo aprobados" ON vendedores
+    FOR ALL TO authenticated USING (es_usuario_aprobado()) WITH CHECK (es_usuario_aprobado());
+
+CREATE POLICY "Acceso contactos_whatsapp solo aprobados" ON contactos_whatsapp
+    FOR ALL TO authenticated USING (es_usuario_aprobado()) WITH CHECK (es_usuario_aprobado());
+
+CREATE POLICY "Acceso auditoria solo aprobados" ON auditoria
+    FOR ALL TO authenticated USING (es_usuario_aprobado()) WITH CHECK (es_usuario_aprobado());
+
+CREATE POLICY "Lectura usuarios autorizados propio o admin" ON usuarios_autorizados
+    FOR SELECT TO authenticated
+    USING (LOWER(email) = LOWER(auth.jwt()->>'email') OR es_admin());
+
+CREATE POLICY "Gestion total de usuarios para administradores" ON usuarios_autorizados
+    FOR ALL TO authenticated
+    USING (es_admin()) WITH CHECK (es_admin());
+
+CREATE POLICY "Auto-registro inicial de usuario" ON usuarios_autorizados
+    FOR INSERT TO authenticated
+    WITH CHECK (LOWER(email) = LOWER(auth.jwt()->>'email'));
 
 -- ============================================================================
--- 7. HABILITACIÓN DE REALTIME EN SUPABASE (Opcional pero muy potente)
+-- 7. HABILITACIÓN DE REALTIME EN SUPABASE
 -- ============================================================================
 ALTER PUBLICATION supabase_realtime ADD TABLE proveedores, contactos_whatsapp, clientes, productos;
