@@ -1,21 +1,26 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CRM y Clientes — Costa Atlántica</title>
-  
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+
   <!-- Supabase Cloud SDK y Conector Ivi -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/supabase-config.js"></script>
   <script src="../js/supabase-client.js"></script>
-  
+
   <style>
-    *, *::before, *::after {
+    *,
+    *::before,
+    *::after {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
@@ -23,7 +28,8 @@
 
     body {
       font-family: 'Inter', 'Poppins', sans-serif;
-      background-color: #f1f5f9; /* Slate 100 */
+      background-color: #f1f5f9;
+      /* Slate 100 */
       min-height: 100vh;
       color: #0f172a;
       display: flex;
@@ -145,7 +151,8 @@
       padding: 2.5rem 2.25rem;
       box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
       border: 1px solid #e2e8f0;
-      border-top: 4px solid #059669; /* Verde esmeralda */
+      border-top: 4px solid #059669;
+      /* Verde esmeralda */
       transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
@@ -261,8 +268,15 @@
     }
 
     @keyframes modalFadeIn {
-      from { opacity: 0; transform: scale(0.98); }
-      to { opacity: 1; transform: scale(1); }
+      from {
+        opacity: 0;
+        transform: scale(0.98);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
     }
 
     .modal-header-sober {
@@ -388,8 +402,15 @@
       text-transform: uppercase;
     }
 
-    .badge-status.activo { background: #d1fae5; color: #065f46; }
-    .badge-status.inactivo { background: #fee2e2; color: #991b1b; }
+    .badge-status.activo {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .badge-status.inactivo {
+      background: #fee2e2;
+      color: #991b1b;
+    }
 
     .badge-destacado {
       background: #fef3c7;
@@ -488,7 +509,7 @@
     .crm-tab-btn.active {
       background: #ffffff;
       color: #0f172a;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
       font-weight: 700;
     }
 
@@ -746,21 +767,39 @@
     }
 
     @keyframes slideInRight {
-      from { transform: translateX(100%); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
     }
 
     @media (max-width: 768px) {
-      .crm-kpi-grid { grid-template-columns: 1fr; }
-      .crm-tabs-bar { flex-direction: column; }
+      .crm-kpi-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .crm-tabs-bar {
+        flex-direction: column;
+      }
     }
 
     @media (max-width: 640px) {
-      .form-grid-2 { grid-template-columns: 1fr; }
-      .chapa-clients-card { padding: 2rem 1.5rem; }
+      .form-grid-2 {
+        grid-template-columns: 1fr;
+      }
+
+      .chapa-clients-card {
+        padding: 2rem 1.5rem;
+      }
     }
   </style>
 </head>
+
 <body>
 
   <!-- Top Navbar -->
@@ -782,7 +821,8 @@
         <span class="user-name" id="navUserName">Ignacio Vizoso</span>
         <span class="user-badge">CRM & CLIENTES</span>
       </div>
-      <button type="button" onclick="cerrarSesion()" class="nav-btn-back" title="Cerrar sesión" style="color: #b91c1c; border-color: #fee2e2; background: #fef2f2; padding: 0.35rem 0.65rem; cursor: pointer;">
+      <button type="button" onclick="cerrarSesion()" class="nav-btn-back" title="Cerrar sesión"
+        style="color: #b91c1c; border-color: #fee2e2; background: #fef2f2; padding: 0.35rem 0.65rem; cursor: pointer;">
         <img src="../assets/icons/sign-out-fill.png" alt="Salir" style="width: 14px; height: 14px;">
         <span>Salir</span>
       </button>
@@ -792,7 +832,7 @@
   <!-- Contenedor Central: Chapa Clientes -->
   <main class="sector-container">
     <div class="chapa-clients-card">
-      
+
       <!-- Ícono Superior Phosphor PNG -->
       <div class="chapa-icon-circle">
         <img src="../assets/icons/users-three-fill.png" alt="Clientes">
@@ -814,7 +854,8 @@
           <span>Directorio de Clientes</span>
         </button>
 
-        <button type="button" class="chapa-link-btn" onclick="abrirModalCRM()" style="border-left: 3px solid #059669; background: #fafdfc;">
+        <button type="button" class="chapa-link-btn" onclick="abrirModalCRM()"
+          style="border-left: 3px solid #059669; background: #fafdfc;">
           <img src="../assets/icons/star-fill.png" class="chapa-link-icon-ph" alt="CRM">
           <div style="flex: 1;">
             <div style="display: flex; align-items: center; justify-content: space-between;">
@@ -892,13 +933,18 @@
 
         <!-- VISTA 1: CUMPLEAÑOS DEL MES -->
         <div id="crmViewCumple">
-          <div style="margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+          <div
+            style="margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
             <div style="font-size: 0.85rem; color: #475569; font-weight: 600;">
-              Mostrando cumpleañeros de: <span id="crmMesActualNombre" style="color: #047857; font-weight: 700;">Octubre</span>
+              Mostrando cumpleañeros de: <span id="crmMesActualNombre"
+                style="color: #047857; font-weight: 700;">Octubre</span>
             </div>
             <div style="display: flex; align-items: center; gap: 0.5rem;">
-              <label for="crmMesSelect" style="font-size: 0.8rem; font-weight: 600; color: #64748b;">Filtrar otro mes:</label>
-              <select id="crmMesSelect" class="form-input-control" style="width: auto; padding: 0.35rem 0.75rem; font-size: 0.85rem;" onchange="renderCRMCumpleanos(parseInt(this.value))">
+              <label for="crmMesSelect" style="font-size: 0.8rem; font-weight: 600; color: #64748b;">Filtrar otro
+                mes:</label>
+              <select id="crmMesSelect" class="form-input-control"
+                style="width: auto; padding: 0.35rem 0.75rem; font-size: 0.85rem;"
+                onchange="renderCRMCumpleanos(parseInt(this.value))">
                 <option value="1">Enero</option>
                 <option value="2">Febrero</option>
                 <option value="3">Marzo</option>
@@ -935,9 +981,12 @@
 
         <!-- VISTA 2: CLIENTES QUE MÁS COMPRAN / DESTACADOS -->
         <div id="crmViewTop" style="display: none;">
-          <div style="margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.75rem 1rem;">
+          <div
+            style="margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.75rem 1rem;">
             <div style="font-size: 0.85rem; color: #334155;">
-              <strong>Criterio de Fidelización:</strong> Los clientes con <strong>2 o más compras</strong> en el mes se clasifican automáticamente como <span class="badge-destacado" style="font-size: 0.7rem;">⭐ Destacado</span>.
+              <strong>Criterio de Fidelización:</strong> Los clientes con <strong>2 o más compras</strong> en el mes se
+              clasifican automáticamente como <span class="badge-destacado" style="font-size: 0.7rem;">⭐
+                Destacado</span>.
             </div>
             <div style="font-size: 0.8rem; color: #64748b;">
               Ordenados por volumen mensual y facturación
@@ -1026,10 +1075,13 @@
             </div>
           </div>
 
-          <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; display: flex; flex-wrap: wrap; gap: 2rem;">
+          <div
+            style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; display: flex; flex-wrap: wrap; gap: 2rem;">
             <label class="switch-container" style="cursor: pointer;">
-              <input type="checkbox" id="cliPromociones" checked style="width: 16px; height: 16px; accent-color: #059669;">
-              <span style="font-size: 0.85rem; font-weight: 600; color: #334155;">Acepta Notificaciones por WhatsApp</span>
+              <input type="checkbox" id="cliPromociones" checked
+                style="width: 16px; height: 16px; accent-color: #059669;">
+              <span style="font-size: 0.85rem; font-weight: 600; color: #334155;">Acepta Notificaciones por
+                WhatsApp</span>
             </label>
             <label class="switch-container" style="cursor: pointer;">
               <input type="checkbox" id="cliEstado" checked style="width: 16px; height: 16px; accent-color: #059669;">
@@ -1040,7 +1092,8 @@
           <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
             <button type="button" class="btn-cancel-action" onclick="cerrarModalNuevoCliente()">Cancelar</button>
             <button type="submit" class="btn-submit-action">
-              <img src="../assets/icons/check-circle-fill.png" style="width: 16px; height: 16px; filter: brightness(0) invert(1);" alt="">
+              <img src="../assets/icons/check-circle-fill.png"
+                style="width: 16px; height: 16px; filter: brightness(0) invert(1);" alt="">
               <span>Guardar Cliente</span>
             </button>
           </div>
@@ -1061,10 +1114,15 @@
       </div>
 
       <div class="modal-body-pad">
-        <div style="margin-bottom: 1.25rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;">
-          <input type="text" id="filtroDirectorio" class="form-input-control" placeholder="Buscar por nombre, apellido, DNI o teléfono..." oninput="filtrarDirectorio()" style="max-width: 400px;">
-          <button type="button" class="btn-submit-action" onclick="cerrarModalDirectorio(); abrirModalNuevoCliente();" style="padding: 0.55rem 1rem; font-size: 0.85rem;">
-            <img src="../assets/icons/user-plus-fill.png" style="width: 14px; height: 14px; filter: brightness(0) invert(1);" alt="">
+        <div
+          style="margin-bottom: 1.25rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;">
+          <input type="text" id="filtroDirectorio" class="form-input-control"
+            placeholder="Buscar por nombre, apellido, DNI o teléfono..." oninput="filtrarDirectorio()"
+            style="max-width: 400px;">
+          <button type="button" class="btn-submit-action" onclick="cerrarModalDirectorio(); abrirModalNuevoCliente();"
+            style="padding: 0.55rem 1rem; font-size: 0.85rem;">
+            <img src="../assets/icons/user-plus-fill.png"
+              style="width: 14px; height: 14px; filter: brightness(0) invert(1);" alt="">
             <span>Nuevo Cliente</span>
           </button>
         </div>
@@ -1073,26 +1131,40 @@
           <table class="clients-table">
             <thead>
               <tr>
-                <th id="th-dir-id" class="th-sortable" onclick="ordenarDirectorio('id')" title="Haga clic para ordenar por ID">
-                  <div class="th-sort-content"><span>ID</span><span class="sort-icon" id="sort-icon-dir-id">↕</span></div>
+                <th id="th-dir-id" class="th-sortable" onclick="ordenarDirectorio('id')"
+                  title="Haga clic para ordenar por ID">
+                  <div class="th-sort-content"><span>ID</span><span class="sort-icon" id="sort-icon-dir-id">↕</span>
+                  </div>
                 </th>
-                <th id="th-dir-nombre" class="th-sortable" onclick="ordenarDirectorio('nombre')" title="Haga clic para ordenar por Nombre">
-                  <div class="th-sort-content"><span>Nombre</span><span class="sort-icon" id="sort-icon-dir-nombre">↕</span></div>
+                <th id="th-dir-nombre" class="th-sortable" onclick="ordenarDirectorio('nombre')"
+                  title="Haga clic para ordenar por Nombre">
+                  <div class="th-sort-content"><span>Nombre</span><span class="sort-icon"
+                      id="sort-icon-dir-nombre">↕</span></div>
                 </th>
-                <th id="th-dir-apellido" class="th-sortable" onclick="ordenarDirectorio('apellido')" title="Haga clic para ordenar por Apellido">
-                  <div class="th-sort-content"><span>Apellido</span><span class="sort-icon" id="sort-icon-dir-apellido">↕</span></div>
+                <th id="th-dir-apellido" class="th-sortable" onclick="ordenarDirectorio('apellido')"
+                  title="Haga clic para ordenar por Apellido">
+                  <div class="th-sort-content"><span>Apellido</span><span class="sort-icon"
+                      id="sort-icon-dir-apellido">↕</span></div>
                 </th>
-                <th id="th-dir-telefono" class="th-sortable" onclick="ordenarDirectorio('telefono')" title="Haga clic para ordenar por Teléfono">
-                  <div class="th-sort-content"><span>Teléfono</span><span class="sort-icon" id="sort-icon-dir-telefono">↕</span></div>
+                <th id="th-dir-telefono" class="th-sortable" onclick="ordenarDirectorio('telefono')"
+                  title="Haga clic para ordenar por Teléfono">
+                  <div class="th-sort-content"><span>Teléfono</span><span class="sort-icon"
+                      id="sort-icon-dir-telefono">↕</span></div>
                 </th>
-                <th id="th-dir-dni" class="th-sortable" onclick="ordenarDirectorio('dni')" title="Haga clic para ordenar por DNI / CUIT">
-                  <div class="th-sort-content"><span>DNI / CUIT</span><span class="sort-icon" id="sort-icon-dir-dni">↕</span></div>
+                <th id="th-dir-dni" class="th-sortable" onclick="ordenarDirectorio('dni')"
+                  title="Haga clic para ordenar por DNI / CUIT">
+                  <div class="th-sort-content"><span>DNI / CUIT</span><span class="sort-icon"
+                      id="sort-icon-dir-dni">↕</span></div>
                 </th>
-                <th id="th-dir-cumple" class="th-sortable" onclick="ordenarDirectorio('cumple')" title="Haga clic para ordenar por Cumpleaños">
-                  <div class="th-sort-content"><span>Cumpleaños</span><span class="sort-icon" id="sort-icon-dir-cumple">↕</span></div>
+                <th id="th-dir-cumple" class="th-sortable" onclick="ordenarDirectorio('cumple')"
+                  title="Haga clic para ordenar por Cumpleaños">
+                  <div class="th-sort-content"><span>Cumpleaños</span><span class="sort-icon"
+                      id="sort-icon-dir-cumple">↕</span></div>
                 </th>
-                <th id="th-dir-estado" class="th-sortable" onclick="ordenarDirectorio('estado')" title="Haga clic para ordenar por Estado">
-                  <div class="th-sort-content"><span>Estado</span><span class="sort-icon" id="sort-icon-dir-estado">↕</span></div>
+                <th id="th-dir-estado" class="th-sortable" onclick="ordenarDirectorio('estado')"
+                  title="Haga clic para ordenar por Estado">
+                  <div class="th-sort-content"><span>Estado</span><span class="sort-icon"
+                      id="sort-icon-dir-estado">↕</span></div>
                 </th>
               </tr>
             </thead>
@@ -1106,24 +1178,31 @@
   </div>
 
   <!-- MODAL DE CONFIRMACIÓN DE REVERSIÓN CRM (SIN ALERTS NATIVOS) -->
-  <div id="modalConfirmarReversion" class="modal-overlay" style="display: none; align-items: center; justify-content: center; z-index: 10000;">
-    <div class="modal-box-wide" style="max-width: 440px; border-radius: 16px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.25), 0 8px 10px -6px rgba(0, 0, 0, 0.1); background: white; overflow: hidden; border: 1px solid #e2e8f0;">
+  <div id="modalConfirmarReversion" class="modal-overlay"
+    style="display: none; align-items: center; justify-content: center; z-index: 10000;">
+    <div class="modal-box-wide"
+      style="max-width: 440px; border-radius: 16px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.25), 0 8px 10px -6px rgba(0, 0, 0, 0.1); background: white; overflow: hidden; border: 1px solid #e2e8f0;">
       <div style="padding: 1.75rem 1.5rem; text-align: center;">
-        <div style="width: 56px; height: 56px; border-radius: 50%; background: #fef2f2; color: #dc2626; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1rem; border: 1px solid #fee2e2;">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
-            <path d="M3 3v5h5"/>
+        <div
+          style="width: 56px; height: 56px; border-radius: 50%; background: #fef2f2; color: #dc2626; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1rem; border: 1px solid #fee2e2;">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+            <path d="M3 3v5h5" />
           </svg>
         </div>
-        <h3 id="reversionModalTitle" style="font-size: 1.2rem; font-weight: 700; color: #0f172a; margin: 0 0 0.5rem 0;">¿Revertir acción?</h3>
+        <h3 id="reversionModalTitle" style="font-size: 1.2rem; font-weight: 700; color: #0f172a; margin: 0 0 0.5rem 0;">
+          ¿Revertir acción?</h3>
         <p id="reversionModalMsg" style="font-size: 0.875rem; color: #64748b; line-height: 1.5; margin: 0 0 1.5rem 0;">
           El estado del botón volverá a estar disponible como si no hubiese sido enviado.
         </p>
         <div style="display: flex; gap: 0.75rem; justify-content: center;">
-          <button type="button" class="btn-cancel" onclick="cerrarModalConfirmarReversion()" style="padding: 0.6rem 1.25rem; font-weight: 600; border-radius: 8px; border: 1px solid #cbd5e1; background: white; color: #475569; cursor: pointer; transition: background 0.15s ease;">
+          <button type="button" class="btn-cancel" onclick="cerrarModalConfirmarReversion()"
+            style="padding: 0.6rem 1.25rem; font-weight: 600; border-radius: 8px; border: 1px solid #cbd5e1; background: white; color: #475569; cursor: pointer; transition: background 0.15s ease;">
             Cancelar
           </button>
-          <button type="button" id="btnConfirmarReversionAction" onclick="ejecutarReversionConfirmada()" style="padding: 0.6rem 1.25rem; font-weight: 600; border-radius: 8px; border: none; background: #dc2626; color: white; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 4px rgba(220, 38, 38, 0.25); transition: background 0.15s ease;">
+          <button type="button" id="btnConfirmarReversionAction" onclick="ejecutarReversionConfirmada()"
+            style="padding: 0.6rem 1.25rem; font-weight: 600; border-radius: 8px; border: none; background: #dc2626; color: white; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 4px rgba(220, 38, 38, 0.25); transition: background 0.15s ease;">
             <span>Sí, revertir</span>
           </button>
         </div>
@@ -1258,7 +1337,7 @@
 
       clientesData.unshift(nuevoCliente);
       localStorage.setItem('ivi_clientes_data', JSON.stringify(clientesData));
-      
+
       cerrarModalNuevoCliente();
       showToast(`Cliente ${nuevoCliente.nombre} ${nuevoCliente.apellido} registrado.`);
     }
@@ -1344,13 +1423,13 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ cliente_id: parseInt(clienteId), tipo: tipo, accion: 'revertir' })
       })
-      .then(res => res.json())
-      .then(data => {
-        if (data && data.ok) {
-          console.log(`[CRM DB] Contacto revertido en PostgreSQL (Tipo: ${tipo}, Cliente: ${clienteId})`);
-        }
-      })
-      .catch(err => console.warn('[CRM DB] Modo offline o backend no disponible al revertir:', err));
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.ok) {
+            console.log(`[CRM DB] Contacto revertido en PostgreSQL (Tipo: ${tipo}, Cliente: ${clienteId})`);
+          }
+        })
+        .catch(err => console.warn('[CRM DB] Modo offline o backend no disponible al revertir:', err));
     }
 
     let reversionPendiente = null;
@@ -1430,13 +1509,13 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ cliente_id: parseInt(clienteId), tipo: tipo })
       })
-      .then(res => res.json())
-      .then(data => {
-        if (data && data.ok) {
-          console.log(`[CRM DB] Contacto registrado en PostgreSQL (ID: ${data.contacto?.id_contacto_wa || 'OK'}, Tipo: ${tipo})`);
-        }
-      })
-      .catch(err => console.warn('[CRM DB] Modo offline o backend no disponible:', err));
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.ok) {
+            console.log(`[CRM DB] Contacto registrado en PostgreSQL (ID: ${data.contacto?.id_contacto_wa || 'OK'}, Tipo: ${tipo})`);
+          }
+        })
+        .catch(err => console.warn('[CRM DB] Modo offline o backend no disponible:', err));
     }
 
     function sincronizarContactosDesdeBackend() {
@@ -1498,7 +1577,7 @@
       }
       marcarOfertaMesEnviada(clienteId, mes, anio);
       registrarContactoEnBackend(clienteId, 'oferta_cumple');
-      
+
       const url = generarUrlWhatsApp(tel, `¡Hola ${nombre}! 🎁 En el mes de tu cumpleaños, desde Costa Atlántica queremos celebrarlo con vos. ¡Tenés un descuento y beneficio especial en tus pedidos durante este mes!`);
       window.open(url, '_blank');
       showToast(`Oferta del mes de cumpleaños avisada a ${nombre} y registrada en base de datos.`);
@@ -1605,7 +1684,7 @@
       const diaActual = new Date().getDate();
       const mesActual = new Date().getMonth() + 1;
       const anioActual = new Date().getFullYear();
-      
+
       const itemsOrdenados = [...lista].sort((a, b) => compararClientes(a, b, directorioSort.columna, directorioSort.orden));
 
       tbody.innerHTML = itemsOrdenados.map(c => {
@@ -1614,7 +1693,7 @@
           const cumpleEsteMes = (parseInt(c.mes_nac) === mesActual);
           const esHoy = (cumpleEsteMes && parseInt(c.dia_nac) === diaActual);
           const avisadoOferta = cumpleEsteMes && yaNotificadoOfertaMes(c.id, mesActual, anioActual);
-          
+
           let badgeMes = '';
           if (cumpleEsteMes) {
             badgeMes = `
@@ -1662,8 +1741,8 @@
 
     function filtrarDirectorio() {
       const q = (document.getElementById('filtroDirectorio')?.value || '').toLowerCase().trim();
-      const filtrados = clientesData.filter(c => 
-        (c.nombre && c.nombre.toLowerCase().includes(q)) || 
+      const filtrados = clientesData.filter(c =>
+        (c.nombre && c.nombre.toLowerCase().includes(q)) ||
         (c.apellido && c.apellido.toLowerCase().includes(q)) ||
         (c.dni && String(c.dni).includes(q)) ||
         (c.telefono && String(c.telefono).includes(q))
@@ -1679,11 +1758,11 @@
     function abrirModalCRM() {
       asegurarDatosCumpleanos();
       sincronizarContactosDesdeBackend();
-      
+
       const mesActual = new Date().getMonth() + 1;
       const selectMes = document.getElementById('crmMesSelect');
       if (selectMes) selectMes.value = mesActual;
-      
+
       const mesesNombres = ["", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
       const elNombreMes = document.getElementById('crmMesActualNombre');
       if (elNombreMes) elNombreMes.innerText = mesesNombres[mesActual] || 'Mes Actual';
@@ -2067,4 +2146,5 @@
     });
   </script>
 </body>
+
 </html>

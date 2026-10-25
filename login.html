@@ -1,22 +1,27 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Acceso al Sistema — Costa Atlántica</title>
-  
+
   <!-- Tipografías Oficiales del Sistema CliP27 / Costa Atlántica -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  
+  <link
+    href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+
   <!-- Supabase Cloud SDK y Conector Ivi -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="./js/supabase-config.js"></script>
   <script src="./js/supabase-client.js"></script>
-  
+
   <style>
-    *, *::before, *::after {
+    *,
+    *::before,
+    *::after {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
@@ -247,8 +252,15 @@
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-6px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(-6px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     /* Footer */
@@ -263,19 +275,21 @@
     }
   </style>
 </head>
+
 <body>
 
   <div class="login-container">
     <!-- Header -->
     <header class="brand-header">
-      <img src="./styles/images/logo.png" alt="Logo Costa Atlántica" class="brand-logo" onerror="this.style.display='none'">
+      <img src="./styles/images/logo.png" alt="Logo Costa Atlántica" class="brand-logo"
+        onerror="this.style.display='none'">
       <h1 class="brand-title">Costa Atlántica</h1>
       <p class="brand-subtitle">Gestión Comercial y Operativa</p>
     </header>
 
     <!-- Card Principal -->
     <div class="login-card">
-      
+
       <!-- Pestañas de Selección -->
       <div class="auth-tabs">
         <button type="button" class="auth-tab-btn active" id="tabBtnLogin" onclick="switchMode('login')">
@@ -293,28 +307,14 @@
       <form id="formLogin" onsubmit="handleLoginSubmit(event)">
         <div class="form-group">
           <label class="form-label" for="loginEmail">Correo Electrónico</label>
-          <input 
-            type="email" 
-            id="loginEmail" 
-            name="email" 
-            class="form-input" 
-            placeholder="usuario@ejemplo.com" 
-            required
-            autocomplete="email"
-          >
+          <input type="email" id="loginEmail" name="email" class="form-input" placeholder="usuario@ejemplo.com" required
+            autocomplete="email">
         </div>
 
         <div class="form-group">
           <label class="form-label" for="loginPassword">Contraseña</label>
-          <input 
-            type="password" 
-            id="loginPassword" 
-            name="password" 
-            class="form-input" 
-            placeholder="••••••••" 
-            required
-            autocomplete="current-password"
-          >
+          <input type="password" id="loginPassword" name="password" class="form-input" placeholder="••••••••" required
+            autocomplete="current-password">
         </div>
 
         <div class="form-help-row">
@@ -329,47 +329,26 @@
       <!-- FORMULARIO 2: SOLICITAR ACCESO / REGISTRO -->
       <form id="formRegister" onsubmit="handleRegisterSubmit(event)" style="display: none;">
         <div class="info-badge">
-          🛡️ Al registrarte, tu cuenta quedará vinculada y se enviará en estado <strong>pendiente</strong> al Administrador para su aprobación.
+          🛡️ Al registrarte, tu cuenta quedará vinculada y se enviará en estado <strong>pendiente</strong> al
+          Administrador para su aprobación.
         </div>
 
         <div class="form-group">
           <label class="form-label" for="regNombre">Nombre y Apellido</label>
-          <input 
-            type="text" 
-            id="regNombre" 
-            name="nombre" 
-            class="form-input" 
-            placeholder="Ej: Paola Estévez" 
-            required
-            autocomplete="name"
-          >
+          <input type="text" id="regNombre" name="nombre" class="form-input" placeholder="Ej: Paola Estévez" required
+            autocomplete="name">
         </div>
 
         <div class="form-group">
           <label class="form-label" for="regEmail">Correo Electrónico</label>
-          <input 
-            type="email" 
-            id="regEmail" 
-            name="email" 
-            class="form-input" 
-            placeholder="usuario@ejemplo.com" 
-            required
-            autocomplete="email"
-          >
+          <input type="email" id="regEmail" name="email" class="form-input" placeholder="usuario@ejemplo.com" required
+            autocomplete="email">
         </div>
 
         <div class="form-group">
           <label class="form-label" for="regPassword">Crear Contraseña</label>
-          <input 
-            type="password" 
-            id="regPassword" 
-            name="password" 
-            class="form-input" 
-            placeholder="Mínimo 6 caracteres" 
-            required
-            minlength="6"
-            autocomplete="new-password"
-          >
+          <input type="password" id="regPassword" name="password" class="form-input" placeholder="Mínimo 6 caracteres"
+            required minlength="6" autocomplete="new-password">
         </div>
 
         <button type="submit" class="btn-submit" id="btnRegisterSubmit">
@@ -553,4 +532,5 @@
     }
   </script>
 </body>
+
 </html>

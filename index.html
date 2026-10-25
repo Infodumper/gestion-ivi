@@ -1,21 +1,26 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ventas — Costa Atlántica</title>
-  
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+
   <!-- Supabase Cloud SDK y Conector Ivi -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="./js/supabase-config.js"></script>
   <script src="./js/supabase-client.js"></script>
-  
+
   <style>
-    *, *::before, *::after {
+    *,
+    *::before,
+    *::after {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
@@ -23,7 +28,8 @@
 
     body {
       font-family: 'Inter', 'Poppins', sans-serif;
-      background-color: #f1f5f9; /* Escala de grises sobria: Slate 100 */
+      background-color: #f1f5f9;
+      /* Escala de grises sobria: Slate 100 */
       min-height: 100vh;
       color: #0f172a;
       display: flex;
@@ -120,7 +126,8 @@
       font-size: 0.65rem;
       font-weight: 700;
       letter-spacing: 0.05em;
-      color: #1d4ed8; /* Azul sobrio */
+      color: #1d4ed8;
+      /* Azul sobrio */
       background: #eff6ff;
       padding: 2px 7px;
       border-radius: 9999px;
@@ -168,9 +175,17 @@
     }
 
     /* Borde superior identificador por sector */
-    .chapa-card-ventas { border-top: 4px solid #2563eb; }
-    .chapa-card-clientes { border-top: 4px solid #059669; }
-    .chapa-card-stock { border-top: 4px solid #475569; }
+    .chapa-card-ventas {
+      border-top: 4px solid #2563eb;
+    }
+
+    .chapa-card-clientes {
+      border-top: 4px solid #059669;
+    }
+
+    .chapa-card-stock {
+      border-top: 4px solid #475569;
+    }
 
     /* Cajas de Íconos Phosphor */
     .chapa-icon-circle {
@@ -183,9 +198,20 @@
       margin-bottom: 1.25rem;
     }
 
-    .icon-circle-ventas { background-color: #f0f7ff; border: 1px solid #dbeafe; }
-    .icon-circle-clientes { background-color: #f0fdf4; border: 1px solid #dcfce7; }
-    .icon-circle-stock { background-color: #f8fafc; border: 1px solid #e2e8f0; }
+    .icon-circle-ventas {
+      background-color: #f0f7ff;
+      border: 1px solid #dbeafe;
+    }
+
+    .icon-circle-clientes {
+      background-color: #f0fdf4;
+      border: 1px solid #dcfce7;
+    }
+
+    .icon-circle-stock {
+      background-color: #f8fafc;
+      border: 1px solid #e2e8f0;
+    }
 
     .chapa-icon-circle img {
       width: 34px;
@@ -338,8 +364,15 @@
     }
 
     @keyframes modalFadeIn {
-      from { opacity: 0; transform: scale(0.98); }
-      to { opacity: 1; transform: scale(1); }
+      from {
+        opacity: 0;
+        transform: scale(0.98);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
     }
 
     .modal-header-sober {
@@ -414,12 +447,16 @@
       color: #1e293b;
     }
 
-    .history-table tbody tr, .clients-table tbody tr, .stock-table tbody tr {
+    .history-table tbody tr,
+    .clients-table tbody tr,
+    .stock-table tbody tr {
       cursor: pointer;
       transition: background-color 0.15s ease;
     }
 
-    .history-table tbody tr:hover, .clients-table tbody tr:hover, .stock-table tbody tr:hover {
+    .history-table tbody tr:hover,
+    .clients-table tbody tr:hover,
+    .stock-table tbody tr:hover {
       background-color: #f1f5f9;
     }
 
@@ -452,13 +489,43 @@
       text-transform: uppercase;
     }
 
-    .badge-status.PAG { background: #d1fae5; color: #065f46; }
-    .badge-status.PEN { background: #fef3c7; color: #92400e; }
-    .badge-status.COT { background: #e0f2fe; color: #0369a1; }
-    .badge-status.CAN { background: #fee2e2; color: #991b1b; }
-    .badge-status.activo, .badge-stock.optimo { background: #d1fae5; color: #065f46; }
-    .badge-status.inactivo, .badge-stock.agotado { background: #fee2e2; color: #991b1b; }
-    .badge-stock.bajo { background: #fef3c7; color: #92400e; }
+    .badge-status.PAG {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .badge-status.PEN {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .badge-status.COT {
+      background: #e0f2fe;
+      color: #0369a1;
+    }
+
+    .badge-status.CAN {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .badge-status.activo,
+    .badge-stock.optimo {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .badge-status.inactivo,
+    .badge-stock.agotado {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .badge-stock.bajo {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
     .badge-destacado {
       background: #fef3c7;
       color: #92400e;
@@ -556,7 +623,7 @@
     .crm-tab-btn.active {
       background: #ffffff;
       color: #0f172a;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
       font-weight: 700;
     }
 
@@ -710,18 +777,26 @@
     }
 
     @media (max-width: 768px) {
-      .crm-kpi-grid { grid-template-columns: 1fr; }
-      .crm-tabs-bar { flex-direction: column; }
+      .crm-kpi-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .crm-tabs-bar {
+        flex-direction: column;
+      }
     }
 
     /* Tablas Generales (Clientes y Stock) */
-    .clients-table, .stock-table {
+    .clients-table,
+    .stock-table {
       width: 100%;
       border-collapse: collapse;
       font-size: 0.875rem;
     }
 
-    .clients-table th, .stock-table th, .history-table th {
+    .clients-table th,
+    .stock-table th,
+    .history-table th {
       background: #f8fafc;
       color: #475569;
       font-weight: 600;
@@ -769,7 +844,9 @@
       font-weight: 800;
     }
 
-    .clients-table td, .stock-table td, .history-table td {
+    .clients-table td,
+    .stock-table td,
+    .history-table td {
       padding: 0.75rem 1rem;
       border-bottom: 1px solid #f1f5f9;
       color: #1e293b;
@@ -792,17 +869,21 @@
       transition: transform 0.15s ease, box-shadow 0.15s ease;
       cursor: pointer;
     }
+
     .stock-circle:hover {
       transform: scale(1.25);
     }
+
     .stock-circle.optimo {
       background-color: #10b981;
       box-shadow: 0 0 0 3px #d1fae5;
     }
+
     .stock-circle.bajo {
       background-color: #f59e0b;
       box-shadow: 0 0 0 3px #fef3c7;
     }
+
     .stock-circle.agotado {
       background-color: #ef4444;
       box-shadow: 0 0 0 3px #fee2e2;
@@ -873,7 +954,8 @@
       border-bottom: none;
     }
 
-    .autocomplete-item:hover, .autocomplete-item.active {
+    .autocomplete-item:hover,
+    .autocomplete-item.active {
       background-color: #dbeafe !important;
       color: #1d4ed8 !important;
     }
@@ -1043,7 +1125,8 @@
     }
 
     .btn-submit-action {
-      background: #059669; /* Verde corporativo sobrio */
+      background: #059669;
+      /* Verde corporativo sobrio */
       color: #ffffff;
       font-size: 0.925rem;
       font-weight: 600;
@@ -1107,8 +1190,15 @@
     }
 
     @keyframes toastSlideIn {
-      from { transform: translateX(110%); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
+      from {
+        transform: translateX(110%);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
     }
 
     .toast-card.toast-warning {
@@ -1214,18 +1304,24 @@
       .sector-container {
         padding: 2rem 1rem 3rem 1rem;
       }
+
       .hub-grid {
-        grid-template-columns: 1fr; /* 1 columna en Vertical en celulares */
+        grid-template-columns: 1fr;
+        /* 1 columna en Vertical en celulares */
         max-width: 440px;
         gap: 1.25rem;
       }
+
       .chapa-sector-card {
         padding: 1.75rem 1.5rem;
       }
     }
 
     @media (max-width: 640px) {
-      .product-list-header { display: none; }
+      .product-list-header {
+        display: none;
+      }
+
       .product-row-item {
         grid-template-columns: minmax(90px, 1.1fr) 1.4fr 38px;
         grid-template-areas:
@@ -1239,26 +1335,31 @@
         gap: 0.5rem 0.65rem;
         align-items: center;
       }
+
       /* 1. Código */
-      .product-row-item > div:nth-child(1) {
+      .product-row-item>div:nth-child(1) {
         grid-column: 1;
         grid-row: 1;
       }
+
       /* 2. Descripción */
-      .product-row-item > div:nth-child(2) {
+      .product-row-item>div:nth-child(2) {
         grid-column: 1 / -1;
         grid-row: 2;
       }
+
       /* 3. Precio Unitario */
-      .product-row-item > div:nth-child(3) {
+      .product-row-item>div:nth-child(3) {
         grid-column: 2;
         grid-row: 1;
       }
+
       /* 4. Cantidad */
-      .product-row-item > div:nth-child(4) {
+      .product-row-item>div:nth-child(4) {
         grid-column: 1;
         grid-row: 3;
       }
+
       /* 5. Subtotal */
       .product-row-subtotal {
         grid-column: 2;
@@ -1266,6 +1367,7 @@
         text-align: right;
         padding-right: 0.25rem;
       }
+
       /* 6. Botón Eliminar */
       .btn-remove-row {
         grid-column: 3;
@@ -1275,12 +1377,13 @@
     }
   </style>
 </head>
+
 <body>
 
   <!-- Top Navbar -->
   <header class="top-navbar">
     <div class="nav-brand-left">
-      
+
       <img src="styles/images/logo.png" alt="Logo" class="nav-logo" onerror="this.style.display='none'">
     </div>
 
@@ -1293,7 +1396,8 @@
         <span class="user-name" id="navUserName">Ignacio Vizoso</span>
         <span class="user-badge">VENTAS</span>
       </div>
-      <button type="button" onclick="cerrarSesion()" class="nav-btn-back" title="Cerrar sesión" style="color: #b91c1c; border-color: #fee2e2; background: #fef2f2; padding: 0.35rem 0.65rem; cursor: pointer;">
+      <button type="button" onclick="cerrarSesion()" class="nav-btn-back" title="Cerrar sesión"
+        style="color: #b91c1c; border-color: #fee2e2; background: #fef2f2; padding: 0.35rem 0.65rem; cursor: pointer;">
         <img src="assets/icons/sign-out-fill.png" alt="Salir" style="width: 14px; height: 14px;">
         <span>Salir</span>
       </button>
@@ -1303,7 +1407,7 @@
   <!-- Contenedor Principal: 3 Menús (Horizontal en PC / Vertical en Celulares) -->
   <main class="sector-container">
     <div class="hub-grid">
-      
+
       <!-- 1. CHAPA VENTAS -->
       <div class="chapa-sector-card chapa-card-ventas">
         <div>
@@ -1327,7 +1431,9 @@
             <span>Historial de Ventas</span>
           </button>
 
-          <button type="button" class="chapa-link-btn btn-difuminado" onclick="mostrarNotificacion('El módulo de Facturación no se encuentra operativo de momento.', 'warning')" title="Facturación electrónica (Próximamente)">
+          <button type="button" class="chapa-link-btn btn-difuminado"
+            onclick="mostrarNotificacion('El módulo de Facturación no se encuentra operativo de momento.', 'warning')"
+            title="Facturación electrónica (Próximamente)">
             <img src="assets/icons/receipt-fill.png" class="chapa-link-icon-ph" alt="Facturación">
             <span>Facturación</span>
             <span class="badge-difuminado">Próximamente</span>
@@ -1417,22 +1523,24 @@
           <div class="form-group-item">
             <label for="vtaClienteSearch" style="display: flex; justify-content: space-between; align-items: center;">
               <span>Cliente <span style="color: #dc2626;">*</span></span>
-              <span id="clienteAyuda" style="font-size: 0.75rem; color: #64748b; font-weight: 400;">Tipee al menos 3 letras para buscar</span>
+              <span id="clienteAyuda" style="font-size: 0.75rem; color: #64748b; font-weight: 400;">Tipee al menos 3
+                letras para buscar</span>
             </label>
-            
+
             <!-- Modo Búsqueda / Autocomplete -->
             <div id="clienteSearchContainer" style="display: flex; gap: 0.5rem; align-items: center;">
               <div style="flex: 1; position: relative;">
-                <input type="text" id="vtaClienteSearch" class="form-input-control" 
-                  placeholder="Escriba para buscar por nombre, apellido o DNI..." 
-                  autocomplete="off" 
-                  oninput="buscarClientesAutocomplete(this.value)"
-                  onkeydown="handleClienteKeydown(event)">
-                
+                <input type="text" id="vtaClienteSearch" class="form-input-control"
+                  placeholder="Escriba para buscar por nombre, apellido o DNI..." autocomplete="off"
+                  oninput="buscarClientesAutocomplete(this.value)" onkeydown="handleClienteKeydown(event)">
+
                 <div id="clienteDropdown" class="autocomplete-dropdown"></div>
               </div>
-              <button type="button" class="btn-submit-action" onclick="abrirModalNuevoClienteDesdeVenta()" style="background: #059669; padding: 0.65rem 0.95rem; font-size: 0.85rem; white-space: nowrap; border-radius: 8px; flex-shrink: 0;" title="Dar de alta un nuevo cliente">
-                <img src="assets/icons/user-plus-fill.png" style="width: 15px; height: 15px; filter: brightness(0) invert(1);" alt="+">
+              <button type="button" class="btn-submit-action" onclick="abrirModalNuevoClienteDesdeVenta()"
+                style="background: #059669; padding: 0.65rem 0.95rem; font-size: 0.85rem; white-space: nowrap; border-radius: 8px; flex-shrink: 0;"
+                title="Dar de alta un nuevo cliente">
+                <img src="assets/icons/user-plus-fill.png"
+                  style="width: 15px; height: 15px; filter: brightness(0) invert(1);" alt="+">
                 <span>Nuevo Cliente</span>
               </button>
             </div>
@@ -1444,9 +1552,11 @@
                   <img src="assets/icons/check-circle-fill.png" style="width: 16px; height: 16px;" alt="OK">
                   <div id="vtaClienteFijoNombre" class="client-fixed-name">Cliente Seleccionado</div>
                 </div>
-                <div id="vtaClienteFijoDetalles" class="client-fixed-details" style="margin-left: 1.5rem;">DNI: - • Teléfono: -</div>
+                <div id="vtaClienteFijoDetalles" class="client-fixed-details" style="margin-left: 1.5rem;">DNI: - •
+                  Teléfono: -</div>
               </div>
-              <button type="button" class="btn-edit-client" onclick="editarClienteSeleccionado()" title="Cambiar o editar cliente seleccionado">
+              <button type="button" class="btn-edit-client" onclick="editarClienteSeleccionado()"
+                title="Cambiar o editar cliente seleccionado">
                 <img src="assets/icons/pencil-simple-fill.png" style="width: 14px; height: 14px; opacity: 0.85;" alt="">
                 <span>Editar</span>
               </button>
@@ -1482,22 +1592,26 @@
           </div>
 
           <!-- Resumen de Totales -->
-          <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.25rem; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
+          <div
+            style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.25rem; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
             <div>
               <div style="font-size: 0.85rem; color: #475569; font-weight: 600;">Subtotal Venta</div>
               <div id="resumenDetalle" style="font-size: 0.8rem; color: #64748b;">1 item(s) seleccionados</div>
             </div>
             <div style="text-align: right;">
-              <div style="font-size: 0.75rem; text-transform: uppercase; color: #64748b; font-weight: 700;">Total a Cobrar</div>
+              <div style="font-size: 0.75rem; text-transform: uppercase; color: #64748b; font-weight: 700;">Total a
+                Cobrar</div>
               <div id="vtaTotal" style="font-size: 1.65rem; font-weight: 800; color: #047857;">$ 0,00</div>
             </div>
           </div>
 
           <!-- Selector de Estado (Regla 4.4: Stock se da de baja en PEN) -->
-          <div id="vtaEstadoContainer" style="display: flex; margin-bottom: 1.5rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.75rem 1.25rem; align-items: center; justify-content: space-between;">
+          <div id="vtaEstadoContainer"
+            style="display: flex; margin-bottom: 1.5rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.75rem 1.25rem; align-items: center; justify-content: space-between;">
             <div style="display: flex; align-items: center; gap: 0.75rem;">
               <span style="font-size: 0.85rem; font-weight: 700; color: #334155;">Estado de la Transacción:</span>
-              <select id="vtaEstadoSelect" class="form-input-control" style="width: auto; padding: 0.35rem 0.75rem; font-weight: 600;">
+              <select id="vtaEstadoSelect" class="form-input-control"
+                style="width: auto; padding: 0.35rem 0.75rem; font-weight: 600;">
                 <option value="PEN" selected>Pendiente</option>
                 <option value="PAG">Pagado</option>
                 <option value="COT">Cotización</option>
@@ -1510,7 +1624,8 @@
           <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
             <button type="button" class="btn-cancel-action" onclick="cerrarModalNuevaVenta()">Cancelar</button>
             <button type="submit" class="btn-submit-action">
-              <img src="assets/icons/check-circle-fill.png" style="width: 16px; height: 16px; filter: brightness(0) invert(1);" alt="">
+              <img src="assets/icons/check-circle-fill.png"
+                style="width: 16px; height: 16px; filter: brightness(0) invert(1);" alt="">
               <span id="btnGuardarVentaText">Registrar Pedido</span>
             </button>
           </div>
@@ -1525,34 +1640,46 @@
       <div class="modal-header-sober">
         <div>
           <h2 class="modal-header-title">Historial de Ventas</h2>
-          <p class="modal-header-subtitle">Consulta cronológica de transacciones — Haga clic en un registro para editarlo</p>
+          <p class="modal-header-subtitle">Consulta cronológica de transacciones — Haga clic en un registro para
+            editarlo</p>
         </div>
         <button class="btn-modal-close" onclick="cerrarModalHistorial()">✕</button>
       </div>
 
       <div class="modal-body-pad">
         <div style="margin-bottom: 1rem; display: flex; gap: 0.75rem;">
-          <input type="text" id="filtroHistorial" class="form-input-control" placeholder="Buscar por ID o cliente..." oninput="filtrarTablaHistorial()" style="max-width: 350px;">
+          <input type="text" id="filtroHistorial" class="form-input-control" placeholder="Buscar por ID o cliente..."
+            oninput="filtrarTablaHistorial()" style="max-width: 350px;">
         </div>
 
         <div style="overflow-x: auto;">
           <table class="history-table">
             <thead>
               <tr>
-                <th id="th-hist-id" class="th-sortable" onclick="ordenarHistorialVentas('id')" title="Haga clic para ordenar por ID Pedido">
-                  <div class="th-sort-content"><span>ID Pedido</span><span class="sort-icon" id="sort-icon-hist-id">↕</span></div>
+                <th id="th-hist-id" class="th-sortable" onclick="ordenarHistorialVentas('id')"
+                  title="Haga clic para ordenar por ID Pedido">
+                  <div class="th-sort-content"><span>ID Pedido</span><span class="sort-icon"
+                      id="sort-icon-hist-id">↕</span></div>
                 </th>
-                <th id="th-hist-fecha" class="th-sortable" onclick="ordenarHistorialVentas('fecha')" title="Haga clic para ordenar por Fecha">
-                  <div class="th-sort-content"><span>Fecha</span><span class="sort-icon" id="sort-icon-hist-fecha">↕</span></div>
+                <th id="th-hist-fecha" class="th-sortable" onclick="ordenarHistorialVentas('fecha')"
+                  title="Haga clic para ordenar por Fecha">
+                  <div class="th-sort-content"><span>Fecha</span><span class="sort-icon"
+                      id="sort-icon-hist-fecha">↕</span></div>
                 </th>
-                <th id="th-hist-cliente" class="th-sortable" onclick="ordenarHistorialVentas('cliente')" title="Haga clic para ordenar por Cliente">
-                  <div class="th-sort-content"><span>Cliente</span><span class="sort-icon" id="sort-icon-hist-cliente">↕</span></div>
+                <th id="th-hist-cliente" class="th-sortable" onclick="ordenarHistorialVentas('cliente')"
+                  title="Haga clic para ordenar por Cliente">
+                  <div class="th-sort-content"><span>Cliente</span><span class="sort-icon"
+                      id="sort-icon-hist-cliente">↕</span></div>
                 </th>
-                <th id="th-hist-estado" class="th-sortable" onclick="ordenarHistorialVentas('estado')" title="Haga clic para ordenar por Estado">
-                  <div class="th-sort-content"><span>Estado</span><span class="sort-icon" id="sort-icon-hist-estado">↕</span></div>
+                <th id="th-hist-estado" class="th-sortable" onclick="ordenarHistorialVentas('estado')"
+                  title="Haga clic para ordenar por Estado">
+                  <div class="th-sort-content"><span>Estado</span><span class="sort-icon"
+                      id="sort-icon-hist-estado">↕</span></div>
                 </th>
-                <th id="th-hist-total" class="th-sortable" onclick="ordenarHistorialVentas('total')" title="Haga clic para ordenar por Total" style="text-align: right;">
-                  <div class="th-sort-content" style="justify-content: flex-end;"><span>Total</span><span class="sort-icon" id="sort-icon-hist-total">↕</span></div>
+                <th id="th-hist-total" class="th-sortable" onclick="ordenarHistorialVentas('total')"
+                  title="Haga clic para ordenar por Total" style="text-align: right;">
+                  <div class="th-sort-content" style="justify-content: flex-end;"><span>Total</span><span
+                      class="sort-icon" id="sort-icon-hist-total">↕</span></div>
                 </th>
                 <th style="text-align: right; width: 80px;">Acción</th>
               </tr>
@@ -1574,7 +1701,8 @@
           <img src="assets/icons/check-circle-fill.png" alt="OK">
         </div>
         <div>
-          <h3 style="font-size: 1.15rem; font-weight: 800; color: #065f46; margin-bottom: 2px;">Venta Registrada con Éxito</h3>
+          <h3 style="font-size: 1.15rem; font-weight: 800; color: #065f46; margin-bottom: 2px;">Venta Registrada con
+            Éxito</h3>
           <p style="font-size: 0.8rem; color: #047857; margin: 0;">Punto de Venta Oficial — Operación Confirmada</p>
         </div>
       </div>
@@ -1582,7 +1710,8 @@
         <div class="receipt-grid">
           <div class="receipt-row">
             <span class="receipt-label">N° Comprobante</span>
-            <span id="exitoComprobante" class="receipt-val" style="color: #1d4ed8; font-family: monospace; font-size: 0.95rem;">-</span>
+            <span id="exitoComprobante" class="receipt-val"
+              style="color: #1d4ed8; font-family: monospace; font-size: 0.95rem;">-</span>
           </div>
           <div class="receipt-row">
             <span class="receipt-label">Fecha</span>
@@ -1602,11 +1731,13 @@
           </div>
           <div class="receipt-row" style="border-top: 1px dashed #cbd5e1; padding-top: 0.75rem; margin-top: 0.25rem;">
             <span class="receipt-label" style="font-weight: 700; color: #334155;">Total Cobrado</span>
-            <span id="exitoTotal" class="receipt-val" style="font-size: 1.35rem; color: #047857; font-weight: 800;">-</span>
+            <span id="exitoTotal" class="receipt-val"
+              style="font-size: 1.35rem; color: #047857; font-weight: 800;">-</span>
           </div>
         </div>
 
-        <button type="button" class="btn-submit-action" onclick="cerrarModalExitoVenta()" style="width: 100%; justify-content: center; padding: 0.85rem; font-size: 1rem;">
+        <button type="button" class="btn-submit-action" onclick="cerrarModalExitoVenta()"
+          style="width: 100%; justify-content: center; padding: 0.85rem; font-size: 1rem;">
           <span>Aceptar y Continuar</span>
         </button>
       </div>
@@ -1673,10 +1804,13 @@
             </div>
           </div>
 
-          <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; display: flex; flex-wrap: wrap; gap: 2rem;">
+          <div
+            style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; display: flex; flex-wrap: wrap; gap: 2rem;">
             <label style="display: flex; align-items: center; gap: 0.65rem; cursor: pointer;">
-              <input type="checkbox" id="cliPromociones" checked style="width: 16px; height: 16px; accent-color: #059669;">
-              <span style="font-size: 0.85rem; font-weight: 600; color: #334155;">Acepta Notificaciones por WhatsApp</span>
+              <input type="checkbox" id="cliPromociones" checked
+                style="width: 16px; height: 16px; accent-color: #059669;">
+              <span style="font-size: 0.85rem; font-weight: 600; color: #334155;">Acepta Notificaciones por
+                WhatsApp</span>
             </label>
             <label style="display: flex; align-items: center; gap: 0.65rem; cursor: pointer;">
               <input type="checkbox" id="cliEstado" checked style="width: 16px; height: 16px; accent-color: #059669;">
@@ -1687,7 +1821,8 @@
           <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
             <button type="button" class="btn-cancel-action" onclick="cerrarModalNuevoCliente()">Cancelar</button>
             <button type="submit" class="btn-submit-action" style="background: #059669;">
-              <img src="assets/icons/check-circle-fill.png" style="width: 16px; height: 16px; filter: brightness(0) invert(1);" alt="">
+              <img src="assets/icons/check-circle-fill.png"
+                style="width: 16px; height: 16px; filter: brightness(0) invert(1);" alt="">
               <span id="btnGuardarClienteText">Guardar Cliente</span>
             </button>
           </div>
@@ -1708,10 +1843,15 @@
       </div>
 
       <div class="modal-body-pad">
-        <div style="margin-bottom: 1.25rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;">
-          <input type="text" id="filtroDirectorio" class="form-input-control" placeholder="Buscar por nombre, apellido, DNI o teléfono..." oninput="filtrarDirectorio()" style="max-width: 400px;">
-          <button type="button" class="btn-submit-action" onclick="abrirModalNuevoCliente();" style="background: #059669; padding: 0.55rem 1rem; font-size: 0.85rem;">
-            <img src="assets/icons/user-plus-fill.png" style="width: 14px; height: 14px; filter: brightness(0) invert(1);" alt="">
+        <div
+          style="margin-bottom: 1.25rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;">
+          <input type="text" id="filtroDirectorio" class="form-input-control"
+            placeholder="Buscar por nombre, apellido, DNI o teléfono..." oninput="filtrarDirectorio()"
+            style="max-width: 400px;">
+          <button type="button" class="btn-submit-action" onclick="abrirModalNuevoCliente();"
+            style="background: #059669; padding: 0.55rem 1rem; font-size: 0.85rem;">
+            <img src="assets/icons/user-plus-fill.png"
+              style="width: 14px; height: 14px; filter: brightness(0) invert(1);" alt="">
             <span>Nuevo Cliente</span>
           </button>
         </div>
@@ -1720,26 +1860,40 @@
           <table class="clients-table">
             <thead>
               <tr>
-                <th id="th-dir-id" class="th-sortable" onclick="ordenarDirectorio('id')" title="Haga clic para ordenar por ID">
-                  <div class="th-sort-content"><span>ID</span><span class="sort-icon" id="sort-icon-dir-id">↕</span></div>
+                <th id="th-dir-id" class="th-sortable" onclick="ordenarDirectorio('id')"
+                  title="Haga clic para ordenar por ID">
+                  <div class="th-sort-content"><span>ID</span><span class="sort-icon" id="sort-icon-dir-id">↕</span>
+                  </div>
                 </th>
-                <th id="th-dir-nombre" class="th-sortable" onclick="ordenarDirectorio('nombre')" title="Haga clic para ordenar por Nombre">
-                  <div class="th-sort-content"><span>Nombre</span><span class="sort-icon" id="sort-icon-dir-nombre">↕</span></div>
+                <th id="th-dir-nombre" class="th-sortable" onclick="ordenarDirectorio('nombre')"
+                  title="Haga clic para ordenar por Nombre">
+                  <div class="th-sort-content"><span>Nombre</span><span class="sort-icon"
+                      id="sort-icon-dir-nombre">↕</span></div>
                 </th>
-                <th id="th-dir-apellido" class="th-sortable" onclick="ordenarDirectorio('apellido')" title="Haga clic para ordenar por Apellido">
-                  <div class="th-sort-content"><span>Apellido</span><span class="sort-icon" id="sort-icon-dir-apellido">↕</span></div>
+                <th id="th-dir-apellido" class="th-sortable" onclick="ordenarDirectorio('apellido')"
+                  title="Haga clic para ordenar por Apellido">
+                  <div class="th-sort-content"><span>Apellido</span><span class="sort-icon"
+                      id="sort-icon-dir-apellido">↕</span></div>
                 </th>
-                <th id="th-dir-telefono" class="th-sortable" onclick="ordenarDirectorio('telefono')" title="Haga clic para ordenar por Teléfono">
-                  <div class="th-sort-content"><span>Teléfono</span><span class="sort-icon" id="sort-icon-dir-telefono">↕</span></div>
+                <th id="th-dir-telefono" class="th-sortable" onclick="ordenarDirectorio('telefono')"
+                  title="Haga clic para ordenar por Teléfono">
+                  <div class="th-sort-content"><span>Teléfono</span><span class="sort-icon"
+                      id="sort-icon-dir-telefono">↕</span></div>
                 </th>
-                <th id="th-dir-dni" class="th-sortable" onclick="ordenarDirectorio('dni')" title="Haga clic para ordenar por DNI / CUIT">
-                  <div class="th-sort-content"><span>DNI / CUIT</span><span class="sort-icon" id="sort-icon-dir-dni">↕</span></div>
+                <th id="th-dir-dni" class="th-sortable" onclick="ordenarDirectorio('dni')"
+                  title="Haga clic para ordenar por DNI / CUIT">
+                  <div class="th-sort-content"><span>DNI / CUIT</span><span class="sort-icon"
+                      id="sort-icon-dir-dni">↕</span></div>
                 </th>
-                <th id="th-dir-cumple" class="th-sortable" onclick="ordenarDirectorio('cumple')" title="Haga clic para ordenar por Cumpleaños">
-                  <div class="th-sort-content"><span>Cumpleaños</span><span class="sort-icon" id="sort-icon-dir-cumple">↕</span></div>
+                <th id="th-dir-cumple" class="th-sortable" onclick="ordenarDirectorio('cumple')"
+                  title="Haga clic para ordenar por Cumpleaños">
+                  <div class="th-sort-content"><span>Cumpleaños</span><span class="sort-icon"
+                      id="sort-icon-dir-cumple">↕</span></div>
                 </th>
-                <th id="th-dir-estado" class="th-sortable" onclick="ordenarDirectorio('estado')" title="Haga clic para ordenar por Estado">
-                  <div class="th-sort-content"><span>Estado</span><span class="sort-icon" id="sort-icon-dir-estado">↕</span></div>
+                <th id="th-dir-estado" class="th-sortable" onclick="ordenarDirectorio('estado')"
+                  title="Haga clic para ordenar por Estado">
+                  <div class="th-sort-content"><span>Estado</span><span class="sort-icon"
+                      id="sort-icon-dir-estado">↕</span></div>
                 </th>
                 <th style="text-align: right; width: 80px;">Acción</th>
               </tr>
@@ -1759,16 +1913,21 @@
       <div class="modal-header-sober">
         <div>
           <h2 class="modal-header-title">Gestión de Inventario</h2>
-          <p class="modal-header-subtitle">Control de existencias y catálogo — Haga clic en un artículo para editarlo</p>
+          <p class="modal-header-subtitle">Control de existencias y catálogo — Haga clic en un artículo para editarlo
+          </p>
         </div>
         <button class="btn-modal-close" onclick="cerrarModalInventario()">✕</button>
       </div>
 
       <div class="modal-body-pad">
-        <div style="margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
-          <input type="text" id="filtroStock" class="form-input-control" placeholder="Buscar por código, producto o proveedor..." oninput="filtrarStock()" style="max-width: 350px;">
-          <button type="button" class="btn-submit-action" onclick="abrirModalNuevoProducto(true)" style="background: #334155; padding: 0.55rem 1rem; font-size: 0.85rem; border-radius: 8px; color: white; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 600; white-space: nowrap;">
-            <img src="assets/icons/plus-fill.png" style="width: 14px; height: 14px; filter: brightness(0) invert(1);" alt="+">
+        <div
+          style="margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+          <input type="text" id="filtroStock" class="form-input-control"
+            placeholder="Buscar por código, producto o proveedor..." oninput="filtrarStock()" style="max-width: 350px;">
+          <button type="button" class="btn-submit-action" onclick="abrirModalNuevoProducto(true)"
+            style="background: #334155; padding: 0.55rem 1rem; font-size: 0.85rem; border-radius: 8px; color: white; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 600; white-space: nowrap;">
+            <img src="assets/icons/plus-fill.png" style="width: 14px; height: 14px; filter: brightness(0) invert(1);"
+              alt="+">
             <span>Nuevo Producto</span>
           </button>
         </div>
@@ -1777,23 +1936,35 @@
           <table class="stock-table">
             <thead>
               <tr>
-                <th id="th-stock-codigo" class="th-sortable" onclick="ordenarStock('codigo')" title="Haga clic para ordenar por Código">
-                  <div class="th-sort-content"><span>Código</span><span class="sort-icon" id="sort-icon-stock-codigo">↕</span></div>
+                <th id="th-stock-codigo" class="th-sortable" onclick="ordenarStock('codigo')"
+                  title="Haga clic para ordenar por Código">
+                  <div class="th-sort-content"><span>Código</span><span class="sort-icon"
+                      id="sort-icon-stock-codigo">↕</span></div>
                 </th>
-                <th id="th-stock-producto" class="th-sortable" onclick="ordenarStock('producto')" title="Haga clic para ordenar por Producto">
-                  <div class="th-sort-content"><span>Producto</span><span class="sort-icon" id="sort-icon-stock-producto">↕</span></div>
+                <th id="th-stock-producto" class="th-sortable" onclick="ordenarStock('producto')"
+                  title="Haga clic para ordenar por Producto">
+                  <div class="th-sort-content"><span>Producto</span><span class="sort-icon"
+                      id="sort-icon-stock-producto">↕</span></div>
                 </th>
-                <th id="th-stock-proveedor" class="th-sortable" onclick="ordenarStock('proveedor')" title="Haga clic para ordenar por Proveedor">
-                  <div class="th-sort-content"><span>Proveedor</span><span class="sort-icon" id="sort-icon-stock-proveedor">↕</span></div>
+                <th id="th-stock-proveedor" class="th-sortable" onclick="ordenarStock('proveedor')"
+                  title="Haga clic para ordenar por Proveedor">
+                  <div class="th-sort-content"><span>Proveedor</span><span class="sort-icon"
+                      id="sort-icon-stock-proveedor">↕</span></div>
                 </th>
-                <th id="th-stock-existencias" class="th-sortable" onclick="ordenarStock('existencias')" title="Haga clic para ordenar por Existencias">
-                  <div class="th-sort-content"><span>Existencias</span><span class="sort-icon" id="sort-icon-stock-existencias">↕</span></div>
+                <th id="th-stock-existencias" class="th-sortable" onclick="ordenarStock('existencias')"
+                  title="Haga clic para ordenar por Existencias">
+                  <div class="th-sort-content"><span>Existencias</span><span class="sort-icon"
+                      id="sort-icon-stock-existencias">↕</span></div>
                 </th>
-                <th id="th-stock-estado" class="th-sortable" onclick="ordenarStock('estado')" title="Haga clic para ordenar por Estado" style="text-align: center; width: 70px;">
-                  <div class="th-sort-content" style="justify-content: center;"><span>Estado</span><span class="sort-icon" id="sort-icon-stock-estado">↕</span></div>
+                <th id="th-stock-estado" class="th-sortable" onclick="ordenarStock('estado')"
+                  title="Haga clic para ordenar por Estado" style="text-align: center; width: 70px;">
+                  <div class="th-sort-content" style="justify-content: center;"><span>Estado</span><span
+                      class="sort-icon" id="sort-icon-stock-estado">↕</span></div>
                 </th>
-                <th id="th-stock-precio" class="th-sortable" onclick="ordenarStock('precio')" title="Haga clic para ordenar por Precio Unitario" style="text-align: right;">
-                  <div class="th-sort-content" style="justify-content: flex-end;"><span>Precio Unitario</span><span class="sort-icon" id="sort-icon-stock-precio">↕</span></div>
+                <th id="th-stock-precio" class="th-sortable" onclick="ordenarStock('precio')"
+                  title="Haga clic para ordenar por Precio Unitario" style="text-align: right;">
+                  <div class="th-sort-content" style="justify-content: flex-end;"><span>Precio Unitario</span><span
+                      class="sort-icon" id="sort-icon-stock-precio">↕</span></div>
                 </th>
               </tr>
             </thead>
@@ -1812,16 +1983,22 @@
       <div class="modal-header-sober">
         <div>
           <h2 class="modal-header-title">Directorio de Proveedores</h2>
-          <p class="modal-header-subtitle">Marcas y distribuidores oficiales — Haga clic en un proveedor para editarlo</p>
+          <p class="modal-header-subtitle">Marcas y distribuidores oficiales — Haga clic en un proveedor para editarlo
+          </p>
         </div>
         <button class="btn-modal-close" onclick="cerrarModalProveedores()">✕</button>
       </div>
 
       <div class="modal-body-pad">
-        <div style="margin-bottom: 1.25rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;">
-          <input type="text" id="filtroProveedores" class="form-input-control" placeholder="Buscar por razón social, contacto o email..." oninput="filtrarProveedores()" style="max-width: 400px;">
-          <button type="button" class="btn-submit-action" onclick="abrirModalNuevoProveedor()" style="background: #0f172a; padding: 0.55rem 1rem; font-size: 0.85rem;">
-            <img src="assets/icons/plus-fill.png" style="width: 14px; height: 14px; filter: brightness(0) invert(1);" alt="">
+        <div
+          style="margin-bottom: 1.25rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;">
+          <input type="text" id="filtroProveedores" class="form-input-control"
+            placeholder="Buscar por razón social, contacto o email..." oninput="filtrarProveedores()"
+            style="max-width: 400px;">
+          <button type="button" class="btn-submit-action" onclick="abrirModalNuevoProveedor()"
+            style="background: #0f172a; padding: 0.55rem 1rem; font-size: 0.85rem;">
+            <img src="assets/icons/plus-fill.png" style="width: 14px; height: 14px; filter: brightness(0) invert(1);"
+              alt="">
             <span>Nuevo Proveedor</span>
           </button>
         </div>
@@ -1830,20 +2007,30 @@
           <table class="stock-table">
             <thead>
               <tr>
-                <th id="th-prov-id" class="th-sortable" onclick="ordenarProveedores('id')" title="Haga clic para ordenar por ID">
-                  <div class="th-sort-content"><span>ID</span><span class="sort-icon" id="sort-icon-prov-id">↕</span></div>
+                <th id="th-prov-id" class="th-sortable" onclick="ordenarProveedores('id')"
+                  title="Haga clic para ordenar por ID">
+                  <div class="th-sort-content"><span>ID</span><span class="sort-icon" id="sort-icon-prov-id">↕</span>
+                  </div>
                 </th>
-                <th id="th-prov-razon" class="th-sortable" onclick="ordenarProveedores('razon')" title="Haga clic para ordenar por Razón Social">
-                  <div class="th-sort-content"><span>Razón Social</span><span class="sort-icon" id="sort-icon-prov-razon">↕</span></div>
+                <th id="th-prov-razon" class="th-sortable" onclick="ordenarProveedores('razon')"
+                  title="Haga clic para ordenar por Razón Social">
+                  <div class="th-sort-content"><span>Razón Social</span><span class="sort-icon"
+                      id="sort-icon-prov-razon">↕</span></div>
                 </th>
-                <th id="th-prov-contacto" class="th-sortable" onclick="ordenarProveedores('contacto')" title="Haga clic para ordenar por Contacto">
-                  <div class="th-sort-content"><span>Contacto</span><span class="sort-icon" id="sort-icon-prov-contacto">↕</span></div>
+                <th id="th-prov-contacto" class="th-sortable" onclick="ordenarProveedores('contacto')"
+                  title="Haga clic para ordenar por Contacto">
+                  <div class="th-sort-content"><span>Contacto</span><span class="sort-icon"
+                      id="sort-icon-prov-contacto">↕</span></div>
                 </th>
-                <th id="th-prov-tel" class="th-sortable" onclick="ordenarProveedores('tel')" title="Haga clic para ordenar por Teléfono">
-                  <div class="th-sort-content"><span>Teléfono</span><span class="sort-icon" id="sort-icon-prov-tel">↕</span></div>
+                <th id="th-prov-tel" class="th-sortable" onclick="ordenarProveedores('tel')"
+                  title="Haga clic para ordenar por Teléfono">
+                  <div class="th-sort-content"><span>Teléfono</span><span class="sort-icon"
+                      id="sort-icon-prov-tel">↕</span></div>
                 </th>
-                <th id="th-prov-email" class="th-sortable" onclick="ordenarProveedores('email')" title="Haga clic para ordenar por Email">
-                  <div class="th-sort-content"><span>Email</span><span class="sort-icon" id="sort-icon-prov-email">↕</span></div>
+                <th id="th-prov-email" class="th-sortable" onclick="ordenarProveedores('email')"
+                  title="Haga clic para ordenar por Email">
+                  <div class="th-sort-content"><span>Email</span><span class="sort-icon"
+                      id="sort-icon-prov-email">↕</span></div>
                 </th>
                 <th style="text-align: right; width: 80px;">Acción</th>
               </tr>
@@ -1886,14 +2073,16 @@
             </div>
             <div class="form-group-item">
               <label>Correo Electrónico <span style="color: #dc2626;">*</span></label>
-              <input type="email" id="provEmail" class="form-input-control" placeholder="Ej: pedidos@natura.com.ar" required>
+              <input type="email" id="provEmail" class="form-input-control" placeholder="Ej: pedidos@natura.com.ar"
+                required>
             </div>
           </div>
 
           <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
             <button type="button" class="btn-cancel-action" onclick="cerrarModalEditarProveedor()">Cancelar</button>
             <button type="submit" class="btn-submit-action" style="background: #0f172a;">
-              <img src="assets/icons/check-circle-fill.png" style="width: 16px; height: 16px; filter: brightness(0) invert(1);" alt="">
+              <img src="assets/icons/check-circle-fill.png"
+                style="width: 16px; height: 16px; filter: brightness(0) invert(1);" alt="">
               <span id="btnGuardarProvText">Guardar Cambios</span>
             </button>
           </div>
@@ -1933,7 +2122,8 @@
             </div>
             <div class="form-group-item" style="grid-column: span 2;">
               <label>Descripción / Denominación <span style="color: #dc2626;">*</span></label>
-              <input type="text" id="prodDescripcion" class="form-input-control" placeholder="Nombre completo del producto" required>
+              <input type="text" id="prodDescripcion" class="form-input-control"
+                placeholder="Nombre completo del producto" required>
             </div>
             <div class="form-group-item">
               <label>Precio Unitario ($ ARS) <span style="color: #dc2626;">*</span></label>
@@ -1956,7 +2146,8 @@
           <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
             <button type="button" class="btn-cancel-action" onclick="cerrarModalEditarProducto()">Cancelar</button>
             <button type="submit" class="btn-submit-action" style="background: #334155;">
-              <img src="assets/icons/check-circle-fill.png" style="width: 16px; height: 16px; filter: brightness(0) invert(1);" alt="">
+              <img src="assets/icons/check-circle-fill.png"
+                style="width: 16px; height: 16px; filter: brightness(0) invert(1);" alt="">
               <span>Guardar Cambios</span>
             </button>
           </div>
@@ -1970,7 +2161,8 @@
     <div class="modal-box-wide">
       <div class="modal-header-sober">
         <div style="display: flex; align-items: center; gap: 0.75rem;">
-          <div style="width: 38px; height: 38px; border-radius: 10px; background: #ecfdf5; border: 1px solid #a7f3d0; display: flex; align-items: center; justify-content: center;">
+          <div
+            style="width: 38px; height: 38px; border-radius: 10px; background: #ecfdf5; border: 1px solid #a7f3d0; display: flex; align-items: center; justify-content: center;">
             <img src="assets/icons/chart-line-up-fill.png" style="width: 20px; height: 20px;" alt="CRM">
           </div>
           <div>
@@ -2031,13 +2223,18 @@
 
         <!-- VISTA 1: CUMPLEAÑOS DEL MES -->
         <div id="crmViewCumple">
-          <div style="margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+          <div
+            style="margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
             <div style="font-size: 0.85rem; color: #475569; font-weight: 600;">
-              Mostrando cumpleañeros de: <span id="crmMesActualNombre" style="color: #047857; font-weight: 700;">Octubre</span>
+              Mostrando cumpleañeros de: <span id="crmMesActualNombre"
+                style="color: #047857; font-weight: 700;">Octubre</span>
             </div>
             <div style="display: flex; align-items: center; gap: 0.5rem;">
-              <label for="crmMesSelect" style="font-size: 0.8rem; font-weight: 600; color: #64748b;">Filtrar otro mes:</label>
-              <select id="crmMesSelect" class="form-input-control" style="width: auto; padding: 0.35rem 0.75rem; font-size: 0.85rem;" onchange="renderCRMCumpleanos(parseInt(this.value))">
+              <label for="crmMesSelect" style="font-size: 0.8rem; font-weight: 600; color: #64748b;">Filtrar otro
+                mes:</label>
+              <select id="crmMesSelect" class="form-input-control"
+                style="width: auto; padding: 0.35rem 0.75rem; font-size: 0.85rem;"
+                onchange="renderCRMCumpleanos(parseInt(this.value))">
                 <option value="1">Enero</option>
                 <option value="2">Febrero</option>
                 <option value="3">Marzo</option>
@@ -2074,9 +2271,12 @@
 
         <!-- VISTA 2: CLIENTES QUE MÁS COMPRAN / DESTACADOS -->
         <div id="crmViewTop" style="display: none;">
-          <div style="margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.75rem 1rem;">
+          <div
+            style="margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.75rem 1rem;">
             <div style="font-size: 0.85rem; color: #334155;">
-              <strong>Criterio de Fidelización:</strong> Los clientes con <strong>2 o más compras</strong> en el mes se clasifican automáticamente como <span class="badge-destacado" style="font-size: 0.7rem;">⭐ Destacado</span>.
+              <strong>Criterio de Fidelización:</strong> Los clientes con <strong>2 o más compras</strong> en el mes se
+              clasifican automáticamente como <span class="badge-destacado" style="font-size: 0.7rem;">⭐
+                Destacado</span>.
             </div>
             <div style="font-size: 0.8rem; color: #64748b;">
               Ordenados por volumen mensual y facturación
@@ -2107,24 +2307,31 @@
   </div>
 
   <!-- MODAL DE CONFIRMACIÓN DE REVERSIÓN CRM (SIN ALERTS NATIVOS) -->
-  <div id="modalConfirmarReversion" class="modal-overlay" style="display: none; align-items: center; justify-content: center; z-index: 10000;">
-    <div class="modal-box-wide" style="max-width: 440px; border-radius: 16px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.25), 0 8px 10px -6px rgba(0, 0, 0, 0.1); background: white; overflow: hidden; border: 1px solid #e2e8f0;">
+  <div id="modalConfirmarReversion" class="modal-overlay"
+    style="display: none; align-items: center; justify-content: center; z-index: 10000;">
+    <div class="modal-box-wide"
+      style="max-width: 440px; border-radius: 16px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.25), 0 8px 10px -6px rgba(0, 0, 0, 0.1); background: white; overflow: hidden; border: 1px solid #e2e8f0;">
       <div style="padding: 1.75rem 1.5rem; text-align: center;">
-        <div style="width: 56px; height: 56px; border-radius: 50%; background: #fef2f2; color: #dc2626; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1rem; border: 1px solid #fee2e2;">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
-            <path d="M3 3v5h5"/>
+        <div
+          style="width: 56px; height: 56px; border-radius: 50%; background: #fef2f2; color: #dc2626; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1rem; border: 1px solid #fee2e2;">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+            <path d="M3 3v5h5" />
           </svg>
         </div>
-        <h3 id="reversionModalTitle" style="font-size: 1.2rem; font-weight: 700; color: #0f172a; margin: 0 0 0.5rem 0;">¿Revertir acción?</h3>
+        <h3 id="reversionModalTitle" style="font-size: 1.2rem; font-weight: 700; color: #0f172a; margin: 0 0 0.5rem 0;">
+          ¿Revertir acción?</h3>
         <p id="reversionModalMsg" style="font-size: 0.875rem; color: #64748b; line-height: 1.5; margin: 0 0 1.5rem 0;">
           El estado del botón volverá a estar disponible como si no hubiese sido enviado.
         </p>
         <div style="display: flex; gap: 0.75rem; justify-content: center;">
-          <button type="button" class="btn-cancel" onclick="cerrarModalConfirmarReversion()" style="padding: 0.6rem 1.25rem; font-weight: 600; border-radius: 8px; border: 1px solid #cbd5e1; background: white; color: #475569; cursor: pointer; transition: background 0.15s ease;">
+          <button type="button" class="btn-cancel" onclick="cerrarModalConfirmarReversion()"
+            style="padding: 0.6rem 1.25rem; font-weight: 600; border-radius: 8px; border: 1px solid #cbd5e1; background: white; color: #475569; cursor: pointer; transition: background 0.15s ease;">
             Cancelar
           </button>
-          <button type="button" id="btnConfirmarReversionAction" onclick="ejecutarReversionConfirmada()" style="padding: 0.6rem 1.25rem; font-weight: 600; border-radius: 8px; border: none; background: #dc2626; color: white; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 4px rgba(220, 38, 38, 0.25); transition: background 0.15s ease;">
+          <button type="button" id="btnConfirmarReversionAction" onclick="ejecutarReversionConfirmada()"
+            style="padding: 0.6rem 1.25rem; font-weight: 600; border-radius: 8px; border: none; background: #dc2626; color: white; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 4px rgba(220, 38, 38, 0.25); transition: background 0.15s ease;">
             <span>Sí, revertir</span>
           </button>
         </div>
@@ -2226,7 +2433,7 @@
       if (!items || !Array.isArray(items)) return;
       let huboCambios = false;
       items.forEach(it => {
-        const prod = catalogoProductos.find(p => 
+        const prod = catalogoProductos.find(p =>
           (it.codigo && p.codigo && p.codigo.toLowerCase() === it.codigo.toLowerCase().trim()) ||
           (it.descripcion && p.descripcion && p.descripcion.toLowerCase() === it.descripcion.toLowerCase().trim())
         );
@@ -2251,7 +2458,7 @@
       if (!items || !Array.isArray(items)) return;
       let huboCambios = false;
       items.forEach(it => {
-        const prod = catalogoProductos.find(p => 
+        const prod = catalogoProductos.find(p =>
           (it.codigo && p.codigo && p.codigo.toLowerCase() === it.codigo.toLowerCase().trim()) ||
           (it.descripcion && p.descripcion && p.descripcion.toLowerCase() === it.descripcion.toLowerCase().trim())
         );
@@ -2331,8 +2538,8 @@
 
     function seleccionarItemActivo(dropdownEl) {
       if (!dropdownEl || dropdownEl.style.display !== 'block') return false;
-      const activeItem = dropdownEl.querySelector('.autocomplete-item.active') || 
-                         dropdownEl.querySelector('.autocomplete-item');
+      const activeItem = dropdownEl.querySelector('.autocomplete-item.active') ||
+        dropdownEl.querySelector('.autocomplete-item');
       if (activeItem && (activeItem.hasAttribute('onclick') || activeItem.onclick)) {
         activeItem.click();
         return true;
@@ -2364,9 +2571,9 @@
         return;
       }
 
-      clientesFiltradosActuales = clientesBase.filter(c => 
-        c.nombre.toLowerCase().includes(q) || 
-        c.apellido.toLowerCase().includes(q) || 
+      clientesFiltradosActuales = clientesBase.filter(c =>
+        c.nombre.toLowerCase().includes(q) ||
+        c.apellido.toLowerCase().includes(q) ||
         (c.dni && c.dni.toLowerCase().includes(q)) ||
         (c.telefono && c.telefono.toLowerCase().includes(q))
       );
@@ -2714,7 +2921,7 @@
         return;
       }
 
-      productosFiltradosCod[rowId] = catalogoProductos.filter(p => 
+      productosFiltradosCod[rowId] = catalogoProductos.filter(p =>
         p.codigo.toLowerCase().includes(q)
       );
 
@@ -2762,8 +2969,8 @@
         return;
       }
 
-      productosFiltradosDesc[rowId] = catalogoProductos.filter(p => 
-        p.descripcion.toLowerCase().includes(q) || 
+      productosFiltradosDesc[rowId] = catalogoProductos.filter(p =>
+        p.descripcion.toLowerCase().includes(q) ||
         p.codigo.toLowerCase().includes(q)
       );
 
@@ -2801,8 +3008,8 @@
         return;
       }
 
-      const coincidencias = catalogoProductos.filter(p => 
-        p.precio === val || 
+      const coincidencias = catalogoProductos.filter(p =>
+        p.precio === val ||
         p.precio.toString().startsWith(strVal) ||
         p.precio.toString().includes(strVal)
       );
@@ -2987,7 +3194,7 @@
     function abrirModalNuevaVenta() {
       document.getElementById('formNuevaVenta').reset();
       document.getElementById('vtaPedidoId').value = '';
-      
+
       const titleEl = document.getElementById('modalVentaTitle');
       if (titleEl) titleEl.innerText = 'Nueva Venta / Pedido';
       const subEl = document.getElementById('modalVentaSubtitle');
@@ -3083,8 +3290,8 @@
       productosFiltradosDesc = {};
       productosFiltradosCod = {};
 
-      const itemsACargar = (pedido.items && pedido.items.length > 0) 
-        ? pedido.items 
+      const itemsACargar = (pedido.items && pedido.items.length > 0)
+        ? pedido.items
         : [{ codigo: '', descripcion: pedido.producto || 'Producto de Venta', precio: pedido.total || 0, cantidad: 1 }];
 
       itemsACargar.forEach(it => {
@@ -3108,7 +3315,7 @@
 
     function guardarVenta(e) {
       e.preventDefault();
-      
+
       const clienteNombre = document.getElementById('vtaClienteNombre').value.trim();
       if (!clienteNombre) {
         mostrarNotificacion("Por favor seleccione o tipee un cliente.", "warning");
@@ -3394,8 +3601,8 @@
 
     function filtrarTablaHistorial() {
       const q = (document.getElementById('filtroHistorial')?.value || '').toLowerCase().trim();
-      const filtrados = pedidosData.filter(p => 
-        (p.id && p.id.toLowerCase().includes(q)) || 
+      const filtrados = pedidosData.filter(p =>
+        (p.id && p.id.toLowerCase().includes(q)) ||
         (p.cliente && p.cliente.toLowerCase().includes(q))
       );
       renderHistorial(filtrados);
@@ -3447,7 +3654,7 @@
       if (!c) return;
 
       cerrarModalDirectorio();
-      
+
       document.getElementById('cliId').value = c.id;
       document.getElementById('cliNombre').value = c.nombre || '';
       document.getElementById('cliApellido').value = c.apellido || '';
@@ -3622,13 +3829,13 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ cliente_id: parseInt(clienteId), tipo: tipo, accion: 'revertir' })
       })
-      .then(res => res.json())
-      .then(data => {
-        if (data && data.ok) {
-          console.log(`[CRM DB] Contacto revertido en PostgreSQL (Tipo: ${tipo}, Cliente: ${clienteId})`);
-        }
-      })
-      .catch(err => console.warn('[CRM DB] Modo offline o backend no disponible al revertir:', err));
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.ok) {
+            console.log(`[CRM DB] Contacto revertido en PostgreSQL (Tipo: ${tipo}, Cliente: ${clienteId})`);
+          }
+        })
+        .catch(err => console.warn('[CRM DB] Modo offline o backend no disponible al revertir:', err));
     }
 
     let reversionPendiente = null;
@@ -3710,13 +3917,13 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ cliente_id: parseInt(clienteId), tipo: tipo })
       })
-      .then(res => res.json())
-      .then(data => {
-        if (data && data.ok) {
-          console.log(`[CRM DB] Contacto registrado en PostgreSQL (ID: ${data.contacto?.id_contacto_wa || 'OK'}, Tipo: ${tipo})`);
-        }
-      })
-      .catch(err => console.warn('[CRM DB] Modo offline o backend no disponible:', err));
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.ok) {
+            console.log(`[CRM DB] Contacto registrado en PostgreSQL (ID: ${data.contacto?.id_contacto_wa || 'OK'}, Tipo: ${tipo})`);
+          }
+        })
+        .catch(err => console.warn('[CRM DB] Modo offline o backend no disponible:', err));
     }
 
     function sincronizarContactosDesdeBackend() {
@@ -3905,7 +4112,7 @@
           const cumpleEsteMes = (parseInt(c.mes_nac) === mesActual);
           const esHoy = (cumpleEsteMes && parseInt(c.dia_nac) === diaActual);
           const avisadoOferta = cumpleEsteMes && yaNotificadoOfertaMes(c.id, mesActual, anioActual);
-          
+
           let badgeMes = '';
           if (cumpleEsteMes) {
             badgeMes = `
@@ -3959,8 +4166,8 @@
 
     function filtrarDirectorio() {
       const q = (document.getElementById('filtroDirectorio')?.value || '').toLowerCase().trim();
-      const filtrados = clientesBase.filter(c => 
-        (c.nombre && c.nombre.toLowerCase().includes(q)) || 
+      const filtrados = clientesBase.filter(c =>
+        (c.nombre && c.nombre.toLowerCase().includes(q)) ||
         (c.apellido && c.apellido.toLowerCase().includes(q)) ||
         (c.dni && String(c.dni).includes(q)) ||
         (c.telefono && String(c.telefono).includes(q))
@@ -3989,7 +4196,7 @@
       const provs = (typeof proveedoresData !== 'undefined' && proveedoresData && proveedoresData.length)
         ? proveedoresData
         : JSON.parse(localStorage.getItem('ivi_proveedores_data') || '[]');
-      
+
       if (!provs || !provs.length) return;
 
       const escapeFn = typeof escapeHtml === 'function' ? escapeHtml : (s) => String(s || '');
@@ -4159,9 +4366,9 @@
 
     function filtrarStock() {
       const q = (document.getElementById('filtroStock')?.value || '').toLowerCase().trim();
-      const filtrados = catalogoProductos.filter(p => 
-        (p.codigo && p.codigo.toLowerCase().includes(q)) || 
-        (p.descripcion && p.descripcion.toLowerCase().includes(q)) || 
+      const filtrados = catalogoProductos.filter(p =>
+        (p.codigo && p.codigo.toLowerCase().includes(q)) ||
+        (p.descripcion && p.descripcion.toLowerCase().includes(q)) ||
         (p.proveedor && p.proveedor.toLowerCase().includes(q))
       );
       renderStock(filtrados);
@@ -4378,8 +4585,8 @@
 
     function filtrarProveedores() {
       const q = (document.getElementById('filtroProveedores')?.value || '').toLowerCase().trim();
-      const filtrados = proveedoresData.filter(pr => 
-        (pr.razon && pr.razon.toLowerCase().includes(q)) || 
+      const filtrados = proveedoresData.filter(pr =>
+        (pr.razon && pr.razon.toLowerCase().includes(q)) ||
         (pr.contacto && pr.contacto.toLowerCase().includes(q)) ||
         (pr.email && pr.email.toLowerCase().includes(q)) ||
         (pr.tel && pr.tel.includes(q))
@@ -4508,15 +4715,15 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ razon, contacto, tel, email })
         })
-        .then(r => r.json())
-        .then(data => {
-          if (data && data.ok && data.proveedor && data.proveedor.id) {
-            nuevoProv.id = data.proveedor.id;
-            localStorage.setItem('ivi_proveedores_data', JSON.stringify(proveedoresData));
-            renderProveedores();
-          }
-        })
-        .catch(err => console.warn('[Proveedores DB] Error registrando en backend:', err));
+          .then(r => r.json())
+          .then(data => {
+            if (data && data.ok && data.proveedor && data.proveedor.id) {
+              nuevoProv.id = data.proveedor.id;
+              localStorage.setItem('ivi_proveedores_data', JSON.stringify(proveedoresData));
+              renderProveedores();
+            }
+          })
+          .catch(err => console.warn('[Proveedores DB] Error registrando en backend:', err));
       }
 
       cerrarModalEditarProveedor();
@@ -4526,7 +4733,7 @@
     }
 
     // Cerrar dropdowns si se hace clic fuera
-    document.addEventListener('click', function(e) {
+    document.addEventListener('click', function (e) {
       const cliSearch = document.getElementById('vtaClienteSearch');
       const cliDropdown = document.getElementById('clienteDropdown');
       if (cliDropdown && !cliDropdown.contains(e.target) && e.target !== cliSearch) {
@@ -4549,11 +4756,11 @@
     function abrirModalCRM() {
       asegurarDatosCumpleanos();
       sincronizarContactosDesdeBackend();
-      
+
       const mesActual = new Date().getMonth() + 1;
       const selectMes = document.getElementById('crmMesSelect');
       if (selectMes) selectMes.value = mesActual;
-      
+
       const mesesNombres = ["", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
       const elNombreMes = document.getElementById('crmMesActualNombre');
       if (elNombreMes) elNombreMes.innerText = mesesNombres[mesActual] || 'Mes Actual';
@@ -4918,7 +5125,7 @@
     }
 
     function escapeHtml(str) {
-      return (str || '').replace(/[&<>"']/g, function(m) {
+      return (str || '').replace(/[&<>"']/g, function (m) {
         return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
       });
     }
@@ -4930,4 +5137,5 @@
     poblarSelectProveedores();
   </script>
 </body>
+
 </html>
