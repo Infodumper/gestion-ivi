@@ -253,6 +253,34 @@
     },
 
     /**
+     * Actualizar contraseña de usuario (para recuperación de contraseña)
+     */
+    async updateUserPassword(newPassword) {
+      if (!this.isConfigured()) {
+        throw new Error('Supabase no está conectado.');
+      }
+      const { data, error } = await this.client.auth.updateUser({
+        password: newPassword
+      });
+      if (error) throw error;
+
+      const email = data.user?.email;
+      if (email) {
+        const { data: usuario } = await this.client
+          .from('usuarios_autorizados')
+          .select('*')
+          .ilike('email', email)
+          .maybeSingle();
+
+        if (usuario && usuario.estado === 'aprobado') {
+          localStorage.setItem(SESSION_KEY, JSON.stringify(usuario));
+          return { user: data.user, profile: usuario };
+        }
+      }
+      return { user: data.user, profile: null };
+    },
+
+    /**
      * Obtener sesión activa actual de Supabase
      */
     async getSession() {
