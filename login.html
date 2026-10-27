@@ -420,6 +420,11 @@
 
       try {
         if (!window.IviSupabase || !window.IviSupabase.isConfigured()) {
+          if (window.IviSupabase && typeof window.IviSupabase.init === 'function') {
+            window.IviSupabase.init();
+          }
+        }
+        if (!window.IviSupabase || !window.IviSupabase.isConfigured()) {
           mostrarAlerta('danger', 'Error de conexión: Supabase Cloud no está inicializado.');
           setLoading('btnLoginSubmit', false, 'Entrar al Sistema');
           return;

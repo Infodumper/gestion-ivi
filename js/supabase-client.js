@@ -61,6 +61,10 @@
         } else {
           console.warn('[Supabase Cloud] Librería @supabase/supabase-js no detectada en window. Cargue el CDN correspondiente.');
         }
+      } else {
+        console.info('[Supabase Cloud] Modo LocalStorage activo (credenciales Supabase no configuradas aún).');
+      }
+
       // Purgar inmediatamente cualquier dato mock viejo que haya quedado en localStorage
       this.purgeMockCache();
 
