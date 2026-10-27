@@ -1230,6 +1230,11 @@
           currentUser = verified;
           const navUser = document.getElementById('navUserName');
           if (navUser) navUser.innerText = verified.nombre || verified.email;
+
+          // Sincronizar datos reales desde Supabase Cloud
+          sincronizarClientesDesdeBackend();
+          sincronizarPedidosDesdeBackend();
+          sincronizarContactosDesdeBackend();
         }
       }
     });
@@ -1243,37 +1248,11 @@
       window.location.href = '../login.html';
     }
 
-    // Datos base de clientes
-    let clientesData = JSON.parse(localStorage.getItem('ivi_clientes_data') || 'null');
-    if (!clientesData || !Array.isArray(clientesData) || clientesData.length === 0) {
-      clientesData = [
-        { id: 1, nombre: "José Ignacio", apellido: "Vizoso Martínez", telefono: "2235869878", dni: "95003856", dia_nac: 17, mes_nac: 2, promociones: true, estado: true },
-        { id: 2, nombre: "Paola Adriana", apellido: "Estévez", telefono: "2233012095", dni: "28642892", dia_nac: 13, mes_nac: 1, promociones: true, estado: false },
-        { id: 3, nombre: "Mariana", apellido: "Montenegro", telefono: "2235170307", dni: "32145678", dia_nac: 9, mes_nac: 5, promociones: true, estado: true },
-        { id: 4, nombre: "Florencia", apellido: "Gómez", telefono: "2234123456", dni: "38990112", dia_nac: 22, mes_nac: 10, promociones: true, estado: true },
-        { id: 5, nombre: "Martín", apellido: "López", telefono: "2236987412", dni: "34567890", dia_nac: 15, mes_nac: 10, promociones: true, estado: true },
-        { id: 6, nombre: "Distribuidora San Martín S.A.", apellido: "", telefono: "2235550192", dni: "30-71123456-8", dia_nac: 18, mes_nac: 10, promociones: true, estado: true },
-        { id: 7, nombre: "Ferretería Industrial Del Sur", apellido: "", telefono: "2234991188", dni: "30-68991234-9", dia_nac: 25, mes_nac: 10, promociones: true, estado: true },
-        { id: 8, nombre: "Valentina", apellido: "Ríos", telefono: "2236112233", dni: "41223344", dia_nac: 4, mes_nac: 2, promociones: true, estado: true },
-        { id: 9, nombre: "Carlos", apellido: "Benítez", telefono: "2235445566", dni: "29887766", dia_nac: 12, mes_nac: 3, promociones: true, estado: true }
-      ];
-      localStorage.setItem('ivi_clientes_data', JSON.stringify(clientesData));
-    }
+    // Datos base de clientes (Sincronizados con Supabase)
+    let clientesData = JSON.parse(localStorage.getItem('ivi_clientes_data') || '[]');
 
-    // Datos base de pedidos para computar ranking CRM y clientes destacados
-    let pedidosData = JSON.parse(localStorage.getItem('ivi_pedidos_data') || 'null');
-    if (!pedidosData || !Array.isArray(pedidosData) || pedidosData.length === 0) {
-      pedidosData = [
-        { id: 'PED-1001', fecha: '16/10/2026', cliente: 'Distribuidora San Martín S.A.', estado: 'PAG', total: 450000.00, items: [] },
-        { id: 'PED-1002', fecha: '17/10/2026', cliente: 'Distribuidora San Martín S.A.', estado: 'PAG', total: 280000.00, items: [] },
-        { id: 'PED-1003', fecha: '15/10/2026', cliente: 'Ferretería Industrial Del Sur', estado: 'PAG', total: 195000.00, items: [] },
-        { id: 'PED-1004', fecha: '18/10/2026', cliente: 'Ferretería Industrial Del Sur', estado: 'PEN', total: 110000.00, items: [] },
-        { id: 'PED-1005', fecha: '14/10/2026', cliente: 'José Ignacio Vizoso Martínez', estado: 'PAG', total: 85000.00, items: [] },
-        { id: 'PED-1006', fecha: '12/10/2026', cliente: 'Mariana Montenegro', estado: 'PAG', total: 64000.00, items: [] },
-        { id: 'PED-1007', fecha: '10/10/2026', cliente: 'Florencia Gómez', estado: 'PAG', total: 42000.00, items: [] }
-      ];
-      localStorage.setItem('ivi_pedidos_data', JSON.stringify(pedidosData));
-    }
+    // Datos base de pedidos (Sincronizados con Supabase)
+    let pedidosData = JSON.parse(localStorage.getItem('ivi_pedidos_data') || '[]');
 
     // Helper Toast
     function showToast(mensaje, tipo = 'success') {
@@ -1324,7 +1303,7 @@
     function guardarClienteForm(e) {
       e.preventDefault();
       const nuevoCliente = {
-        id: clientesData.length + 1,
+        id: Date.now(),
         nombre: document.getElementById('cliNombre').value.trim(),
         apellido: document.getElementById('cliApellido').value.trim(),
         telefono: document.getElementById('cliTelefono').value.trim(),
@@ -1337,6 +1316,16 @@
 
       clientesData.unshift(nuevoCliente);
       localStorage.setItem('ivi_clientes_data', JSON.stringify(clientesData));
+
+      if (window.IviSupabase && window.IviSupabase.isConfigured()) {
+        window.IviSupabase.saveCliente(nuevoCliente).then(saved => {
+          if (saved && saved.id_cliente) {
+            nuevoCliente.id = saved.id_cliente;
+            nuevoCliente.id_cliente = saved.id_cliente;
+          }
+          sincronizarClientesDesdeBackend();
+        });
+      }
 
       cerrarModalNuevoCliente();
       showToast(`Cliente ${nuevoCliente.nombre} ${nuevoCliente.apellido} registrado.`);
@@ -1498,66 +1487,84 @@
       });
     }
 
+    function sincronizarClientesDesdeBackend() {
+      if (window.IviSupabase && window.IviSupabase.isConfigured()) {
+        window.IviSupabase.getClientes().then(data => {
+          if (Array.isArray(data)) {
+            clientesData = data;
+            localStorage.setItem('ivi_clientes_data', JSON.stringify(clientesData));
+            if (typeof renderDirectorio === 'function') renderDirectorio();
+            if (typeof actualizarContadoresNotificaciones === 'function') actualizarContadoresNotificaciones();
+            if (typeof renderizarListadosCRM === 'function') renderizarListadosCRM();
+            console.log('[Supabase Cloud CRM] Clientes sincronizados:', clientesData.length);
+          }
+        }).catch(err => console.warn('[Supabase Clientes] Error:', err));
+      }
+    }
+
+    function sincronizarPedidosDesdeBackend() {
+      if (window.IviSupabase && window.IviSupabase.isConfigured()) {
+        window.IviSupabase.getPedidos().then(data => {
+          if (Array.isArray(data)) {
+            pedidosData = data;
+            localStorage.setItem('ivi_pedidos_data', JSON.stringify(pedidosData));
+            localStorage.setItem('ivi_pedidos', JSON.stringify(pedidosData));
+            if (typeof renderizarListadosCRM === 'function') renderizarListadosCRM();
+            if (typeof actualizarKpisCRM === 'function') actualizarKpisCRM();
+            console.log('[Supabase Cloud CRM] Pedidos sincronizados:', pedidosData.length);
+          }
+        }).catch(err => console.warn('[Supabase Pedidos] Error:', err));
+      }
+    }
+
     function registrarContactoEnBackend(clienteId, tipo) {
       if (!clienteId) return;
-      const apiPath = window.location.pathname.includes('/crm/') || window.location.pathname.includes('/ventas/')
-        ? '../api/contactos_whatsapp.php'
-        : 'api/contactos_whatsapp.php';
-
-      fetch(apiPath, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ cliente_id: parseInt(clienteId), tipo: tipo })
-      })
-        .then(res => res.json())
-        .then(data => {
-          if (data && data.ok) {
-            console.log(`[CRM DB] Contacto registrado en PostgreSQL (ID: ${data.contacto?.id_contacto_wa || 'OK'}, Tipo: ${tipo})`);
-          }
-        })
-        .catch(err => console.warn('[CRM DB] Modo offline o backend no disponible:', err));
+      if (window.IviSupabase && window.IviSupabase.isConfigured()) {
+        window.IviSupabase.registrarContactoWhatsApp(clienteId, tipo)
+          .then(() => console.log(`[Supabase Cloud CRM] Contacto registrado (Tipo: ${tipo}, Cliente: ${clienteId})`));
+        return;
+      }
     }
 
     function sincronizarContactosDesdeBackend() {
-      const apiPath = window.location.pathname.includes('/crm/') || window.location.pathname.includes('/ventas/')
-        ? '../api/contactos_whatsapp.php'
-        : 'api/contactos_whatsapp.php';
+      const procesarListaContactos = (contactos) => {
+        if (!Array.isArray(contactos)) return;
+        const notifs = getCrmNotificaciones();
+        let modificado = false;
+        contactos.forEach(c => {
+          const fechaObj = new Date(c.fecha_contacto);
+          const mes = fechaObj.getMonth() + 1;
+          const dia = fechaObj.getDate();
+          const anio = fechaObj.getFullYear();
 
-      fetch(apiPath)
-        .then(res => res.json())
-        .then(data => {
-          if (data && data.ok && Array.isArray(data.contactos)) {
-            const notifs = getCrmNotificaciones();
-            let modificado = false;
-            data.contactos.forEach(c => {
-              const fechaObj = new Date(c.fecha_contacto);
-              const mes = fechaObj.getMonth() + 1;
-              const dia = fechaObj.getDate();
-              const anio = fechaObj.getFullYear();
-
-              if (c.tipo === 'oferta_cumple') {
-                const key = `${c.cliente_id}_${mes}_${anio}`;
-                if (!notifs.ofertasMes[key]) {
-                  notifs.ofertasMes[key] = c.fecha_contacto;
-                  modificado = true;
-                }
-              } else if (c.tipo === 'saludo_cumple') {
-                const key = `${c.cliente_id}_${dia}_${mes}_${anio}`;
-                if (!notifs.felicitacionesDia[key]) {
-                  notifs.felicitacionesDia[key] = c.fecha_contacto;
-                  modificado = true;
-                }
-              }
-            });
-            if (modificado) {
-              localStorage.setItem('ivi_crm_notificaciones_cumple', JSON.stringify(notifs));
-              const mesActual = new Date().getMonth() + 1;
-              if (typeof renderCRMCumpleanos === 'function') renderCRMCumpleanos(mesActual);
-              if (typeof renderDirectorio === 'function') renderDirectorio();
+          if (c.tipo === 'oferta_cumple') {
+            const key = `${c.cliente_id}_${mes}_${anio}`;
+            if (!notifs.ofertasMes[key]) {
+              notifs.ofertasMes[key] = c.fecha_contacto;
+              modificado = true;
+            }
+          } else if (c.tipo === 'saludo_cumple') {
+            const key = `${c.cliente_id}_${dia}_${mes}_${anio}`;
+            if (!notifs.felicitacionesDia[key]) {
+              notifs.felicitacionesDia[key] = c.fecha_contacto;
+              modificado = true;
             }
           }
-        })
-        .catch(err => console.warn('[CRM DB] Sincronización offline'));
+        });
+        if (modificado) {
+          localStorage.setItem('ivi_crm_notificaciones_cumple', JSON.stringify(notifs));
+          const mesActual = new Date().getMonth() + 1;
+          if (typeof renderCRMCumpleanos === 'function') renderCRMCumpleanos(mesActual);
+          if (typeof renderDirectorio === 'function') renderDirectorio();
+        }
+      };
+
+      if (window.IviSupabase && window.IviSupabase.isConfigured()) {
+        window.IviSupabase.getContactosWhatsApp().then(contactos => {
+          if (contactos) procesarListaContactos(contactos);
+        });
+        return;
+      }
     }
 
     function generarUrlWhatsApp(telefono, textoMensaje) {
@@ -2129,6 +2136,8 @@
 
     // Auto-abrir si la URL tiene parámetro crm o hash #crm
     window.addEventListener('DOMContentLoaded', () => {
+      sincronizarClientesDesdeBackend();
+      sincronizarPedidosDesdeBackend();
       sincronizarContactosDesdeBackend();
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.get('crm') === '1' || urlParams.get('panel') === 'crm' || window.location.hash === '#crm') {

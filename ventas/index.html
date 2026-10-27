@@ -2363,6 +2363,13 @@
           currentUser = verified;
           const navUser = document.getElementById('navUserName');
           if (navUser) navUser.innerText = verified.nombre || verified.email;
+
+          // Sincronizar datos reales desde Supabase Cloud
+          sincronizarClientesDesdeBackend();
+          sincronizarProductosDesdeBackend();
+          sincronizarPedidosDesdeBackend();
+          sincronizarProveedoresDesdeBackend();
+          sincronizarContactosDesdeBackend();
         }
       }
     });
@@ -2376,50 +2383,11 @@
       window.location.href = '../login.html';
     }
 
-    // Base de Clientes (Sincronizada con PostgreSQL / IviS)
-    let clientesBase = JSON.parse(localStorage.getItem('ivi_clientes_data') || 'null');
-    if (!clientesBase || clientesBase.length === 0) {
-      clientesBase = [
-        { id: 1, nombre: "José Ignacio", apellido: "Vizoso Martínez", telefono: "2235869878", dni: "95003856", dia_nac: 17, mes_nac: 2, promociones: true, estado: true },
-        { id: 2, nombre: "Paola Adriana", apellido: "Estévez", telefono: "2233012095", dni: "28642892", dia_nac: 13, mes_nac: 1, promociones: true, estado: false },
-        { id: 3, nombre: "Mariana", apellido: "Montenegro", telefono: "2235170307", dni: "32145678", dia_nac: 9, mes_nac: 5, promociones: true, estado: true },
-        { id: 4, nombre: "Florencia", apellido: "Gómez", telefono: "2234123456", dni: "38990112", dia_nac: 22, mes_nac: 10, promociones: true, estado: true },
-        { id: 5, nombre: "Martín", apellido: "López", telefono: "2236987412", dni: "34567890", dia_nac: 15, mes_nac: 10, promociones: true, estado: true },
-        { id: 6, nombre: "Distribuidora San Martín", apellido: "S.A.", telefono: "2234998877", dni: "30-71234567-8", dia_nac: 18, mes_nac: 10, promociones: true, estado: true },
-        { id: 7, nombre: "Logística Pampeana", apellido: "SRL", telefono: "2235112233", dni: "30-68945123-4", dia_nac: 25, mes_nac: 10, promociones: true, estado: true },
-        { id: 8, nombre: "Ferretería Industrial", apellido: "Del Sur", telefono: "2236445566", dni: "33-54789123-9", dia_nac: 4, mes_nac: 2, promociones: true, estado: true },
-        { id: 9, nombre: "Metalúrgica", apellido: "Andina", telefono: "2235778899", dni: "30-70112233-1", dia_nac: 12, mes_nac: 3, promociones: true, estado: true },
-        { id: 10, nombre: "Consumidor", apellido: "Final", telefono: "-", dni: "-", dia_nac: null, mes_nac: null, promociones: false, estado: true }
-      ];
-      localStorage.setItem('ivi_clientes_data', JSON.stringify(clientesBase));
-    }
+    // Base de Clientes (Sincronizada con PostgreSQL / Supabase)
+    let clientesBase = JSON.parse(localStorage.getItem('ivi_clientes_data') || '[]');
 
     // Catálogo Maestro de Productos con persistencia en localStorage (ivi_stock_data)
-    let catalogoProductos = JSON.parse(localStorage.getItem('ivi_stock_data') || 'null');
-    if (!catalogoProductos) {
-      catalogoProductos = [
-        { id: 1, codigo: "93617", descripcion: "Essencial exclusivo eau de parfum (100ml)", precio: 71470, categoria: "Perfumería", proveedor: "Natura Cosméticos", stock: 24, estado: "optimo" },
-        { id: 2, codigo: "171", descripcion: "Cherry Eau de Parfum (50ml)", precio: 15990, categoria: "Perfumería", proveedor: "Monique Cosmética", stock: 15, estado: "optimo" },
-        { id: 3, codigo: "NAT002", descripcion: "Humor Propio (50ml)", precio: 17500, categoria: "Perfumería", proveedor: "Natura Cosméticos", stock: 8, estado: "bajo" },
-        { id: 4, codigo: "PROD-002", descripcion: "Difusor Aromático Premium", precio: 8900, categoria: "Hogar", proveedor: "Monique Cosmética", stock: 32, estado: "optimo" },
-        { id: 5, codigo: "PROD-001", descripcion: "Extracto Puro 100ml", precio: 12500, categoria: "Aromaterapia", proveedor: "AVON Argentina", stock: 45, estado: "optimo" },
-        { id: 6, codigo: "PROD-003", descripcion: "Agua de Ropa Floral 500ml", precio: 6400, categoria: "Textil", proveedor: "L'Oréal Distribución", stock: 60, estado: "optimo" },
-        { id: 7, codigo: "PROD-004", descripcion: "Esencia Concentrada 30ml", precio: 4800, categoria: "Aromaterapia", proveedor: "AVON Argentina", stock: 0, estado: "agotado" },
-        { id: 8, codigo: "PROD-005", descripcion: "Vela Soja Aromaterapia", precio: 7200, categoria: "Hogar", proveedor: "Monique Cosmética", stock: 18, estado: "optimo" }
-      ];
-      localStorage.setItem('ivi_stock_data', JSON.stringify(catalogoProductos));
-    } else {
-      let actualizado = false;
-      catalogoProductos.forEach(p => {
-        if (!p.proveedor) {
-          p.proveedor = p.categoria === 'Hogar' ? 'Monique Cosmética' : (p.categoria === 'Aromaterapia' ? 'AVON Argentina' : (p.categoria === 'Textil' ? "L'Oréal Distribución" : 'Natura Cosméticos'));
-          actualizado = true;
-        }
-      });
-      if (actualizado) {
-        localStorage.setItem('ivi_stock_data', JSON.stringify(catalogoProductos));
-      }
-    }
+    let catalogoProductos = JSON.parse(localStorage.getItem('ivi_stock_data') || '[]');
 
     // Funciones de Gestión y Actualización de Stock (Regla 4.4: Stock se da de baja en Pendiente)
     function recalcularEstadoProducto(p) {
@@ -2484,19 +2452,7 @@
     }
 
     // Historial de Pedidos en almacenamiento local
-    let pedidosData = JSON.parse(localStorage.getItem('ivi_pedidos') || 'null');
-    if (!pedidosData) {
-      pedidosData = [
-        { id: "VTA-2026-0101", fecha: "16/10/2026", cliente: "Distribuidora San Martín S.A.", estado: "PAG", total: 345000.00 },
-        { id: "VTA-2026-0102", fecha: "16/10/2026", cliente: "Logística Pampeana SRL", estado: "PEN", total: 182500.00 },
-        { id: "VTA-2026-0103", fecha: "15/10/2026", cliente: "Ferretería Industrial Del Sur", estado: "PAG", total: 520400.00 },
-        { id: "VTA-2026-0104", fecha: "15/10/2026", cliente: "Metalúrgica Andina", estado: "COT", total: 96800.00 },
-        { id: "VTA-2026-0105", fecha: "14/10/2026", cliente: "Consumidor Final", estado: "PAG", total: 37400.00 },
-        { id: "VTA-2026-0106", fecha: "12/10/2026", cliente: "Distribuidora San Martín S.A.", estado: "PAG", total: 210000.00 },
-        { id: "VTA-2026-0107", fecha: "10/10/2026", cliente: "Ferretería Industrial Del Sur", estado: "PAG", total: 180000.00 }
-      ];
-      localStorage.setItem('ivi_pedidos', JSON.stringify(pedidosData));
-    }
+    let pedidosData = JSON.parse(localStorage.getItem('ivi_pedidos') || '[]');
 
     function formatPesos(val) {
       return new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 2 }).format(val || 0);
@@ -3422,6 +3378,9 @@
           pedidosData[idx].total = totalVenta;
 
           localStorage.setItem('ivi_pedidos', JSON.stringify(pedidosData));
+          if (window.IviSupabase && window.IviSupabase.isConfigured()) {
+            window.IviSupabase.updateEstadoPedido(pedidoExistente.id_pedido || pedidoIdEnEdicion, nuevoEstado);
+          }
           cerrarModalNuevaVenta();
           mostrarNotificacion(`Pedido ${pedidoIdEnEdicion} actualizado con éxito (${nuevoEstado})`, 'success');
 
@@ -3457,6 +3416,23 @@
 
       pedidosData.unshift(nuevoPedido);
       localStorage.setItem('ivi_pedidos', JSON.stringify(pedidosData));
+
+      if (window.IviSupabase && window.IviSupabase.isConfigured()) {
+        const cliMatch = (clientesBase || []).find(c => `${c.nombre} ${c.apellido}`.trim().toLowerCase() === clienteNombre.toLowerCase() || c.id === clienteSeleccionadoId);
+        window.IviSupabase.savePedido({
+          id_cliente: cliMatch ? (cliMatch.id_cliente || cliMatch.id) : null,
+          total: totalVenta,
+          estado: nuevoEstado
+        }, items).then(saved => {
+          if (saved && saved.id_pedido) {
+            nuevoPedido.id_pedido = saved.id_pedido;
+            nuevoPedido.id = `VTA-2026-${String(saved.id_pedido).padStart(4, '0')}`;
+            const exitoComp = document.getElementById('exitoComprobante');
+            if (exitoComp) exitoComp.innerText = nuevoPedido.id;
+          }
+          sincronizarPedidosDesdeBackend();
+        });
+      }
 
       cerrarModalNuevaVenta();
       mostrarModalExitoVenta(nuevoPedido);
@@ -3708,6 +3684,9 @@
             estado
           };
           localStorage.setItem('ivi_clientes_data', JSON.stringify(clientesBase));
+          if (window.IviSupabase && window.IviSupabase.isConfigured()) {
+            window.IviSupabase.saveCliente(clientesBase[idx]).then(() => sincronizarClientesDesdeBackend());
+          }
           cerrarModalNuevoCliente();
           mostrarNotificacion(`Cliente "${nombre} ${apellido}" actualizado con éxito`, 'success');
           renderDirectorio();
@@ -3718,7 +3697,7 @@
 
       // Modo Nuevo Cliente
       const nuevoCliente = {
-        id: clientesBase.length + 1,
+        id: Date.now(),
         nombre: nombre,
         apellido: apellido,
         telefono: telefono,
@@ -3731,6 +3710,16 @@
 
       clientesBase.unshift(nuevoCliente);
       localStorage.setItem('ivi_clientes_data', JSON.stringify(clientesBase));
+
+      if (window.IviSupabase && window.IviSupabase.isConfigured()) {
+        window.IviSupabase.saveCliente(nuevoCliente).then(saved => {
+          if (saved && saved.id_cliente) {
+            nuevoCliente.id = saved.id_cliente;
+            nuevoCliente.id_cliente = saved.id_cliente;
+          }
+          sincronizarClientesDesdeBackend();
+        });
+      }
 
       const origenPrevio = origenModalCliente;
       cerrarModalNuevoCliente();
@@ -4253,25 +4242,39 @@
         .catch(err => console.warn('[Proveedores DB] Modo offline o backend no disponible:', err));
     }
 
+    function sincronizarClientesDesdeBackend() {
+      if (window.IviSupabase && window.IviSupabase.isConfigured()) {
+        window.IviSupabase.getClientes().then(data => {
+          if (Array.isArray(data)) {
+            clientesBase = data;
+            localStorage.setItem('ivi_clientes_data', JSON.stringify(clientesBase));
+            if (typeof renderDirectorio === 'function') renderDirectorio();
+            if (typeof actualizarContadoresNotificaciones === 'function') actualizarContadoresNotificaciones();
+            console.log('[Supabase Cloud] Clientes sincronizados desde Supabase:', clientesBase.length);
+          }
+        }).catch(err => console.warn('[Supabase Clientes] Error:', err));
+      }
+    }
+
+    function sincronizarPedidosDesdeBackend() {
+      if (window.IviSupabase && window.IviSupabase.isConfigured()) {
+        window.IviSupabase.getPedidos().then(data => {
+          if (Array.isArray(data)) {
+            pedidosData = data;
+            localStorage.setItem('ivi_pedidos', JSON.stringify(pedidosData));
+            if (typeof renderHistorial === 'function') renderHistorial();
+            if (typeof renderizarCRMEnVentas === 'function') renderizarCRMEnVentas();
+            console.log('[Supabase Cloud] Pedidos sincronizados desde Supabase:', pedidosData.length);
+          }
+        }).catch(err => console.warn('[Supabase Pedidos] Error:', err));
+      }
+    }
+
     function sincronizarProductosDesdeBackend() {
       if (window.IviSupabase && window.IviSupabase.isConfigured()) {
         window.IviSupabase.getProductos().then(data => {
           if (Array.isArray(data)) {
-            catalogoProductos = data.map(p => {
-              const provNombre = p.proveedores?.nombre_comercial || (proveedoresData.find(pr => pr.id === p.id_proveedor)?.razon) || 'Natura Cosméticos';
-              const st = parseInt(p.stock) || 0;
-              const est = st <= 0 ? 'agotado' : (st <= 10 ? 'bajo' : 'optimo');
-              return {
-                id: p.id_producto,
-                codigo: p.cod_producto || `PROD-${p.id_producto}`,
-                descripcion: p.nombre_producto || p.descripcion || 'Sin nombre',
-                precio: parseFloat(p.precio) || 0,
-                stock: st,
-                categoria: p.familia_olfativa || 'Perfumería',
-                proveedor: provNombre,
-                estado: est
-              };
-            });
+            catalogoProductos = data;
             localStorage.setItem('ivi_stock_data', JSON.stringify(catalogoProductos));
             if (typeof renderStock === 'function') renderStock();
             console.log('[Supabase Cloud] Productos sincronizados desde Supabase:', catalogoProductos.length);
@@ -5135,9 +5138,11 @@
     }
 
     // Sincronización inicial con PostgreSQL / Supabase Cloud
-    sincronizarContactosDesdeBackend();
-    sincronizarProveedoresDesdeBackend();
+    sincronizarClientesDesdeBackend();
     sincronizarProductosDesdeBackend();
+    sincronizarPedidosDesdeBackend();
+    sincronizarProveedoresDesdeBackend();
+    sincronizarContactosDesdeBackend();
     poblarSelectProveedores();
   </script>
 </body>

@@ -61,11 +61,46 @@
         } else {
           console.warn('[Supabase Cloud] Librería @supabase/supabase-js no detectada en window. Cargue el CDN correspondiente.');
         }
-      } else {
-        console.info('[Supabase Cloud] Modo LocalStorage activo (credenciales Supabase no configuradas aún).');
-      }
+      // Purgar inmediatamente cualquier dato mock viejo que haya quedado en localStorage
+      this.purgeMockCache();
 
       return this.client;
+    },
+
+    /**
+     * Limpia datos mock heredados en localStorage para garantizar
+     * que la app solo muestre datos reales de Supabase.
+     */
+    purgeMockCache() {
+      try {
+        const PURGE_TAG = 'ivi_real_supabase_sync_v2';
+        if (localStorage.getItem(PURGE_TAG) !== 'true') {
+          console.log('[Supabase Cloud] Purgando caché local con datos mock...');
+          localStorage.removeItem('ivi_clientes_data');
+          localStorage.removeItem('ivi_stock_data');
+          localStorage.removeItem('ivi_pedidos');
+          localStorage.removeItem('ivi_pedidos_data');
+          localStorage.removeItem('ivi_proveedores_data');
+          localStorage.setItem(PURGE_TAG, 'true');
+        } else {
+          // Chequeo secundario: si contiene nombres mock conocidos, limpiar
+          const clis = localStorage.getItem('ivi_clientes_data');
+          if (clis && (clis.includes('Distribuidora San Martín') || clis.includes('Florencia Gómez'))) {
+            localStorage.removeItem('ivi_clientes_data');
+          }
+          const prods = localStorage.getItem('ivi_stock_data');
+          if (prods && (prods.includes('Extracto Puro') || prods.includes('Difusor Aromático'))) {
+            localStorage.removeItem('ivi_stock_data');
+          }
+          const peds = localStorage.getItem('ivi_pedidos') || localStorage.getItem('ivi_pedidos_data');
+          if (peds && peds.includes('VTA-2026-0101')) {
+            localStorage.removeItem('ivi_pedidos');
+            localStorage.removeItem('ivi_pedidos_data');
+          }
+        }
+      } catch (e) {
+        console.warn('[Supabase Cloud] Error purgando caché mock:', e);
+      }
     },
 
     /**
@@ -392,6 +427,9 @@
     /**
      * CLIENTES: Consulta y Sincronización
      */
+    /**
+     * CLIENTES: Consulta y Sincronización en tiempo real desde Supabase
+     */
     async getClientes() {
       if (!this.client) return null;
       try {
@@ -401,9 +439,257 @@
           .order('id_cliente', { ascending: true });
 
         if (error) throw error;
-        return data;
+        if (!Array.isArray(data)) return [];
+
+        const formateados = data.map(c => {
+          let diaNac = null;
+          let mesNac = null;
+          if (c.fecha_nac) {
+            const parts = String(c.fecha_nac).split('-');
+            if (parts.length === 3) {
+              mesNac = parseInt(parts[1], 10);
+              diaNac = parseInt(parts[2], 10);
+            }
+          }
+          return {
+            id: c.id_cliente,
+            id_cliente: c.id_cliente,
+            nombre: c.nombre || '',
+            apellido: c.apellido || '',
+            telefono: c.telefono || '',
+            dni: c.dni || '',
+            fecha_nac: c.fecha_nac || null,
+            dia_nac: diaNac,
+            mes_nac: mesNac,
+            promociones: c.acepta_promociones !== false,
+            estado: c.estado !== false,
+            id_vendedor: c.id_vendedor || null
+          };
+        });
+
+        localStorage.setItem('ivi_clientes_data', JSON.stringify(formateados));
+        return formateados;
       } catch (err) {
         console.warn('[Supabase] Error al obtener clientes:', err.message);
+        return null;
+      }
+    },
+
+    /**
+     * CLIENTES: Guardar o actualizar cliente en Supabase
+     */
+    async saveCliente(cli) {
+      if (!this.client) return null;
+      try {
+        let fechaNac = null;
+        if (cli.dia_nac && cli.mes_nac) {
+          const mes = String(cli.mes_nac).padStart(2, '0');
+          const dia = String(cli.dia_nac).padStart(2, '0');
+          fechaNac = `2000-${mes}-${dia}`;
+        } else if (cli.fecha_nac) {
+          fechaNac = cli.fecha_nac;
+        }
+
+        const payload = {
+          nombre: cli.nombre || '',
+          apellido: cli.apellido || '',
+          telefono: cli.telefono || '',
+          dni: cli.dni || '',
+          fecha_nac: fechaNac,
+          acepta_promociones: cli.promociones !== false,
+          estado: cli.estado !== false
+        };
+
+        if (cli.id_vendedor) {
+          payload.id_vendedor = Number(cli.id_vendedor);
+        }
+
+        let res;
+        if (cli.id && Number.isInteger(Number(cli.id)) && Number(cli.id) < 1000000) {
+          res = await this.client
+            .from('clientes')
+            .update(payload)
+            .eq('id_cliente', Number(cli.id))
+            .select();
+        } else {
+          res = await this.client
+            .from('clientes')
+            .insert([payload])
+            .select();
+        }
+
+        if (res.error) throw res.error;
+        return res.data ? res.data[0] : null;
+      } catch (err) {
+        console.warn('[Supabase] Error al guardar cliente:', err.message);
+        return null;
+      }
+    },
+
+    /**
+     * PEDIDOS / VENTAS: Consulta en tiempo real desde Supabase
+     */
+    async getPedidos() {
+      if (!this.client) return null;
+      try {
+        let { data, error } = await this.client
+          .from('pedidos')
+          .select(`
+            id_pedido,
+            fecha,
+            total,
+            estado,
+            id_vendedor,
+            id_cliente,
+            clientes (id_cliente, nombre, apellido, telefono, dni),
+            vendedores (id_vendedor, nombre),
+            detalle_pedidos (id_detalle, id_producto, cantidad, precio_unitario, codigo_producto, productos(id_producto, nombre_producto, descripcion, cod_producto))
+          `)
+          .order('id_pedido', { ascending: false });
+
+        if (error) {
+          console.warn('[Supabase] Join falló, intentando consulta directa de pedidos:', error.message);
+          const resPlana = await this.client
+            .from('pedidos')
+            .select('*')
+            .order('id_pedido', { ascending: false });
+          if (resPlana.error) throw resPlana.error;
+          data = resPlana.data;
+        }
+
+        if (!Array.isArray(data)) return [];
+
+        const pedidosFormateados = data.map(p => {
+          let clienteNombre = 'Consumidor Final';
+          if (p.clientes) {
+            const nom = [p.clientes.nombre, p.clientes.apellido].filter(Boolean).join(' ');
+            if (nom) clienteNombre = nom;
+          }
+
+          let fechaFormateada = '';
+          if (p.fecha) {
+            try {
+              const d = new Date(p.fecha);
+              const dia = String(d.getDate()).padStart(2, '0');
+              const mes = String(d.getMonth() + 1).padStart(2, '0');
+              const anio = d.getFullYear();
+              fechaFormateada = `${dia}/${mes}/${anio}`;
+            } catch (e) {
+              fechaFormateada = p.fecha;
+            }
+          }
+
+          let estadoNormalizado = p.estado || 'PAG';
+          if (estadoNormalizado === 'Activo') estadoNormalizado = 'PAG';
+          if (estadoNormalizado === 'Anulado') estadoNormalizado = 'ANU';
+          if (estadoNormalizado === 'Presupuesto') estadoNormalizado = 'COT';
+
+          const itemsFormateados = (p.detalle_pedidos || []).map(dp => ({
+            id: dp.id_producto,
+            id_producto: dp.id_producto,
+            codigo: dp.codigo_producto || dp.productos?.cod_producto || '',
+            descripcion: dp.productos?.nombre_producto || dp.productos?.descripcion || dp.codigo_producto || 'Producto',
+            cantidad: dp.cantidad || 1,
+            precio: parseFloat(dp.precio_unitario) || 0,
+            subtotal: (dp.cantidad || 1) * (parseFloat(dp.precio_unitario) || 0)
+          }));
+
+          const descProductos = itemsFormateados.length > 0
+            ? itemsFormateados.map(it => `${it.cantidad}x ${it.codigo ? '[' + it.codigo + '] ' : ''}${it.descripcion}`).join(', ')
+            : 'Venta comercial';
+
+          return {
+            id: `VTA-2026-${String(p.id_pedido).padStart(4, '0')}`,
+            id_pedido: p.id_pedido,
+            fecha: fechaFormateada,
+            fecha_iso: p.fecha,
+            cliente: clienteNombre,
+            id_cliente: p.id_cliente,
+            vendedor: p.vendedores?.nombre || 'Vendedor',
+            id_vendedor: p.id_vendedor,
+            estado: estadoNormalizado,
+            total: parseFloat(p.total) || 0,
+            total_items: itemsFormateados.length,
+            producto: descProductos,
+            items: itemsFormateados
+          };
+        });
+
+        localStorage.setItem('ivi_pedidos', JSON.stringify(pedidosFormateados));
+        localStorage.setItem('ivi_pedidos_data', JSON.stringify(pedidosFormateados));
+        return pedidosFormateados;
+      } catch (err) {
+        console.warn('[Supabase] Error al obtener pedidos:', err.message);
+        return null;
+      }
+    },
+
+    /**
+     * PEDIDOS / VENTAS: Registrar pedido y sus items en Supabase
+     */
+    async savePedido(pedido, items = []) {
+      if (!this.client) return null;
+      try {
+        const payload = {
+          id_cliente: pedido.id_cliente || null,
+          id_vendedor: pedido.id_vendedor || 1,
+          fecha: new Date().toISOString(),
+          total: parseFloat(pedido.total) || 0,
+          estado: (pedido.estado === 'PAG' || pedido.estado === 'Activo') ? 'Activo' : (pedido.estado === 'COT' ? 'Presupuesto' : 'Pendiente')
+        };
+
+        const { data: nuevoPedido, error: errPed } = await this.client
+          .from('pedidos')
+          .insert([payload])
+          .select()
+          .single();
+
+        if (errPed) throw errPed;
+
+        if (items && items.length > 0) {
+          const detalleRows = items.map(it => ({
+            id_pedido: nuevoPedido.id_pedido,
+            id_producto: (it.id && Number(it.id) < 1000000) ? Number(it.id) : null,
+            cantidad: parseInt(it.cantidad) || 1,
+            precio_unitario: parseFloat(it.precio) || 0,
+            codigo_producto: it.codigo || ''
+          }));
+
+          const { error: errDet } = await this.client
+            .from('detalle_pedidos')
+            .insert(detalleRows);
+
+          if (errDet) {
+            console.warn('[Supabase] Error insertando items del pedido:', errDet.message);
+          }
+        }
+
+        return nuevoPedido;
+      } catch (err) {
+        console.warn('[Supabase] Error al guardar pedido:', err.message);
+        return null;
+      }
+    },
+
+    /**
+     * PEDIDOS / VENTAS: Actualizar estado de pedido en Supabase
+     */
+    async updateEstadoPedido(idPedido, nuevoEstado) {
+      if (!this.client || !idPedido) return null;
+      try {
+        const idNum = Number(String(idPedido).replace(/\D/g, ''));
+        const estadoDb = (nuevoEstado === 'PAG' || nuevoEstado === 'Activo') ? 'Activo' : (nuevoEstado === 'ANU' ? 'Anulado' : nuevoEstado);
+
+        const { data, error } = await this.client
+          .from('pedidos')
+          .update({ estado: estadoDb })
+          .eq('id_pedido', idNum)
+          .select();
+
+        if (error) throw error;
+        return data;
+      } catch (err) {
+        console.warn('[Supabase] Error al actualizar estado del pedido:', err.message);
         return null;
       }
     },
@@ -419,15 +705,36 @@
           .select('*, proveedores(id_proveedor, nombre_comercial, contacto)')
           .order('id_producto', { ascending: true });
 
+        let productosRaw = data;
         if (error) {
           const { data: dataDirecta, error: err2 } = await this.client
             .from('productos')
             .select('*')
             .order('id_producto', { ascending: true });
           if (err2) throw err2;
-          return dataDirecta;
+          productosRaw = dataDirecta;
         }
-        return data;
+
+        if (!Array.isArray(productosRaw)) return [];
+
+        const formateados = productosRaw.map(p => {
+          const provNombre = p.proveedores?.nombre_comercial || 'Natura Cosméticos';
+          const st = parseInt(p.stock) || 0;
+          const est = st <= 0 ? 'agotado' : (st <= 10 ? 'bajo' : 'optimo');
+          return {
+            id: p.id_producto,
+            codigo: p.cod_producto || `PROD-${p.id_producto}`,
+            descripcion: p.nombre_producto || p.descripcion || 'Sin nombre',
+            precio: parseFloat(p.precio) || 0,
+            stock: st,
+            categoria: p.familia_olfativa || 'Perfumería',
+            proveedor: provNombre,
+            estado: est
+          };
+        });
+
+        localStorage.setItem('ivi_stock_data', JSON.stringify(formateados));
+        return formateados;
       } catch (err) {
         console.warn('[Supabase] Error al obtener productos:', err.message);
         return null;

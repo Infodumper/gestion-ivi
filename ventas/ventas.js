@@ -4,52 +4,7 @@
  */
 
 const VentasState = {
-  pedidos: [
-    {
-      id: "VTA-2026-0101",
-      cliente: "Distribuidora San Martín S.A.",
-      cuit: "30-71234567-8",
-      fecha: "16/10/2026",
-      estado: "PAG",
-      items: 8,
-      total: 345000.00,
-      metodo: "Transferencia Bancaria",
-      vendedor: "Martín López"
-    },
-    {
-      id: "VTA-2026-0102",
-      cliente: "Logística Pampeana SRL",
-      cuit: "30-68945123-4",
-      fecha: "16/10/2026",
-      estado: "PEN",
-      items: 3,
-      total: 182500.00,
-      metodo: "Cuenta Corriente",
-      vendedor: "Florencia Gómez"
-    },
-    {
-      id: "VTA-2026-0103",
-      cliente: "Ferretería Industrial Del Sur",
-      cuit: "33-54789123-9",
-      fecha: "15/10/2026",
-      estado: "ENT",
-      items: 12,
-      total: 520400.00,
-      metodo: "Cheque 30 días",
-      vendedor: "Martín López"
-    },
-    {
-      id: "VTA-2026-0104",
-      cliente: "Metalúrgica Andina",
-      cuit: "30-70112233-1",
-      fecha: "15/10/2026",
-      estado: "COT",
-      items: 4,
-      total: 96800.00,
-      metodo: "Efectivo / Transferencia",
-      vendedor: "Florencia Gómez"
-    }
-  ],
+  pedidos: JSON.parse(localStorage.getItem('ivi_pedidos') || '[]'),
   filtroActual: "TODOS"
 };
 

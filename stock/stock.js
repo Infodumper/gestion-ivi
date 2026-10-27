@@ -4,52 +4,7 @@
  */
 
 const StockState = {
-  articulos: [
-    {
-      id: "PRD-001",
-      sku: "SEN-MOD-01",
-      nombre: "Sensor Térmico Modbus RS485",
-      categoria: "Sensores & Automatización",
-      almacen: "Depósito Central",
-      stockActual: 42,
-      puntoReorden: 15,
-      costoUnitario: 28500.00,
-      precioVenta: 45000.00
-    },
-    {
-      id: "PRD-002",
-      sku: "VALV-SOL-02",
-      nombre: "Válvula Solenoide 24V 1/2 pulgada",
-      categoria: "Válvulas & Neumática",
-      almacen: "Depósito Central",
-      stockActual: 6,
-      puntoReorden: 10,
-      costoUnitario: 14200.00,
-      precioVenta: 22800.00
-    },
-    {
-      id: "PRD-003",
-      sku: "PLC-IO-08",
-      nombre: "Módulo Expansión PLC 8 I/O Digital",
-      categoria: "Controladores",
-      almacen: "Almacén Sucursal Sur",
-      stockActual: 0,
-      puntoReorden: 5,
-      costoUnitario: 89000.00,
-      precioVenta: 135000.00
-    },
-    {
-      id: "PRD-004",
-      sku: "CAB-APAT-04",
-      nombre: "Cable Apatallado Par Trenzado 100m",
-      categoria: "Conectividad & Cables",
-      almacen: "Depósito Central",
-      stockActual: 75,
-      puntoReorden: 20,
-      costoUnitario: 18000.00,
-      precioVenta: 31000.00
-    }
-  ],
+  articulos: JSON.parse(localStorage.getItem('ivi_stock_data') || '[]'),
   filtroStock: "TODOS"
 };
 

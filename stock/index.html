@@ -657,6 +657,10 @@
           currentUser = verified;
           const navUser = document.getElementById('navUserName');
           if (navUser) navUser.innerText = verified.nombre || verified.email;
+
+          // Sincronizar datos reales desde Supabase Cloud
+          sincronizarProductosDesdeBackend();
+          sincronizarProveedoresDesdeBackend();
         }
       }
     });
@@ -671,24 +675,9 @@
     }
 
     let storedStock = localStorage.getItem('ivi_stock_data');
-    let productosData = storedStock ? JSON.parse(storedStock) : [
-      { codigo: "PROD-001", nombre: "Extracto Puro 100ml", proveedor: "Natura Cosméticos", categoria: "Perfumería", stock: 45, estado: "optimo", precio: 12500 },
-      { codigo: "PROD-002", nombre: "Difusor Aromático Premium", proveedor: "Monique Cosmética", categoria: "Hogar", stock: 12, estado: "bajo", precio: 8900 },
-      { codigo: "PROD-003", nombre: "Agua de Ropa Floral 500ml", proveedor: "L'Oréal Distribución", categoria: "Textil", stock: 60, estado: "optimo", precio: 6400 },
-      { codigo: "PROD-004", nombre: "Esencia Concentrada 30ml", proveedor: "AVON Argentina", categoria: "Aromaterapia", stock: 0, estado: "agotado", precio: 4800 }
-    ];
+    let productosData = storedStock ? JSON.parse(storedStock) : [];
 
-    let proveedoresData = JSON.parse(localStorage.getItem('ivi_proveedores_data') || 'null');
-    if (!proveedoresData || !proveedoresData.some(p => p.razon === 'Ignacio - Infodumper')) {
-      proveedoresData = [
-        { id: 1, razon: "Natura Cosméticos", contacto: "María Gómez", tel: "02235869878", email: "pedidos@natura.com.ar" },
-        { id: 2, razon: "Monique Cosmética", contacto: "Esteban López", tel: "2235869878", email: "ventas@monique.com" },
-        { id: 3, razon: "AVON Argentina", contacto: "Pepita Pérez", tel: "225455812", email: "contacto@avon.com" },
-        { id: 4, razon: "L'Oréal Distribución", contacto: "Carlos Rivas", tel: "2234112233", email: "info@loreal.com.ar" },
-        { id: 5, razon: "Ignacio - Infodumper", contacto: "Ignacio", tel: "2235869878", email: "ignacio@infodumper.net" }
-      ];
-      localStorage.setItem('ivi_proveedores_data', JSON.stringify(proveedoresData));
-    }
+    let proveedoresData = JSON.parse(localStorage.getItem('ivi_proveedores_data') || '[]');
 
     function escapeHtml(str) {
       return (str || '').replace(/[&<>"']/g, function(m) {
@@ -717,20 +706,23 @@
     }
 
     function sincronizarProveedoresDesdeBackend() {
-      const apiPath = (window.location.pathname.includes('/ventas/') || window.location.pathname.includes('/crm/') || window.location.pathname.includes('/stock/'))
-        ? '../api/proveedores.php'
-        : 'api/proveedores.php';
-
-      fetch(apiPath)
-        .then(res => res.json())
-        .then(data => {
-          if (data && data.ok && Array.isArray(data.proveedores) && data.proveedores.length > 0) {
-            proveedoresData = data.proveedores;
+      if (window.IviSupabase && window.IviSupabase.isConfigured()) {
+        window.IviSupabase.getProveedores().then(data => {
+          if (Array.isArray(data) && data.length > 0) {
+            proveedoresData = data.map(p => ({
+              id: p.id_proveedor,
+              razon: p.nombre_comercial,
+              contacto: p.contacto || '',
+              tel: p.telefono || '',
+              email: p.email || ''
+            }));
             localStorage.setItem('ivi_proveedores_data', JSON.stringify(proveedoresData));
             poblarSelectProveedores();
+            console.log('[Supabase Cloud Stock] Proveedores sincronizados:', proveedoresData.length);
           }
-        })
-        .catch(err => console.warn('[Proveedores DB] Modo offline o backend no disponible:', err));
+        }).catch(err => console.warn('[Supabase Proveedores] Error:', err));
+        return;
+      }
     }
 
     function formatPesos(val) {
@@ -741,22 +733,7 @@
       if (window.IviSupabase && window.IviSupabase.isConfigured()) {
         window.IviSupabase.getProductos().then(data => {
           if (Array.isArray(data)) {
-            productosData = data.map(p => {
-              const provNombre = p.proveedores?.nombre_comercial || (proveedoresData.find(pr => pr.id === p.id_proveedor)?.razon) || 'Natura Cosméticos';
-              const st = parseInt(p.stock) || 0;
-              const est = st <= 0 ? 'agotado' : (st <= 10 ? 'bajo' : 'optimo');
-              return {
-                id: p.id_producto,
-                codigo: p.cod_producto || `PROD-${p.id_producto}`,
-                nombre: p.nombre_producto || p.descripcion || 'Sin nombre',
-                descripcion: p.nombre_producto || p.descripcion || 'Sin nombre',
-                precio: parseFloat(p.precio) || 0,
-                stock: st,
-                categoria: p.familia_olfativa || 'Perfumería',
-                proveedor: provNombre,
-                estado: est
-              };
-            });
+            productosData = data;
             localStorage.setItem('ivi_stock_data', JSON.stringify(productosData));
             if (typeof renderStock === 'function') renderStock();
             console.log('[Supabase Cloud Stock] Productos sincronizados:', productosData.length);

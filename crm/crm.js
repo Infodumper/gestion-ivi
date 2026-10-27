@@ -4,60 +4,7 @@
  */
 
 const CRMState = {
-  clientes: [
-    {
-      id: "CLI-001",
-      nombre: "Distribuidora San Martín S.A.",
-      contacto: "Ing. Roberto Calvo",
-      email: "rcalvo@dismartin.com.ar",
-      telefono: "+54 11 4512-8800",
-      etapa: "GANA",
-      score: 92,
-      salud: "SALUDABLE",
-      ltv: 1850000.00,
-      ultimaInteraccion: "14/10/2026",
-      rubro: "Distribución Mayorista"
-    },
-    {
-      id: "CLI-002",
-      nombre: "Logística Pampeana SRL",
-      contacto: "Mariana Benítez",
-      email: "mbenitez@logpampeana.com",
-      telefono: "+54 2954 44-1290",
-      etapa: "PROP",
-      score: 78,
-      salud: "OBSERVACION",
-      ltv: 620000.00,
-      ultimaInteraccion: "08/10/2026",
-      rubro: "Transporte & Envíos"
-    },
-    {
-      id: "CLI-003",
-      nombre: "Metalúrgica Andina",
-      contacto: "Carlos Méndez",
-      email: "cmendez@andina-metal.com",
-      telefono: "+54 261 498-3310",
-      etapa: "CALI",
-      score: 65,
-      salud: "SALUDABLE",
-      ltv: 96800.00,
-      ultimaInteraccion: "15/10/2026",
-      rubro: "Manufactura Industrial"
-    },
-    {
-      id: "CLI-004",
-      nombre: "Constructora del Valle",
-      contacto: "Arq. Laura Peña",
-      email: "lpena@valle-obras.com",
-      telefono: "+54 299 477-9001",
-      etapa: "CONT",
-      score: 48,
-      salud: "RIESGO",
-      ltv: 0.00,
-      ultimaInteraccion: "20/09/2026",
-      rubro: "Construcción Civil"
-    }
-  ]
+  clientes: JSON.parse(localStorage.getItem('ivi_clientes_data') || '[]')
 };
 
 const formatCurrency = (val) => {

@@ -95,3 +95,27 @@ Al preparar el sistema para su despliegue público en Netlify con backend en Sup
 - [x] Peticiones anónimas o sin token JWT son bloqueadas por RLS a nivel motor PostgreSQL.
 - [x] Cierre de sesión revoca tokens activos tanto en Supabase como en `localStorage`.
 - [x] Código sincronizado y publicado en Netlify a través de GitHub branch `main`.
+
+---
+
+## [ENGRAM-20261026-002] Erradicación de Datos Mock y Sincronización Real con Supabase Cloud
+
+- **Fecha:** 26 de Octubre de 2026
+- **Sector Afectado:** Capa 4 (Persistencia Supabase Cloud) + Capa 3 (Ventas, Stock, CRM)
+- **Estado:** Implementado, Validado y Listo para Despliegue en Netlify
+- **Autor / Responsable:** Ignacio Vizoso / Agente Orquestador
+
+### 1. Diagnóstico
+En la aplicación desplegada se visualizaban clientes y pedidos de prueba (*Distribuidora San Martín S.A.*, *Florencia Gómez*, *Extracto Puro 100ml*, *VTA-2026-0101*, etc.) debido a:
+1. Arrays de fallback con datos mock hardcodeados que se guardaban en el `localStorage` del cliente.
+2. Clientes y Pedidos nunca se consultaban a la API de Supabase en las vistas de Ventas y CRM.
+3. El módulo Stock inicializaba productos mock si no existía caché previa.
+
+### 2. Decisiones Arquitectónicas (ADR)
+1. **Purga Automática de Caché Mock:** Implementación de `purgeMockCache()` en `js/supabase-client.js`, que detecta y elimina cualquier clave local heredada con datos falsos.
+2. **Sincronización Total de Negocio con Supabase:**
+   - `getClientes()` y `saveCliente()`: Sincronización bidireccional de clientes con PostgreSQL.
+   - `getPedidos()`, `savePedido()` y `updateEstadoPedido()`: Sincronización de pedidos y detalle de líneas con la base de datos cloud.
+   - `getProductos()` y `actualizarStockProducto()`: Consulta y baja de stock en tiempo real.
+3. **Cero Datos Falsos en Fallback:** Se inicializan todas las entidades como `[]` en `index.html`, `ventas/index.html`, `stock/index.html` y `crm/index.html`.
+
