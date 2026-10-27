@@ -2117,11 +2117,7 @@
             <div class="form-group-item">
               <label>Proveedor <span style="color: #dc2626;">*</span></label>
               <select id="prodProveedor" class="form-input-control">
-                <option value="Natura Cosméticos">Natura Cosméticos</option>
-                <option value="Monique Cosmética">Monique Cosmética</option>
-                <option value="AVON Argentina">AVON Argentina</option>
-                <option value="L'Oréal Distribución">L'Oréal Distribución</option>
-                <option value="Ignacio - Infodumper">Ignacio - Infodumper</option>
+                <option value="">-- Sin proveedores registrados --</option>
               </select>
             </div>
             <div class="form-group-item" style="grid-column: span 2;">
@@ -4206,19 +4202,24 @@
         ? proveedoresData
         : JSON.parse(localStorage.getItem('ivi_proveedores_data') || '[]');
 
-      if (!provs || !provs.length) return;
-
       const escapeFn = typeof escapeHtml === 'function' ? escapeHtml : (s) => String(s || '');
 
-      selectEl.innerHTML = provs.map(pr => {
+      if (!provs || !provs.length) {
+        selectEl.innerHTML = '<option value="">-- Sin proveedores registrados --</option>';
+        return;
+      }
+
+      let optionsHtml = '<option value="">-- Seleccionar Proveedor --</option>';
+      optionsHtml += provs.map(pr => {
         const nombre = pr.razon || pr.nombre_comercial || '';
-        const selected = (nombre === valorSeleccionado) ? 'selected' : '';
+        const selected = (nombre && nombre === valorSeleccionado) ? 'selected' : '';
         return `<option value="${escapeFn(nombre)}" ${selected}>${escapeFn(nombre)}</option>`;
       }).join('');
 
       if (valorSeleccionado && !provs.some(pr => (pr.razon || pr.nombre_comercial) === valorSeleccionado)) {
-        selectEl.insertAdjacentHTML('beforeend', `<option value="${escapeFn(valorSeleccionado)}" selected>${escapeFn(valorSeleccionado)}</option>`);
+        optionsHtml += `<option value="${escapeFn(valorSeleccionado)}" selected>${escapeFn(valorSeleccionado)}</option>`;
       }
+      selectEl.innerHTML = optionsHtml;
     }
 
     function sincronizarProveedoresDesdeBackend() {
@@ -4385,7 +4386,7 @@
       }
 
       tbody.innerHTML = itemsOrdenados.map(p => {
-        const provNombre = p.proveedor || (p.categoria === 'Hogar' ? 'Monique Cosmética' : (p.categoria === 'Aromaterapia' ? 'AVON Argentina' : (p.categoria === 'Textil' ? "L'Oréal Distribución" : 'Natura Cosméticos')));
+        const provNombre = p.proveedor || 'Sin proveedor';
         const estadoTit = p.estado === 'optimo' ? 'Stock óptimo' : (p.estado === 'bajo' ? 'Stock bajo' : 'Agotado');
         return `
         <tr onclick="editarProducto(${p.id})" title="Haga clic para editar el artículo ${escapeHtml(p.descripcion)}">
@@ -4418,7 +4419,7 @@
 
       document.getElementById('prodId').value = p.id;
       document.getElementById('prodCodigo').value = p.codigo || '';
-      const provVal = p.proveedor || (p.categoria === 'Hogar' ? 'Monique Cosmética' : (p.categoria === 'Aromaterapia' ? 'AVON Argentina' : (p.categoria === 'Textil' ? "L'Oréal Distribución" : 'Natura Cosméticos')));
+      const provVal = p.proveedor || '';
       poblarSelectProveedores(provVal);
       document.getElementById('prodDescripcion').value = p.descripcion || '';
       document.getElementById('prodPrecio').value = p.precio || 0;
@@ -4452,7 +4453,7 @@
       const subEl = document.getElementById('modalProdSubtitle');
       if (subEl) subEl.innerText = 'Dar de alta un nuevo artículo en el catálogo y stock';
 
-      poblarSelectProveedores('Natura Cosméticos');
+      poblarSelectProveedores('');
 
       const estadoEl = document.getElementById('prodEstado');
       if (estadoEl) estadoEl.value = 'optimo';
@@ -4483,7 +4484,7 @@
       const prodId = document.getElementById('prodId').value;
       const codigo = document.getElementById('prodCodigo').value.trim();
       const provEl = document.getElementById('prodProveedor');
-      const proveedor = provEl ? provEl.value : 'Natura Cosméticos';
+      const proveedor = provEl ? provEl.value.trim() : '';
       const descripcion = document.getElementById('prodDescripcion').value.trim();
       const precio = parseFloat(document.getElementById('prodPrecio').value) || 0;
       const stock = parseInt(document.getElementById('prodStock').value) || 0;

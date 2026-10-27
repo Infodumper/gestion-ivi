@@ -750,7 +750,7 @@
         if (!Array.isArray(productosRaw)) return [];
 
         const formateados = productosRaw.map(p => {
-          const provNombre = p.proveedores?.nombre_comercial || 'Natura Cosméticos';
+          const provNombre = p.proveedores?.nombre_comercial || 'Sin proveedor';
           const st = parseInt(p.stock) || 0;
           const est = st <= 0 ? 'agotado' : (st <= 10 ? 'bajo' : 'optimo');
           return {

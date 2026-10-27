@@ -172,5 +172,24 @@ El usuario solicita iniciar el sistema en producción sin ningún cliente, pedid
 - **Backend:** Script `database/reset_datos_operativos.sql` listo para ejecución manual en el SQL Editor de Supabase (preserva `usuarios_autorizados`).
 - **Despliegue:** Commit `1b7c93f` publicado en `main` y desplegado en Netlify.
 
+---
+
+## [ENGRAM-20261027-005] Erradicación de Proveedores Hardcodeados y Select Dinámico en Estado Cero
+
+- **Fecha:** 27 de Octubre de 2026
+- **Sector Afectado:** Capa 3 (UI de Stock, Ventas e Index) + Capa 4 (Formateo en Supabase Client)
+- **Estado:** Implementado, Validado y Sincronizado en GitHub / Netlify
+- **Autor / Responsable:** Ignacio Vizoso / Agente Orquestador
+
+### 1. Diagnóstico del Problema
+- Tras la ejecución de `reset_datos_operativos.sql`, el selector de proveedores en los modales de alta/edición de productos continuaba mostrando opciones de prueba (*Natura Cosméticos*, *Monique Cosmética*, *AVON Argentina*, *L'Oréal Distribución*, *Ignacio - Infodumper*).
+- Causa: En el marcado HTML de `index.html`, `ventas/index.html` y `stock/index.html`, `<select id="prodProveedor">` mantenía dichas opciones fijas por defecto. Además, la función `poblarSelectProveedores()` hacía `return` inmediato si `provs.length === 0`, impidiendo la limpieza del selector. `js/supabase-client.js` también utilizaba un fallback textual `'Natura Cosméticos'` al mapear productos sin proveedor vinculado.
+
+### 2. Decisiones y Cambios Implementados (ADR)
+1. **Marcado Neutro:** Se reemplazaron las 5 opciones fijas por `<option value="">-- Sin proveedores registrados --</option>`.
+2. **Selector Reactivo a Estado Vacío:** `poblarSelectProveedores()` ahora limpia activamente el selector con el estado neutro cuando `provs.length === 0`, o genera `-- Seleccionar Proveedor --` seguido únicamente de los proveedores existentes en Supabase.
+3. **Eliminación de Fallbacks Fijos:** Se removieron los defaults fijos en `abrirModalNuevoProducto()`, `editarProducto()`, `guardarProductoForm()` y en el formateador de `js/supabase-client.js` (sustituido por `'Sin proveedor'`).
+
+
 
 
