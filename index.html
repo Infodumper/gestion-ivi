@@ -3558,6 +3558,19 @@
 
       const itemsOrdenados = [...lista].sort((a, b) => compararPedidos(a, b, historialSort.columna, historialSort.orden));
 
+      if (!itemsOrdenados || itemsOrdenados.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" style="text-align: center; padding: 2.5rem; color: #64748b;">
+              <div style="font-size: 2rem; margin-bottom: 0.5rem;">📋</div>
+              <p style="font-weight: 600; margin: 0 0 0.25rem 0; color: #334155;">No hay ventas ni pedidos registrados</p>
+              <p style="font-size: 0.85rem; margin: 0;">Presiona "+ Nueva Venta" para emitir el primer comprobante.</p>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
       tbody.innerHTML = itemsOrdenados.map(p => `
         <tr onclick="editarPedido('${p.id}')" title="Haga clic para editar este pedido (${p.id})">
           <td style="font-weight: 700; color: #1d4ed8;">${p.id}</td>
@@ -4095,6 +4108,19 @@
 
       const itemsOrdenados = [...lista].sort((a, b) => compararClientes(a, b, directorioSort.columna, directorioSort.orden));
 
+      if (!itemsOrdenados || itemsOrdenados.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="7" style="text-align: center; padding: 2.5rem; color: #64748b;">
+              <div style="font-size: 2rem; margin-bottom: 0.5rem;">👥</div>
+              <p style="font-weight: 600; margin: 0 0 0.25rem 0; color: #334155;">No hay clientes registrados</p>
+              <p style="font-size: 0.85rem; margin: 0;">Presiona "+ Nuevo Cliente" para dar de alta el primer cliente.</p>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
       tbody.innerHTML = itemsOrdenados.map(c => {
         let cumpleInfo = '-';
         if (c.dia_nac && c.mes_nac) {
@@ -4167,17 +4193,7 @@
     // =========================================================================
     // MODALES Y GESTIÓN DIRECTA DE STOCK (INVENTARIO Y PROVEEDORES)
     // =========================================================================
-    let proveedoresData = JSON.parse(localStorage.getItem('ivi_proveedores_data') || 'null');
-    if (!proveedoresData || !proveedoresData.some(p => p.razon === 'Ignacio - Infodumper')) {
-      proveedoresData = [
-        { id: 1, razon: "Natura Cosméticos", contacto: "María Gómez", tel: "02235869878", email: "pedidos@natura.com.ar" },
-        { id: 2, razon: "Monique Cosmética", contacto: "Esteban López", tel: "2235869878", email: "ventas@monique.com" },
-        { id: 3, razon: "AVON Argentina", contacto: "Pepita Pérez", tel: "225455812", email: "contacto@avon.com" },
-        { id: 4, razon: "L'Oréal Distribución", contacto: "Carlos Rivas", tel: "2234112233", email: "info@loreal.com.ar" },
-        { id: 5, razon: "Ignacio - Infodumper", contacto: "Ignacio", tel: "2235869878", email: "ignacio@infodumper.net" }
-      ];
-      localStorage.setItem('ivi_proveedores_data', JSON.stringify(proveedoresData));
-    }
+    let proveedoresData = JSON.parse(localStorage.getItem('ivi_proveedores_data') || '[]');
 
     function poblarSelectProveedores(valorSeleccionado = '') {
       const selectEl = document.getElementById('prodProveedor');
@@ -4204,7 +4220,7 @@
     function sincronizarProveedoresDesdeBackend() {
       if (window.IviSupabase && window.IviSupabase.isConfigured()) {
         window.IviSupabase.getProveedores().then(data => {
-          if (Array.isArray(data) && data.length > 0) {
+          if (Array.isArray(data)) {
             proveedoresData = data.map(p => ({
               id: p.id_proveedor,
               razon: p.nombre_comercial,
@@ -4350,6 +4366,19 @@
       actualizarIndicadoresOrdenStock();
 
       const itemsOrdenados = [...lista].sort((a, b) => compararProductos(a, b, stockSort.columna, stockSort.orden));
+
+      if (!itemsOrdenados || itemsOrdenados.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" style="text-align: center; padding: 2.5rem; color: #64748b;">
+              <div style="font-size: 2rem; margin-bottom: 0.5rem;">📦</div>
+              <p style="font-weight: 600; margin: 0 0 0.25rem 0; color: #334155;">No hay artículos en el catálogo</p>
+              <p style="font-size: 0.85rem; margin: 0;">Presiona "+ Nuevo Artículo" para registrar productos.</p>
+            </td>
+          </tr>
+        `;
+        return;
+      }
 
       tbody.innerHTML = itemsOrdenados.map(p => {
         const provNombre = p.proveedor || (p.categoria === 'Hogar' ? 'Monique Cosmética' : (p.categoria === 'Aromaterapia' ? 'AVON Argentina' : (p.categoria === 'Textil' ? "L'Oréal Distribución" : 'Natura Cosméticos')));

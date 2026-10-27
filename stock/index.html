@@ -708,7 +708,7 @@
     function sincronizarProveedoresDesdeBackend() {
       if (window.IviSupabase && window.IviSupabase.isConfigured()) {
         window.IviSupabase.getProveedores().then(data => {
-          if (Array.isArray(data) && data.length > 0) {
+          if (Array.isArray(data)) {
             proveedoresData = data.map(p => ({
               id: p.id_proveedor,
               razon: p.nombre_comercial,
@@ -869,8 +869,21 @@
 
     function renderStock(lista = productosData) {
       const tbody = document.getElementById('stockTableBody');
+      if (!tbody) return;
+      if (!lista || lista.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" style="text-align: center; padding: 2.5rem; color: #64748b;">
+              <div style="font-size: 2rem; margin-bottom: 0.5rem;">📦</div>
+              <p style="font-weight: 600; margin: 0 0 0.25rem 0; color: #334155;">No hay artículos en el inventario</p>
+              <p style="font-size: 0.85rem; margin: 0;">Presiona "+ Nuevo Producto" para cargar el inventario inicial.</p>
+            </td>
+          </tr>
+        `;
+        return;
+      }
       tbody.innerHTML = lista.map(p => {
-        const prov = p.proveedor || p.categoria || 'Natura Cosméticos';
+        const prov = p.proveedor || p.categoria || 'Sin proveedor';
         const estadoTit = p.estado === 'optimo' ? 'Stock Óptimo' : (p.estado === 'bajo' ? 'Stock Bajo' : 'Agotado');
         const nombreProd = p.descripcion || p.nombre || '';
         return `
@@ -898,6 +911,17 @@
 
     function abrirModalProveedores() {
       const tbody = document.getElementById('proveedoresTableBody');
+      if (!tbody) return;
+      if (!proveedoresData || proveedoresData.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="5" style="text-align: center; padding: 2rem; color: #64748b;">
+              No hay proveedores registrados. Presiona "+ Nuevo Proveedor".
+            </td>
+          </tr>
+        `;
+        return;
+      }
       tbody.innerHTML = proveedoresData.map(pr => `
         <tr>
           <td style="font-weight: 700; color: #334155;">#${pr.id}</td>

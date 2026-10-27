@@ -4,17 +4,9 @@
  */
 
 const ModalManager = {
-  // Inicialización de datos locales sincronizados con PostgreSQL
-  clientes: JSON.parse(localStorage.getItem('ivi_clientes_data') || 'null') || [
-    { id: 1, nombre: "José Ignacio", apellido: "Vizoso Martínez", telefono: "2235869878", dni: "95003856", dia_nac: 17, mes_nac: 2, promociones: true, estado: true },
-    { id: 2, nombre: "Paola Adriana", apellido: "Estévez", telefono: "2233012095", dni: "28642892", dia_nac: 13, mes_nac: 1, promociones: true, estado: false },
-    { id: 3, nombre: "Mariana", apellido: "Montenegro", telefono: "2235170307", dni: "", dia_nac: 9, mes_nac: 5, promociones: true, estado: true }
-  ],
-  proveedores: JSON.parse(localStorage.getItem('ivi_proveedores_data') || 'null') || [
-    { id: 1, nombreComercial: "Natura", cuit: "30-70889900-1", contacto: "María Gómez", telefono: "02235869878", email: "pedidos@natura.com.ar", direccion: "Avenida Colón 2134", estado: true },
-    { id: 2, nombreComercial: "Monique", cuit: "30-65443322-9", contacto: "Esteban López", telefono: "2235869878", email: "ventas@monique.com", direccion: "Av. Colón 2134", estado: true },
-    { id: 3, nombreComercial: "AVON", cuit: "33-50112233-4", contacto: "Pepita Pérez", telefono: "225455812", email: "contacto@avon.com", direccion: "Calle 14 n° 880", estado: true }
-  ],
+  // Inicialización de datos locales sincronizados con Supabase Cloud
+  clientes: JSON.parse(localStorage.getItem('ivi_clientes_data') || '[]'),
+  proveedores: JSON.parse(localStorage.getItem('ivi_proveedores_data') || '[]'),
 
   guardarEnStorage() {
     localStorage.setItem('ivi_clientes_data', JSON.stringify(this.clientes));

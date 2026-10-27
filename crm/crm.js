@@ -40,8 +40,19 @@ const renderCRM = () => {
   const container = document.getElementById("crmList");
   if (!container) return;
 
+  if (!CRMState.clientes || CRMState.clientes.length === 0) {
+    container.innerHTML = `
+      <div style="padding: 2.5rem; text-align: center; color: var(--text-muted);">
+        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">👥</div>
+        <p style="font-size: 1rem; font-weight: 500; margin: 0 0 0.25rem 0;">No hay clientes ni prospectos registrados</p>
+        <p style="font-size: 0.85rem; margin: 0;">Los nuevos clientes sincronizados desde Supabase aparecerán aquí automáticamente.</p>
+      </div>
+    `;
+    actualizarMetricasCRM();
+    return;
+  }
+
   container.innerHTML = CRMState.clientes.map(c => `
-    <div class="chapita" onclick="verFicha360('${c.id}')">
       <div class="chapita-lead">
         <div class="chapita-avatar" style="background-color: var(--color-sector-crm-bg); color: var(--color-sector-crm);">
           ${c.nombre.substring(0, 2).toUpperCase()}

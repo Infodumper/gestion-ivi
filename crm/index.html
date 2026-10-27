@@ -1694,6 +1694,19 @@
 
       const itemsOrdenados = [...lista].sort((a, b) => compararClientes(a, b, directorioSort.columna, directorioSort.orden));
 
+      if (!itemsOrdenados || itemsOrdenados.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="7" style="text-align: center; padding: 2.5rem; color: #64748b;">
+              <div style="font-size: 2rem; margin-bottom: 0.5rem;">👥</div>
+              <p style="font-weight: 600; margin: 0 0 0.25rem 0; color: #334155;">No hay clientes registrados</p>
+              <p style="font-size: 0.85rem; margin: 0;">Presiona "+ Nuevo Cliente" para dar de alta el primer cliente.</p>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
       tbody.innerHTML = itemsOrdenados.map(c => {
         let cumpleInfo = '-';
         if (c.dia_nac && c.mes_nac) {

@@ -119,3 +119,28 @@ En la aplicación desplegada se visualizaban clientes y pedidos de prueba (*Dist
    - `getProductos()` y `actualizarStockProducto()`: Consulta y baja de stock en tiempo real.
 3. **Cero Datos Falsos en Fallback:** Se inicializan todas las entidades como `[]` en `index.html`, `ventas/index.html`, `stock/index.html` y `crm/index.html`.
 
+---
+
+## [ENGRAM-20261026-003] Protocolo de Estado Cero para Producción y Preservación de Accesos
+
+- **Fecha:** 26 de Octubre de 2026
+- **Sector Afectado:** Capa 1 (Directivas) + Capa 4 (Persistencia & Reset) + Capa 3 (UI Empty States)
+- **Estado:** Implementado y Listo para Ejecución en Supabase SQL Editor
+- **Autor / Responsable:** Ignacio Vizoso / Agente Orquestador
+
+### 1. Requerimiento
+El usuario solicita iniciar el sistema en producción sin ningún cliente, pedido, producto ni contacto cargado ("Estado Cero"), garantizando que la única tabla conservada sea `usuarios_autorizados` (control de acceso y roles).
+
+### 2. Decisiones Arquitectónicas (ADR)
+1. **Script de Vaciado Operativo Atómico (`database/reset_datos_operativos.sql`):**
+   - Ejecuta `TRUNCATE TABLE detalle_pedidos, pedidos, contactos_whatsapp, auditoria, productos, proveedores, clientes RESTART IDENTITY CASCADE`.
+   - Reinicia todas las secuencias a `1` para que las nuevas ventas y registros comiencen desde el primer ID.
+   - Preserva `usuarios_autorizados` y la asignación comercial de `vendedores`.
+2. **Erradicación de Fallbacks Residuales:**
+   - Limpieza de `js/modals.js` (eliminados arrays de prueba de clientes y proveedores).
+   - Limpieza de `ventas/index.html` (eliminado array residual de proveedores mock).
+   - Ajuste de sincronización para que listas vacías `[]` desde Supabase sobreescriban limpiamente el almacenamiento local.
+3. **Diseño de Estados Vacíos Intuitivos (Empty States):**
+   - En Ventas, Directorio de Clientes, Stock y CRM se incorporaron tarjetas informativas con botones de llamada a la acción ("+ Nueva Venta", "+ Nuevo Cliente", "+ Nuevo Producto") para una experiencia visual limpia y profesional.
+
+
