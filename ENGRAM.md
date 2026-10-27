@@ -143,4 +143,34 @@ El usuario solicita iniciar el sistema en producción sin ningún cliente, pedid
 3. **Diseño de Estados Vacíos Intuitivos (Empty States):**
    - En Ventas, Directorio de Clientes, Stock y CRM se incorporaron tarjetas informativas con botones de llamada a la acción ("+ Nueva Venta", "+ Nuevo Cliente", "+ Nuevo Producto") para una experiencia visual limpia y profesional.
 
+---
+
+## [ENGRAM-20261026-004] Flujo de Recuperación de Credenciales, Servidor Local Cero-Dependencias y Cierre de Sesión
+
+- **Fecha:** 26 de Octubre de 2026
+- **Sector Afectado:** Capa 4 (Auth Tokens) + Capa 3 (UI Login & Recovery) + Entorno de Desarrollo Local
+- **Estado:** Implementado, Probado y Sincronizado en GitHub / Netlify
+- **Autor / Responsable:** Ignacio Vizoso / Agente Orquestador
+
+### 1. Diagnóstico y Necesidades
+1. **Recuperación de Contraseña por Token:** Al solicitar reseteo de clave, Supabase generaba un enlace con tokens JWT (`#access_token=...&type=recovery`). La interfaz de `login.html` no disponía de captura de evento `PASSWORD_RECOVERY` ni formulario de actualización de clave.
+2. **Redirección de Correo a `localhost:3000`:** Por defecto, Supabase utiliza `http://localhost:3000` como `Site URL`.
+3. **Consumo de Créditos en Netlify:** Cada commit activaba un build automático en Netlify, consumiendo el 50% de la cuota mensual gratuita (150/300 créditos). Era imperativo contar con un entorno de prueba local antes de realizar `git push`.
+
+### 2. Decisiones Arquitectónicas (ADR)
+1. **Flujo de Recuperación Reactivo en `login.html`:**
+   - Se agregó `updateUserPassword(newPassword)` en `js/supabase-client.js`.
+   - Se implementó `#formRecovery` en `login.html` que detecta automáticamente fragmentos de URL `#type=recovery` o el evento `PASSWORD_RECOVERY` de Supabase Auth, permitiendo fijar la nueva contraseña con validación de coincidencia y longitud mínima.
+2. **Servidor HTTP Local de Cero Dependencias (`scripts/servidor_local.ps1` e `iniciar_servidor.bat`):**
+   - Corre sobre `System.Net.HttpListener` de PowerShell nativo en Windows (puerto 3000).
+   - No requiere Node.js, Python ni PHP.
+   - Abre automáticamente el navegador en `http://localhost:3000/login.html` y atiende directamente los enlaces de recuperación enviados por Supabase sin desvíos.
+   - Protegido por `.gitignore` para no contaminar el despliegue de Netlify ni consumir minutos de build.
+
+### 3. Estado de Cierre al 26/10/2026
+- **Frontend:** 100% conectado a Supabase Cloud, cero datos mock residuales, empty states activos y guardián de autenticación.
+- **Backend:** Script `database/reset_datos_operativos.sql` listo para ejecución manual en el SQL Editor de Supabase (preserva `usuarios_autorizados`).
+- **Despliegue:** Commit `1b7c93f` publicado en `main` y desplegado en Netlify.
+
+
 
