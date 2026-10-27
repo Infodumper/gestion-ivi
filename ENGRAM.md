@@ -189,6 +189,31 @@ El usuario solicita iniciar el sistema en producción sin ningún cliente, pedid
 1. **Marcado Neutro:** Se reemplazaron las 5 opciones fijas por `<option value="">-- Sin proveedores registrados --</option>`.
 2. **Selector Reactivo a Estado Vacío:** `poblarSelectProveedores()` ahora limpia activamente el selector con el estado neutro cuando `provs.length === 0`, o genera `-- Seleccionar Proveedor --` seguido únicamente de los proveedores existentes en Supabase.
 3. **Eliminación de Fallbacks Fijos:** Se removieron los defaults fijos en `abrirModalNuevoProducto()`, `editarProducto()`, `guardarProductoForm()` y en el formateador de `js/supabase-client.js` (sustituido por `'Sin proveedor'`).
+4. **Despliegue:** Commit `3aa388f` subido a `main` y publicado en producción en Netlify.
+
+---
+
+## [ENGRAM-20261027-006] Aprovisionamiento y Estandarización del Ecosistema de Desarrollo Global en PATH
+
+- **Fecha:** 27 de Octubre de 2026
+- **Sector Afectado:** Infraestructura de Desarrollo Local y Variables de Entorno del Sistema
+- **Estado:** Configurado, Validado y Operativo en Windows
+- **Autor / Responsable:** Ignacio Vizoso / Agente Orquestador
+
+### 1. Diagnóstico del Entorno
+- La estación de trabajo carecía de un entorno runtime unificado en el `PATH` para herramientas de uso general.
+- Python no estaba instalado (solo existía el acceso directo de Windows Store).
+- Node.js y Composer no estaban instalados.
+- PHP 8.5.12 se encontraba en disco (`C:\php\php.exe`) pero fuera del `PATH` del usuario.
+- La política de ejecución de scripts de PowerShell para el usuario actual bloqueaba llamadas a utilidades `.ps1` (como `npm.ps1`).
+
+### 2. Acciones y Estandarizaciones Realizadas (ADR)
+1. **Python 3.12 (3.12.10):** Instalado vía `winget` en ámbito de usuario con inclusión de `pip 25.0.1`, lanzador `py` y rutas agregadas al `PATH`.
+2. **PHP 8.5.12:** Se incorporó de forma permanente la ruta `C:\php` al `PATH` del usuario, habilitando extensiones esenciales (`curl`, `openssl`, `mbstring`, `pdo_mysql`, `pdo_sqlite`, `zend opcache`).
+3. **Composer 2.11:** Se descargó el binario `composer.phar` en `C:\php` y se construyeron los envoltorios `composer.bat` (CMD/PowerShell) y `composer` (Git Bash).
+4. **Node.js LTS (v24.22.1):** Instalado con parches de seguridad oficiales, incorporando `npm 11.19.1` y `npx 11.19.1` en el `PATH` de la máquina.
+5. **Directiva PowerShell:** Se fijó `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force` para permitir la ejecución no restrictiva de scripts firmados y herramientas de desarrollo.
+
 
 
 
